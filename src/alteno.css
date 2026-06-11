@@ -752,7 +752,7 @@ input,textarea,button { font-family:inherit; }
 
 /* ── Back to top ── */
 .totop {
-  position:fixed; right:24px; bottom:24px; z-index:30;
+  position:fixed; right:32px; bottom:108px; z-index:30;
   width:44px; height:44px; border-radius:50%; border:1px solid var(--glass-bs);
   background:var(--glass-bg); backdrop-filter:blur(20px);
   display:grid; place-items:center; cursor:pointer;
@@ -1585,6 +1585,8 @@ input,textarea,button { font-family:inherit; }
   .ariel-fab-ring.r1 { width:54px; height:54px; }
   .ariel-fab-ring.r2 { width:40px; height:40px; }
   .ariel-fab-tip { display: none; }
+  /* totop sits above the FAB on mobile */
+  .totop { bottom:88px; right:16px; }
   .ariel-backdrop { padding:12px; align-items: flex-end; }
   .ariel-modal { max-width:100%; }
   .ariel-modal .ariel-panel { height: 85dvh; border-radius: 12px 12px 4px 4px; }
