@@ -1,6 +1,67 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useLanguage } from '../../context/LanguageContext'
 import DeviceScene from '../ui/DeviceScene'
+
+function TypewriterH1({ line1, line2 }) {
+  const [t1, setT1] = useState('')
+  const [t2, setT2] = useState('')
+  const [phase, setPhase] = useState(0) // 0=idle 1=typing line1 2=typing line2 3=done
+
+  useEffect(() => {
+    let iv1, iv2, tStart, tPause, tLoop
+
+    function loopLine2() {
+      tPause = setTimeout(() => {
+        setT2('')
+        setPhase(2)
+        let j = 0
+        iv2 = setInterval(() => {
+          j++
+          setT2(line2.slice(0, j))
+          if (j >= line2.length) {
+            clearInterval(iv2)
+            setPhase(3)
+            tLoop = setTimeout(loopLine2, 6200)
+          }
+        }, 58)
+      }, 380)
+    }
+
+    // первая строка — один раз, потом остаётся
+    setT1(''); setT2(''); setPhase(0)
+    tStart = setTimeout(() => {
+      setPhase(1)
+      let i = 0
+      iv1 = setInterval(() => {
+        i++
+        setT1(line1.slice(0, i))
+        if (i >= line1.length) {
+          clearInterval(iv1)
+          loopLine2()
+        }
+      }, 68)
+    }, 650)
+
+    return () => {
+      clearTimeout(tStart); clearTimeout(tPause); clearTimeout(tLoop)
+      clearInterval(iv1); clearInterval(iv2)
+    }
+  }, [line1, line2])
+
+  return (
+    <h1 className="ub hero-h1">
+      <span className="tw-line">
+        {t1}
+        {phase === 1 && <span className="tw-cur" />}
+      </span>
+      <span className="tw-line">
+        <span className="grad">{t2}</span>
+        {phase === 2 && <span className="tw-cur" />}
+        {phase === 3 && <span className="tw-cur tw-cur--done" />}
+      </span>
+    </h1>
+  )
+}
 
 export default function Hero() {
   const { t } = useLanguage()
@@ -28,10 +89,7 @@ export default function Hero() {
               <span className="dot" />
             </div>
 
-            <h1 className="ub hero-h1">
-              <span className="s-line"><span className="s-inner s-d1">{t.hero.title}</span></span>
-              <span className="s-line"><span className="s-inner grad s-d2">{t.hero.titleAccent}</span></span>
-            </h1>
+            <TypewriterH1 line1={t.hero.title} line2={t.hero.titleAccent} />
 
             <p className="sub reveal d3">{t.hero.sub}</p>
 

@@ -3,7 +3,7 @@ import { useLanguage } from '../../context/LanguageContext'
 
 const TG_TOKEN   = import.meta.env.VITE_TG_TOKEN   || ''
 const TG_CHAT_ID = import.meta.env.VITE_TG_CHAT_ID || ''
-const RL_KEY     = 'alteno_rl'
+const RL_KEY      = 'alteno_rl'
 const MAX_PER_DAY = 2
 
 const SOCIAL = [
@@ -51,23 +51,16 @@ const SOCIAL = [
 ]
 
 function getRLData() {
-  try {
-    return JSON.parse(localStorage.getItem(RL_KEY) || '{}')
-  } catch {
-    return {}
-  }
+  try { return JSON.parse(localStorage.getItem(RL_KEY) || '{}') } catch { return {} }
 }
-
 function getTodayCount() {
   const data = getRLData()
   const today = new Date().toDateString()
   return data.date === today ? (data.count || 0) : 0
 }
-
 function recordSubmission() {
   const today = new Date().toDateString()
-  const count = getTodayCount() + 1
-  localStorage.setItem(RL_KEY, JSON.stringify({ date: today, count }))
+  localStorage.setItem(RL_KEY, JSON.stringify({ date: today, count: getTodayCount() + 1 }))
 }
 
 async function sendNotifications(form) {
@@ -109,9 +102,8 @@ export default function Contact() {
   const { t } = useLanguage()
   const [form, setForm]       = useState({ name: '', contact: '', task: '' })
   const [sending, setSending] = useState(false)
-  const [status, setStatus]   = useState('idle') // 'idle' | 'success' | 'limited'
+  const [status, setStatus]   = useState('idle')
 
-  // Проверяем лимит при загрузке
   useEffect(() => {
     if (getTodayCount() >= MAX_PER_DAY) setStatus('limited')
   }, [])
@@ -119,11 +111,7 @@ export default function Contact() {
   const submit = async (e) => {
     e.preventDefault()
     if (!form.name || !form.contact || sending || status !== 'idle') return
-
-    if (getTodayCount() >= MAX_PER_DAY) {
-      setStatus('limited')
-      return
-    }
+    if (getTodayCount() >= MAX_PER_DAY) { setStatus('limited'); return }
 
     setSending(true)
     await sendNotifications(form)
@@ -131,10 +119,7 @@ export default function Contact() {
     setSending(false)
     setForm({ name: '', contact: '', task: '' })
     setStatus('success')
-
-    if (getTodayCount() < MAX_PER_DAY) {
-      setTimeout(() => setStatus('idle'), 4200)
-    }
+    if (getTodayCount() < MAX_PER_DAY) setTimeout(() => setStatus('idle'), 4200)
   }
 
   return (
@@ -142,6 +127,7 @@ export default function Contact() {
       <div className="shell">
         <div className="banner reveal">
           <div className="banner-inner">
+
             {/* Left */}
             <div className="b-head">
               <div className="eyebrow"><span className="line" />{t.contact.eyebrow}</div>
@@ -176,7 +162,6 @@ export default function Contact() {
 
             {/* Right — form */}
             <div className="form-card">
-              {/* Success overlay */}
               {status === 'success' && (
                 <div className="success-state show">
                   <div className="ring2">
@@ -187,7 +172,6 @@ export default function Contact() {
                 </div>
               )}
 
-              {/* Rate limit overlay */}
               {status === 'limited' && (
                 <div className="success-state show" style={{ '--ring-c': '#f59e0b' }}>
                   <div className="ring2" style={{ borderColor: 'rgba(245,158,11,.4)', background: 'rgba(245,158,11,.1)' }}>
@@ -204,24 +188,20 @@ export default function Contact() {
                 <div className="field">
                   <label>{t.contact.lname}</label>
                   <input type="text" required placeholder={t.contact.pname}
-                    value={form.name}
-                    onChange={e => setForm({ ...form, name: e.target.value })} />
+                    value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} />
                 </div>
                 <div className="field">
                   <label>{t.contact.lcontact}</label>
                   <input type="text" required placeholder={t.contact.pcontact}
-                    value={form.contact}
-                    onChange={e => setForm({ ...form, contact: e.target.value })} />
+                    value={form.contact} onChange={e => setForm({ ...form, contact: e.target.value })} />
                 </div>
                 <div className="field">
                   <label>{t.contact.ltask}</label>
                   <textarea placeholder={t.contact.ptask}
-                    value={form.task}
-                    onChange={e => setForm({ ...form, task: e.target.value })} />
+                    value={form.task} onChange={e => setForm({ ...form, task: e.target.value })} />
                 </div>
                 <button type="submit" className="btn btn-primary"
-                  disabled={sending}
-                  style={{ opacity: sending ? .65 : 1 }}>
+                  disabled={sending} style={{ opacity: sending ? .65 : 1 }}>
                   {sending ? '...' : t.contact.submit}
                   {!sending && (
                     <svg viewBox="0 0 24 24" fill="none" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -231,6 +211,7 @@ export default function Contact() {
                 </button>
               </form>
             </div>
+
           </div>
         </div>
       </div>

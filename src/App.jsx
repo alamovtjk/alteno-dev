@@ -12,6 +12,7 @@ import Studio from './components/sections/Studio'
 import Testimonials from './components/sections/Testimonials'
 import Contact from './components/sections/Contact'
 import Cursor from './components/ui/Cursor'
+import ArielFloat from './components/ui/ArielFloat'
 
 // Бегущая строка технологий
 function Ticker() {
@@ -99,6 +100,7 @@ function AppInner() {
       </main>
 
       <Footer />
+      <ArielFloat />
     </div>
   )
 }

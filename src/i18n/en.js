@@ -10,8 +10,8 @@ export default {
   },
   hero: {
     badge: 'Next-gen AI studio',
-    title: 'We build digital products',
-    titleAccent: 'that actually work',
+    title: 'We don\'t just build websites —',
+    titleAccent: 'we build the growth of your business',
     sub: 'AI-powered design and development, turnkey. We serve businesses in Tajikistan — fast, beautiful and affordable.',
     cta1: 'Start a project',
     cta2: 'View cases',
