@@ -1,0 +1,881 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>AlTeNo Dev — Design Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;500;600;700;800&family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#080c18;--bg-surface:rgba(255,255,255,.06);--bg-elevated:rgba(255,255,255,.09);
+  --border:rgba(255,255,255,.10);--border-sub:rgba(255,255,255,.06);--border-strong:rgba(255,255,255,.18);
+  --text-1:#f1f5f9;--text-2:#94a3b8;--text-3:#64748b;--text-4:#334155;
+  --violet:#7c3aed;--violet-dk:#5b21b6;--violet-lt:#a78bfa;--violet-sub:rgba(109,40,217,.12);
+  --teal:#0d9488;--teal-lt:#2dd4bf;--teal-sub:rgba(13,148,136,.12);
+  --blue:#2563eb;--blue-lt:#60a5fa;--blue-sub:rgba(37,99,235,.12);
+  --fuchsia:#9333ea;--fuchsia-lt:#f0abfc;--fuchsia-sub:rgba(147,51,234,.12);
+  --font-h:'Unbounded',sans-serif;--font-b:'Manrope',sans-serif;
+  --radius-sm:8px;--radius-md:12px;--radius-lg:16px;--radius-xl:20px;--radius-2xl:24px;--radius-full:9999px;
+  --shadow-glass:0 8px 32px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.07);
+  --shadow-violet:0 8px 24px rgba(124,58,237,.4);
+}
+html{scroll-behavior:smooth}
+body{font-family:var(--font-b);background:var(--bg);color:var(--text-2);line-height:1.6;-webkit-font-smoothing:antialiased}
+h1,h2,h3,h4{font-family:var(--font-h);color:var(--text-1);letter-spacing:-.02em;line-height:1.2}
+
+/* ── Layout ── */
+.container{max-width:1100px;margin:0 auto;padding:0 32px}
+.section{padding:72px 0;border-bottom:1px solid var(--border-sub)}
+.section:last-child{border-bottom:none}
+.section-label{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.05);border:1px solid var(--border);color:var(--text-3);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;padding:6px 14px;border-radius:var(--radius-full);margin-bottom:16px}
+.section-label::before{content:'';width:6px;height:6px;border-radius:50%;background:currentColor;opacity:.6}
+.section-title{font-size:clamp(1.5rem,3vw,2.2rem);margin-bottom:8px}
+.section-sub{color:var(--text-3);font-size:.95rem;margin-bottom:40px;max-width:520px}
+.row{display:flex;flex-wrap:wrap;gap:16px;margin-bottom:16px}
+.col{flex:1;min-width:200px}
+
+/* ── Blobs ── */
+.hero-bg{position:relative;min-height:320px;display:flex;align-items:center;justify-content:center;overflow:hidden;padding:64px 32px;text-align:center;border-radius:var(--radius-2xl);margin-bottom:40px}
+.hero-bg::before,.hero-bg::after,.hero-bg .blob3{content:'';position:absolute;border-radius:50%;filter:blur(80px);pointer-events:none}
+.hero-bg::before{width:500px;height:500px;background:radial-gradient(circle,#6d28d9,#4c1d95,transparent);opacity:.55;top:-150px;left:-150px}
+.hero-bg::after{width:400px;height:400px;background:radial-gradient(circle,#0d9488,#134e4a,transparent);opacity:.5;bottom:-100px;right:-100px}
+.hero-bg .blob3{width:350px;height:350px;background:radial-gradient(circle,#2563eb,#1e3a8a,transparent);opacity:.4;top:50%;left:50%;transform:translate(-50%,-50%)}
+
+/* ── Glass ── */
+.glass{background:var(--bg-surface);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid var(--border);box-shadow:var(--shadow-glass);border-radius:var(--radius-xl)}
+.glass-demo{padding:24px;position:relative;z-index:1}
+.glass-sm{background:var(--bg-surface);backdrop-filter:blur(20px);border:1px solid var(--border);border-radius:var(--radius-lg);padding:16px}
+
+/* ── Colors ── */
+.swatch-row{display:flex;flex-wrap:wrap;gap:12px}
+.swatch{width:80px}
+.swatch-box{height:56px;border-radius:var(--radius-md);border:1px solid var(--border-sub)}
+.swatch-label{font-size:11px;color:var(--text-3);margin-top:6px;font-weight:600;text-align:center;word-break:break-all}
+
+/* ── Typography ── */
+.type-row{display:flex;align-items:baseline;gap:20px;padding:16px 0;border-bottom:1px solid var(--border-sub)}
+.type-row:last-child{border-bottom:none}
+.type-meta{width:140px;flex-shrink:0;font-size:12px;color:var(--text-3)}
+.type-sample-h{font-family:var(--font-h);color:var(--text-1);letter-spacing:-.02em;line-height:1.2}
+.type-sample-b{font-family:var(--font-b);color:var(--text-1);line-height:1.5}
+.grad-text{background:linear-gradient(135deg,#a78bfa,#c084fc,#38bdf8);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+
+/* ── Components ── */
+.btn{display:inline-flex;align-items:center;gap:8px;font-family:var(--font-b);font-weight:600;font-size:14px;border:none;cursor:pointer;transition:all .2s}
+.btn-primary{background:var(--violet);color:#fff;padding:12px 28px;border-radius:var(--radius-md);box-shadow:var(--shadow-violet)}
+.btn-primary:hover{background:var(--violet-dk)}
+.btn-ghost{background:var(--bg-surface);backdrop-filter:blur(16px);color:var(--text-1);padding:12px 28px;border-radius:var(--radius-md);border:1px solid var(--border)}
+.btn-ghost:hover{background:var(--bg-elevated);border-color:var(--border-strong)}
+.btn-sm{padding:8px 16px;font-size:12px;border-radius:var(--radius-sm)}
+
+.tag{display:inline-flex;align-items:center;padding:4px 10px;border-radius:var(--radius-full);font-size:11px;font-weight:500;border:1px solid var(--border-sub);color:var(--text-3);background:rgba(255,255,255,.05)}
+
+.input-demo{width:100%;background:rgba(255,255,255,.05);border:1px solid var(--border);border-radius:var(--radius-md);padding:12px 16px;color:var(--text-1);font-family:var(--font-b);font-size:14px;outline:none;transition:all .2s}
+.input-demo:focus{background:rgba(109,40,217,.07);border-color:rgba(124,58,237,.55);box-shadow:0 0 0 3px rgba(109,40,217,.14)}
+.input-demo::placeholder{color:var(--text-4)}
+.label{display:block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--text-3);margin-bottom:6px}
+
+/* ── Card ── */
+.card{background:var(--bg-surface);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid var(--border);border-radius:var(--radius-xl);padding:24px;box-shadow:var(--shadow-glass)}
+.card-icon{width:44px;height:44px;border-radius:var(--radius-md);display:flex;align-items:center;justify-content:center;font-size:18px;margin-bottom:16px}
+.card-num{font-size:11px;font-weight:700;font-family:var(--font-h);padding:4px 10px;border-radius:var(--radius-sm)}
+.card-title{font-family:var(--font-h);font-size:15px;font-weight:600;color:var(--text-1);margin-bottom:8px;letter-spacing:-.01em}
+.card-desc{font-size:13px;color:var(--text-2);line-height:1.6;margin-bottom:14px}
+.card-tags{display:flex;flex-wrap:wrap;gap:6px;padding-top:12px;border-top:1px solid var(--border-sub)}
+
+/* ── Stat card ── */
+.stat-card{display:flex;align-items:center;gap:12px;padding:16px 18px;border-radius:var(--radius-lg)}
+.stat-icon{width:36px;height:36px;border-radius:var(--radius-md);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.stat-value{font-family:var(--font-h);font-size:22px;font-weight:700;line-height:1}
+.stat-label{font-size:12px;color:var(--text-3);margin-top:4px}
+
+/* ── Review card ── */
+.review-card{background:var(--bg-surface);border:1px solid var(--border);border-radius:var(--radius-xl);padding:22px;display:flex;flex-direction:column;gap:14px;height:100%}
+.stars{display:flex;gap:3px}
+.star{color:#f59e0b;font-size:13px}
+.review-text{font-size:13px;color:var(--text-1);line-height:1.65;flex:1}
+.review-author{display:flex;align-items:center;gap:10px;padding-top:12px;border-top:1px solid var(--border-sub)}
+.avatar{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--font-h);font-size:10px;font-weight:700;color:#fff;flex-shrink:0}
+
+/* ── Badge ── */
+.badge{display:inline-flex;align-items:center;gap:6px;background:var(--bg-surface);border:1px solid var(--border);padding:6px 14px;border-radius:var(--radius-full);font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--text-3)}
+.badge-dot{width:6px;height:6px;border-radius:50%}
+
+/* ── Spacing ── */
+.space-demo{display:flex;align-items:flex-end;gap:8px;flex-wrap:wrap}
+.space-block{background:linear-gradient(135deg,rgba(109,40,217,.4),rgba(13,148,136,.3));border-radius:4px;transition:all .2s}
+
+/* ── Process step ── */
+.step{display:flex;gap:16px;margin-bottom:0}
+.step-line{display:flex;flex-direction:column;align-items:center;flex-shrink:0;width:40px}
+.step-num{width:40px;height:40px;border-radius:var(--radius-md);display:flex;align-items:center;justify-content:center;font-family:var(--font-h);font-weight:700;font-size:12px;flex-shrink:0}
+.step-connector{width:1px;flex:1;min-height:32px;margin-top:6px}
+.step-body{flex:1;padding-bottom:20px}
+.step-card{padding:18px 20px;border-radius:var(--radius-lg)}
+.step-title{font-family:var(--font-h);font-size:14px;font-weight:600;color:var(--text-1);margin-bottom:6px}
+.step-desc{font-size:13px;color:var(--text-2);line-height:1.6}
+
+/* ── Nav preview ── */
+.nav-preview{display:flex;align-items:center;justify-content:space-between;padding:0 24px;height:56px;background:rgba(8,12,24,.85);backdrop-filter:blur(24px);border:1px solid var(--border-sub);border-radius:var(--radius-xl);margin-bottom:12px}
+.nav-logo{display:flex;align-items:center;gap:10px}
+.nav-logo-icon{width:30px;height:30px;border-radius:8px;background:linear-gradient(135deg,#7c3aed,#5b21b6);display:flex;align-items:center;justify-content:center;font-family:var(--font-h);font-size:12px;font-weight:700;color:#fff;box-shadow:0 0 16px rgba(124,58,237,.4)}
+.nav-links{display:flex;gap:24px}
+.nav-link{font-size:13px;font-weight:500;color:var(--text-3);text-decoration:none}
+.nav-right{display:flex;align-items:center;gap:10px}
+.lang-switch{display:flex;background:var(--bg-surface);border:1px solid var(--border);border-radius:var(--radius-full);padding:3px;gap:2px}
+.lang-btn{padding:4px 10px;border-radius:var(--radius-full);font-size:11px;font-weight:700;color:var(--text-3)}
+.lang-btn.active{background:var(--violet);color:#fff}
+
+/* ── Footer preview ── */
+.footer-prev{border:1px solid var(--border-sub);border-radius:var(--radius-xl);padding:32px;background:var(--bg-surface)}
+.footer-grid{display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;gap:32px}
+.footer-col-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--text-4);margin-bottom:14px;font-family:var(--font-h)}
+.footer-link{display:block;font-size:13px;color:var(--text-3);margin-bottom:8px;text-decoration:none}
+.footer-link:hover{color:var(--text-1)}
+.social-btn{width:32px;height:32px;border-radius:var(--radius-md);background:var(--bg-surface);border:1px solid var(--border);display:inline-flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--text-3);margin-right:6px}
+
+/* ── TOC Nav ── */
+.toc{position:fixed;top:24px;right:24px;background:var(--bg-surface);backdrop-filter:blur(20px);border:1px solid var(--border);border-radius:var(--radius-xl);padding:16px 20px;z-index:100;max-height:calc(100vh - 48px);overflow-y:auto}
+.toc-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--text-3);margin-bottom:10px;font-family:var(--font-h)}
+.toc a{display:block;font-size:12px;color:var(--text-3);text-decoration:none;padding:3px 0;transition:color .15s}
+.toc a:hover{color:var(--text-1)}
+@media(max-width:900px){.toc{display:none}}
+</style>
+</head>
+<body>
+
+<!-- TOC -->
+<nav class="toc">
+  <div class="toc-title">Навигация</div>
+  <a href="#overview">Обзор</a>
+  <a href="#colors">Цвета</a>
+  <a href="#typography">Типографика</a>
+  <a href="#glass">Glassmorphism</a>
+  <a href="#buttons">Кнопки</a>
+  <a href="#inputs">Форма</a>
+  <a href="#cards">Карточки</a>
+  <a href="#stats">Статистика</a>
+  <a href="#reviews">Отзывы</a>
+  <a href="#process">Процесс</a>
+  <a href="#nav">Навигация</a>
+  <a href="#footer">Футер</a>
+  <a href="#spacing">Отступы</a>
+  <a href="#motion">Анимации</a>
+</nav>
+
+<div class="container">
+
+  <!-- ── OVERVIEW ── -->
+  <section class="section" id="overview">
+    <div class="section-label">Design System</div>
+    <h1 class="section-title" style="font-size:clamp(2rem,4vw,3rem)">
+      AlTeNo <span class="grad-text">Dev</span>
+    </h1>
+    <p class="section-sub">Дизайн-система для сайта веб-студии. Dark glassmorphism премиум-класс. Шрифты: <strong style="color:var(--text-1)">Unbounded</strong> (заголовки) + <strong style="color:var(--text-1)">Manrope</strong> (текст).</p>
+
+    <!-- Hero bg preview -->
+    <div class="hero-bg">
+      <div class="blob3"></div>
+      <div class="glass-demo glass" style="max-width:480px;text-align:center">
+        <div class="badge" style="margin-bottom:14px">
+          <span class="badge-dot" style="background:#2dd4bf"></span>
+          Веб-студия нового поколения
+        </div>
+        <h2 style="font-size:clamp(1.6rem,3vw,2.4rem);margin-bottom:10px">
+          Создаём сайты,<br><span class="grad-text">которые продают</span>
+        </h2>
+        <p style="font-size:.9rem;color:var(--text-2);margin-bottom:20px;max-width:360px;margin-left:auto;margin-right:auto">AlTeNo Dev разрабатывает цифровые продукты мирового уровня — от концепции до запуска.</p>
+        <div class="row" style="justify-content:center;margin-bottom:0">
+          <button class="btn btn-primary">Обсудить проект →</button>
+          <button class="btn btn-ghost">Смотреть работы</button>
+        </div>
+      </div>
+    </div>
+
+    <div style="background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:16px;padding:20px 24px">
+      <p style="font-size:13px;color:var(--text-3);margin-bottom:8px;font-weight:700;text-transform:uppercase;letter-spacing:.08em">📦 Состав</p>
+      <ul style="font-size:13px;color:var(--text-2);display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:6px;list-style:none">
+        <li>✦ &nbsp;Цветовая система — акценты + стекло</li>
+        <li>✦ &nbsp;Типографика — Unbounded + Manrope</li>
+        <li>✦ &nbsp;Glassmorphism — backdrop-filter</li>
+        <li>✦ &nbsp;Кнопки — primary, ghost, sm</li>
+        <li>✦ &nbsp;Форма — input, textarea, label</li>
+        <li>✦ &nbsp;Карточки — услуги, портфолио, отзывы</li>
+        <li>✦ &nbsp;Статистика — animated counters</li>
+        <li>✦ &nbsp;Процесс — timeline</li>
+        <li>✦ &nbsp;Навигация — header, language</li>
+        <li>✦ &nbsp;Футер — 4-column grid</li>
+        <li>✦ &nbsp;Отступы — spacing scale</li>
+        <li>✦ &nbsp;Анимации — easing + durations</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ── COLORS ── -->
+  <section class="section" id="colors">
+    <div class="section-label">01</div>
+    <h2 class="section-title">Цветовая система</h2>
+    <p class="section-sub">Тёмный базовый фон + 4 акцентных цвета + 4 уровня текста</p>
+
+    <!-- Background -->
+    <h4 style="font-size:12px;text-transform:uppercase;letter-spacing:.1em;color:var(--text-3);margin-bottom:14px;font-family:var(--font-h)">Background</h4>
+    <div class="swatch-row" style="margin-bottom:32px">
+      <div class="swatch">
+        <div class="swatch-box" style="background:#080c18;border:2px solid rgba(255,255,255,.15)"></div>
+        <div class="swatch-label">#080c18<br>Base</div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-box" style="background:rgba(255,255,255,.06)"></div>
+        <div class="swatch-label">white 6%<br>Surface</div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-box" style="background:rgba(255,255,255,.09)"></div>
+        <div class="swatch-label">white 9%<br>Elevated</div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-box" style="background:rgba(8,12,24,.85)"></div>
+        <div class="swatch-label">base 85%<br>Overlay (nav)</div>
+      </div>
+    </div>
+
+    <!-- Accents -->
+    <h4 style="font-size:12px;text-transform:uppercase;letter-spacing:.1em;color:var(--text-3);margin-bottom:14px;font-family:var(--font-h)">Accent — Violet (Primary)</h4>
+    <div class="swatch-row" style="margin-bottom:32px">
+      <div class="swatch"><div class="swatch-box" style="background:#5b21b6"></div><div class="swatch-label">#5b21b6<br>Dark</div></div>
+      <div class="swatch"><div class="swatch-box" style="background:#7c3aed"></div><div class="swatch-label">#7c3aed<br>Base ✓</div></div>
+      <div class="swatch"><div class="swatch-box" style="background:#a78bfa"></div><div class="swatch-label">#a78bfa<br>Light</div></div>
+      <div class="swatch"><div class="swatch-box" style="background:rgba(109,40,217,.12)"></div><div class="swatch-label">109,40,217<br>12% Subtle</div></div>
+      <div class="swatch"><div class="swatch-box" style="background:rgba(109,40,217,.25)"></div><div class="swatch-label">109,40,217<br>25% Border</div></div>
+    </div>
+
+    <h4 style="font-size:12px;text-transform:uppercase;letter-spacing:.1em;color:var(--text-3);margin-bottom:14px;font-family:var(--font-h)">Accent — Teal (Secondary)</h4>
+    <div class="swatch-row" style="margin-bottom:32px">
+      <div class="swatch"><div class="swatch-box" style="background:#0d9488"></div><div class="swatch-label">#0d9488<br>Base</div></div>
+      <div class="swatch"><div class="swatch-box" style="background:#2dd4bf"></div><div class="swatch-label">#2dd4bf<br>Light</div></div>
+      <div class="swatch"><div class="swatch-box" style="background:rgba(13,148,136,.12)"></div><div class="swatch-label">13,148,136<br>12% Subtle</div></div>
+    </div>
+
+    <h4 style="font-size:12px;text-transform:uppercase;letter-spacing:.1em;color:var(--text-3);margin-bottom:14px;font-family:var(--font-h)">Accent — Blue / Fuchsia</h4>
+    <div class="swatch-row" style="margin-bottom:32px">
+      <div class="swatch"><div class="swatch-box" style="background:#2563eb"></div><div class="swatch-label">#2563eb<br>Blue</div></div>
+      <div class="swatch"><div class="swatch-box" style="background:#60a5fa"></div><div class="swatch-label">#60a5fa<br>Blue Lt</div></div>
+      <div class="swatch"><div class="swatch-box" style="background:#9333ea"></div><div class="swatch-label">#9333ea<br>Fuchsia</div></div>
+      <div class="swatch"><div class="swatch-box" style="background:#f0abfc"></div><div class="swatch-label">#f0abfc<br>Fuchsia Lt</div></div>
+    </div>
+
+    <!-- Text -->
+    <h4 style="font-size:12px;text-transform:uppercase;letter-spacing:.1em;color:var(--text-3);margin-bottom:14px;font-family:var(--font-h)">Text hierarchy</h4>
+    <div style="background:var(--bg-surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:20px;display:flex;flex-direction:column;gap:10px">
+      <div><span style="font-size:16px;color:#f1f5f9;font-weight:600">text-1 #f1f5f9</span> — заголовки, важный контент</div>
+      <div><span style="font-size:16px;color:#94a3b8;font-weight:500">text-2 #94a3b8</span> — основной текст, параграфы</div>
+      <div><span style="font-size:16px;color:#64748b">text-3 #64748b</span> — вторичный текст, подписи</div>
+      <div><span style="font-size:16px;color:#334155">text-4 #334155</span> — disabled, placeholder</div>
+    </div>
+
+    <!-- Gradients -->
+    <h4 style="font-size:12px;text-transform:uppercase;letter-spacing:.1em;color:var(--text-3);margin:24px 0 14px;font-family:var(--font-h)">Градиенты текста</h4>
+    <div class="swatch-row">
+      <div style="flex:1;min-width:150px;padding:20px;border-radius:var(--radius-md);background:var(--bg-surface);border:1px solid var(--border);text-align:center">
+        <div style="font-family:var(--font-h);font-size:18px;background:linear-gradient(135deg,#a78bfa,#c084fc,#38bdf8);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;font-weight:700">Hero gradient</div>
+        <div style="font-size:11px;color:var(--text-3);margin-top:6px">violet → purple → cyan</div>
+      </div>
+      <div style="flex:1;min-width:150px;padding:20px;border-radius:var(--radius-md);background:var(--bg-surface);border:1px solid var(--border);text-align:center">
+        <div style="font-family:var(--font-h);font-size:18px;background:linear-gradient(135deg,#2dd4bf,#38bdf8);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;font-weight:700">Teal gradient</div>
+        <div style="font-size:11px;color:var(--text-3);margin-top:6px">teal → sky</div>
+      </div>
+      <div style="flex:1;min-width:150px;padding:20px;border-radius:var(--radius-md);background:var(--bg-surface);border:1px solid var(--border);text-align:center">
+        <div style="font-family:var(--font-h);font-size:18px;background:linear-gradient(135deg,#60a5fa,#818cf8);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;font-weight:700">Blue gradient</div>
+        <div style="font-size:11px;color:var(--text-3);margin-top:6px">blue → indigo</div>
+      </div>
+      <div style="flex:1;min-width:150px;padding:20px;border-radius:var(--radius-md);background:var(--bg-surface);border:1px solid var(--border);text-align:center">
+        <div style="font-family:var(--font-h);font-size:18px;background:linear-gradient(135deg,#f0abfc,#a78bfa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;font-weight:700">Fuchsia gradient</div>
+        <div style="font-size:11px;color:var(--text-3);margin-top:6px">fuchsia → violet</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── TYPOGRAPHY ── -->
+  <section class="section" id="typography">
+    <div class="section-label">02</div>
+    <h2 class="section-title">Типографика</h2>
+    <p class="section-sub">Unbounded — заголовки (letter-spacing: -0.02em). Manrope — весь остальной текст.</p>
+
+    <h4 style="font-size:12px;text-transform:uppercase;letter-spacing:.1em;color:var(--text-3);margin-bottom:16px;font-family:var(--font-h)">Unbounded — Heading Scale</h4>
+    <div style="background:var(--bg-surface);border:1px solid var(--border);border-radius:var(--radius-xl);padding:24px 28px;margin-bottom:24px">
+      <div class="type-row">
+        <div class="type-meta">hero · clamp(36–64px)<br>Bold 700</div>
+        <div class="type-sample-h grad-text" style="font-size:clamp(2rem,5vw,4rem);font-weight:700">AlTeNo Dev</div>
+      </div>
+      <div class="type-row">
+        <div class="type-meta">h2 · 36–48px<br>Bold 700</div>
+        <div class="type-sample-h" style="font-size:clamp(1.6rem,3vw,2.8rem);font-weight:700">Полный спектр</div>
+      </div>
+      <div class="type-row">
+        <div class="type-meta">h3 · 20–24px<br>Semibold 600</div>
+        <div class="type-sample-h" style="font-size:clamp(1.1rem,2vw,1.4rem);font-weight:600">Веб-разработка</div>
+      </div>
+      <div class="type-row">
+        <div class="type-meta">section label · 11px<br>Bold 700 · caps · +0.1em</div>
+        <div class="section-label" style="margin-bottom:0">Что мы делаем</div>
+      </div>
+    </div>
+
+    <h4 style="font-size:12px;text-transform:uppercase;letter-spacing:.1em;color:var(--text-3);margin-bottom:16px;font-family:var(--font-h)">Manrope — Body Scale</h4>
+    <div style="background:var(--bg-surface);border:1px solid var(--border);border-radius:var(--radius-xl);padding:24px 28px">
+      <div class="type-row">
+        <div class="type-meta">large · 18px<br>Regular 400</div>
+        <div class="type-sample-b" style="font-size:18px;color:var(--text-2);max-width:500px">AlTeNo Dev разрабатывает цифровые продукты мирового уровня — от концепции до запуска.</div>
+      </div>
+      <div class="type-row">
+        <div class="type-meta">base · 15px<br>Regular 400</div>
+        <div class="type-sample-b" style="font-size:15px;color:var(--text-2)">Создаём быстрые, масштабируемые сайты и веб-приложения на современном стеке.</div>
+      </div>
+      <div class="type-row">
+        <div class="type-meta">small · 13px<br>Medium 500</div>
+        <div class="type-sample-b" style="font-size:13px;color:var(--text-2)">Разрабатываем интерфейсы, которые интуитивно понятны и визуально безупречны.</div>
+      </div>
+      <div class="type-row">
+        <div class="type-meta">xs · 11px<br>Semibold 600</div>
+        <div class="type-sample-b" style="font-size:11px;color:var(--text-3);text-transform:uppercase;letter-spacing:.08em">React · Next.js · Node.js</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── GLASS ── -->
+  <section class="section" id="glass">
+    <div class="section-label">03</div>
+    <h2 class="section-title">Glassmorphism</h2>
+    <p class="section-sub">Все карточки используют backdrop-filter: blur(20px). Работает только поверх ярких blobs.</p>
+
+    <!-- Side by side comparison -->
+    <div class="row">
+      <div style="flex:1;min-width:260px;position:relative;padding:32px;border-radius:20px;overflow:hidden">
+        <div style="position:absolute;inset:0;background:radial-gradient(circle at 40% 40%,#6d28d9 0%,#4c1d95 40%,transparent 70%);opacity:.7"></div>
+        <div style="position:absolute;inset:0;background:radial-gradient(circle at 70% 70%,#0d9488 0%,transparent 60%);opacity:.5"></div>
+        <div class="glass" style="position:relative;padding:20px">
+          <div style="font-size:12px;color:var(--text-3);margin-bottom:6px;text-transform:uppercase;letter-spacing:.08em;font-weight:700">Default Glass</div>
+          <div style="font-size:14px;color:var(--text-1);font-weight:600">background: rgba(255,255,255,.06)</div>
+          <div style="font-size:13px;color:var(--text-2);margin-top:4px">backdrop-filter: blur(20px)</div>
+          <div style="font-size:13px;color:var(--text-2)">border: 1px solid rgba(255,255,255,.10)</div>
+        </div>
+      </div>
+      <div style="flex:1;min-width:260px;position:relative;padding:32px;border-radius:20px;overflow:hidden">
+        <div style="position:absolute;inset:0;background:radial-gradient(circle at 60% 30%,#7c3aed 0%,transparent 60%);opacity:.6"></div>
+        <div style="position:absolute;inset:0;background:radial-gradient(circle at 30% 70%,#2563eb 0%,transparent 60%);opacity:.5"></div>
+        <div style="position:relative;background:rgba(255,255,255,.09);backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,.18);border-radius:16px;padding:20px;box-shadow:0 20px 48px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.1)">
+          <div style="font-size:12px;color:var(--text-3);margin-bottom:6px;text-transform:uppercase;letter-spacing:.08em;font-weight:700">Hover Glass</div>
+          <div style="font-size:14px;color:var(--text-1);font-weight:600">background: rgba(255,255,255,.09)</div>
+          <div style="font-size:13px;color:var(--text-2);margin-top:4px">border: 1px solid rgba(255,255,255,.18)</div>
+          <div style="font-size:13px;color:var(--text-2)">box-shadow: elevated</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:12px;padding:16px 20px;margin-top:20px;font-size:13px;color:var(--text-3)">
+      ⚠️ <strong style="color:var(--text-2)">Важно:</strong> backdrop-filter виден только поверх цветного фона. Без blobs стекло выглядит как тёмная панель — это нормально. Усиление видимости: увеличить opacity блоба или добавить более яркий акцентный блоб позади карточки.
+    </div>
+  </section>
+
+  <!-- ── BUTTONS ── -->
+  <section class="section" id="buttons">
+    <div class="section-label">04</div>
+    <h2 class="section-title">Кнопки</h2>
+    <p class="section-sub">Primary — violet background. Ghost — glass + border. Состояния: default, hover, focus, disabled.</p>
+
+    <div class="row" style="align-items:flex-start;flex-wrap:wrap;gap:24px">
+      <div class="col" style="min-width:240px">
+        <div style="font-size:12px;color:var(--text-3);text-transform:uppercase;letter-spacing:.08em;font-weight:700;margin-bottom:14px">Primary</div>
+        <div style="display:flex;flex-direction:column;gap:10px;align-items:flex-start">
+          <button class="btn btn-primary">Обсудить проект →</button>
+          <button class="btn btn-primary btn-sm">Смотреть работы →</button>
+          <button class="btn btn-primary" style="opacity:.4;cursor:not-allowed" disabled>Disabled</button>
+        </div>
+      </div>
+      <div class="col" style="min-width:240px">
+        <div style="font-size:12px;color:var(--text-3);text-transform:uppercase;letter-spacing:.08em;font-weight:700;margin-bottom:14px">Ghost / Glass</div>
+        <div style="display:flex;flex-direction:column;gap:10px;align-items:flex-start">
+          <button class="btn btn-ghost">Смотреть работы</button>
+          <button class="btn btn-ghost btn-sm">Все проекты →</button>
+          <button class="btn btn-ghost" style="opacity:.4;cursor:not-allowed" disabled>Disabled</button>
+        </div>
+      </div>
+      <div class="col" style="min-width:240px">
+        <div style="font-size:12px;color:var(--text-3);text-transform:uppercase;letter-spacing:.08em;font-weight:700;margin-bottom:14px">Spec</div>
+        <div style="font-size:13px;color:var(--text-3);display:flex;flex-direction:column;gap:6px">
+          <div>Padding: 12px 28px (base), 8px 16px (sm)</div>
+          <div>Radius: 12px</div>
+          <div>Font: Manrope 600 14px</div>
+          <div>Transition: 200ms ease</div>
+          <div>Primary shadow: 0 8px 24px violet 40%</div>
+          <div>Magnet effect: Framer spring</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── INPUTS ── -->
+  <section class="section" id="inputs">
+    <div class="section-label">05</div>
+    <h2 class="section-title">Форма / Inputs</h2>
+    <p class="section-sub">Focus ring: violet 14% + border violet 55%. Placeholder: text-4 #334155.</p>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;max-width:640px">
+      <div>
+        <label class="label">Ваше имя</label>
+        <input class="input-demo" type="text" placeholder="Ваше имя"/>
+      </div>
+      <div>
+        <label class="label">Email или Telegram</label>
+        <input class="input-demo" type="text" placeholder="Email или Telegram"/>
+      </div>
+      <div style="grid-column:1/-1">
+        <label class="label">Опишите задачу</label>
+        <textarea class="input-demo" rows="4" placeholder="Опишите задачу" style="resize:none;display:block"></textarea>
+      </div>
+      <div style="grid-column:1/-1">
+        <button class="btn btn-primary" style="width:100%;justify-content:center">Отправить заявку →</button>
+      </div>
+    </div>
+    <div style="margin-top:20px;font-size:13px;color:var(--text-3)">
+      Нажмите на поле — увидите фокус-состояние (violet ring + border glow)
+    </div>
+  </section>
+
+  <!-- ── CARDS ── -->
+  <section class="section" id="cards">
+    <div class="section-label">06</div>
+    <h2 class="section-title">Карточки услуг</h2>
+    <p class="section-sub">3D tilt при наведении. Каждая карточка — свой акцентный цвет. Icon + number + title + desc + tags.</p>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px">
+      <!-- Card 1 -->
+      <div class="card">
+        <div style="display:flex;align-items:start;justify-content:space-between;margin-bottom:14px">
+          <div class="card-icon" style="background:rgba(109,40,217,.1);border:1px solid rgba(109,40,217,.25);color:#a78bfa">
+            <svg width="20" height="20" viewBox="0 0 22 22" fill="none"><rect x="2" y="3" width="18" height="13" rx="2.5" stroke="currentColor" stroke-width="1.4"/><path d="M7 19h8M11 16v3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+          </div>
+          <span class="card-num" style="background:rgba(109,40,217,.1);border:1px solid rgba(109,40,217,.2);color:#a78bfa">01</span>
+        </div>
+        <div class="card-title">Веб-разработка</div>
+        <div class="card-desc">Создаём быстрые, масштабируемые сайты на современном стеке.</div>
+        <div class="card-tags">
+          <span class="tag" style="background:rgba(109,40,217,.15);color:#c4b5fd;border-color:rgba(109,40,217,.25)">React</span>
+          <span class="tag" style="background:rgba(109,40,217,.15);color:#c4b5fd;border-color:rgba(109,40,217,.25)">Next.js</span>
+        </div>
+      </div>
+      <!-- Card 2 -->
+      <div class="card">
+        <div style="display:flex;align-items:start;justify-content:space-between;margin-bottom:14px">
+          <div class="card-icon" style="background:rgba(13,148,136,.1);border:1px solid rgba(13,148,136,.25);color:#2dd4bf">
+            <svg width="20" height="20" viewBox="0 0 22 22" fill="none"><rect x="2" y="2" width="8" height="8" rx="2" stroke="currentColor" stroke-width="1.4"/><rect x="12" y="2" width="8" height="5" rx="2" stroke="currentColor" stroke-width="1.4"/><rect x="2" y="12" width="8" height="8" rx="2" stroke="currentColor" stroke-width="1.4"/><rect x="12" y="9" width="8" height="11" rx="2" stroke="currentColor" stroke-width="1.4"/></svg>
+          </div>
+          <span class="card-num" style="background:rgba(13,148,136,.1);border:1px solid rgba(13,148,136,.2);color:#2dd4bf">02</span>
+        </div>
+        <div class="card-title">UI/UX Дизайн</div>
+        <div class="card-desc">Разрабатываем интерфейсы, которые интуитивно понятны.</div>
+        <div class="card-tags">
+          <span class="tag" style="background:rgba(13,148,136,.15);color:#5eead4;border-color:rgba(13,148,136,.25)">Figma</span>
+          <span class="tag" style="background:rgba(13,148,136,.15);color:#5eead4;border-color:rgba(13,148,136,.25)">Motion</span>
+        </div>
+      </div>
+      <!-- Card 3 -->
+      <div class="card">
+        <div style="display:flex;align-items:start;justify-content:space-between;margin-bottom:14px">
+          <div class="card-icon" style="background:rgba(37,99,235,.1);border:1px solid rgba(37,99,235,.25);color:#60a5fa">
+            <svg width="20" height="20" viewBox="0 0 22 22" fill="none"><circle cx="11" cy="8" r="4" stroke="currentColor" stroke-width="1.4"/><path d="M5 19c0-3.314 2.686-6 6-6s6 2.686 6 6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+          </div>
+          <span class="card-num" style="background:rgba(37,99,235,.1);border:1px solid rgba(37,99,235,.2);color:#60a5fa">03</span>
+        </div>
+        <div class="card-title">Брендинг</div>
+        <div class="card-desc">Создаём фирменный стиль, который запоминается.</div>
+        <div class="card-tags">
+          <span class="tag" style="background:rgba(37,99,235,.15);color:#93c5fd;border-color:rgba(37,99,235,.25)">Логотип</span>
+          <span class="tag" style="background:rgba(37,99,235,.15);color:#93c5fd;border-color:rgba(37,99,235,.25)">Айдентика</span>
+        </div>
+      </div>
+      <!-- Card 4 -->
+      <div class="card">
+        <div style="display:flex;align-items:start;justify-content:space-between;margin-bottom:14px">
+          <div class="card-icon" style="background:rgba(147,51,234,.1);border:1px solid rgba(147,51,234,.25);color:#f0abfc">
+            <svg width="20" height="20" viewBox="0 0 22 22" fill="none"><path d="M3 16L8 8l4 6 4-5 4 7" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <span class="card-num" style="background:rgba(147,51,234,.1);border:1px solid rgba(147,51,234,.2);color:#f0abfc">04</span>
+        </div>
+        <div class="card-title">Продвижение</div>
+        <div class="card-desc">Выводим проекты в топ: SEO, реклама, аналитика.</div>
+        <div class="card-tags">
+          <span class="tag" style="background:rgba(147,51,234,.15);color:#f5d0fe;border-color:rgba(147,51,234,.25)">SEO</span>
+          <span class="tag" style="background:rgba(147,51,234,.15);color:#f5d0fe;border-color:rgba(147,51,234,.25)">Analytics</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tags -->
+    <div style="margin-top:28px">
+      <div style="font-size:12px;color:var(--text-3);text-transform:uppercase;letter-spacing:.08em;font-weight:700;margin-bottom:12px">Tags (все цвета)</div>
+      <div style="display:flex;flex-wrap:wrap;gap:8px">
+        <span class="tag" style="background:rgba(109,40,217,.15);color:#c4b5fd;border-color:rgba(109,40,217,.25)">Violet</span>
+        <span class="tag" style="background:rgba(13,148,136,.15);color:#5eead4;border-color:rgba(13,148,136,.25)">Teal</span>
+        <span class="tag" style="background:rgba(37,99,235,.15);color:#93c5fd;border-color:rgba(37,99,235,.25)">Blue</span>
+        <span class="tag" style="background:rgba(147,51,234,.15);color:#f5d0fe;border-color:rgba(147,51,234,.25)">Fuchsia</span>
+        <span class="tag">Default</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── STATS ── -->
+  <section class="section" id="stats">
+    <div class="section-label">07</div>
+    <h2 class="section-title">Статистика</h2>
+    <p class="section-sub">Горизонтальный layout: иконка + число + подпись. Счётчики анимируются при появлении в viewport.</p>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px">
+      <div class="stat-card" style="background:rgba(109,40,217,.1);border:1px solid rgba(109,40,217,.2)">
+        <div class="stat-icon" style="background:rgba(109,40,217,.15);border:1px solid rgba(109,40,217,.2);color:#a78bfa">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M1 12L5 6l3 4 3-3.5 4 5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div><div class="stat-value" style="color:#a78bfa">50+</div><div class="stat-label">Проектов запущено</div></div>
+      </div>
+      <div class="stat-card" style="background:rgba(13,148,136,.1);border:1px solid rgba(13,148,136,.2)">
+        <div class="stat-icon" style="background:rgba(13,148,136,.15);border:1px solid rgba(13,148,136,.2);color:#2dd4bf">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="6" r="3" stroke="currentColor" stroke-width="1.4"/><path d="M3 14c0-2.76 2.24-5 5-5s5 2.24 5 5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+        </div>
+        <div><div class="stat-value" style="color:#2dd4bf">98%</div><div class="stat-label">Довольных клиентов</div></div>
+      </div>
+      <div class="stat-card" style="background:rgba(37,99,235,.1);border:1px solid rgba(37,99,235,.2)">
+        <div class="stat-icon" style="background:rgba(37,99,235,.15);border:1px solid rgba(37,99,235,.2);color:#60a5fa">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="5.5" stroke="currentColor" stroke-width="1.4"/><path d="M8 5v3.5l2 1.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+        </div>
+        <div><div class="stat-value" style="color:#60a5fa">5</div><div class="stat-label">Лет в индустрии</div></div>
+      </div>
+      <div class="stat-card" style="background:rgba(147,51,234,.1);border:1px solid rgba(147,51,234,.2)">
+        <div class="stat-icon" style="background:rgba(147,51,234,.15);border:1px solid rgba(147,51,234,.2);color:#f0abfc">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 1.5l1.5 3.5 3.5.5-2.5 2.5 1 3.5L8 10l-3.5 1.5 1-3.5L3 5.5l3.5-.5L8 1.5z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg>
+        </div>
+        <div><div class="stat-value" style="color:#f0abfc">12</div><div class="stat-label">Наград и премий</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── REVIEWS ── -->
+  <section class="section" id="reviews">
+    <div class="section-label">08</div>
+    <h2 class="section-title">Карточки отзывов</h2>
+    <p class="section-sub">Grid 3 columns. Stars → quote → author с аватаром-инициалами.</p>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px">
+      <div class="review-card">
+        <div class="stars">★★★★★</div>
+        <p class="review-text">«AlTeNo Dev превзошли все ожидания. Сайт загружается мгновенно, конверсия выросла на 40% за первый месяц.»</p>
+        <div class="review-author">
+          <div class="avatar" style="background:rgba(109,40,217,.4);border:1px solid rgba(255,255,255,.15)">АВ</div>
+          <div>
+            <p style="font-size:13px;font-weight:600;color:var(--text-1)">Алексей Воронов</p>
+            <p style="font-size:12px;color:var(--text-3)">CEO, FinTrack Pro</p>
+          </div>
+        </div>
+      </div>
+      <div class="review-card">
+        <div class="stars">★★★★★</div>
+        <p class="review-text">«Команда понимает бизнес, а не просто рисует красивые картинки. Рекомендую без оговорок.»</p>
+        <div class="review-author">
+          <div class="avatar" style="background:rgba(13,148,136,.4);border:1px solid rgba(255,255,255,.15)">МС</div>
+          <div>
+            <p style="font-size:13px;font-weight:600;color:var(--text-1)">Мария Соколова</p>
+            <p style="font-size:12px;color:var(--text-3)">CMO, Lumina Shop</p>
+          </div>
+        </div>
+      </div>
+      <div class="review-card">
+        <div class="stars">★★★★★</div>
+        <p class="review-text">«Дизайн получился именно таким, каким я его представлял — только лучше. Работать с ними легко.»</p>
+        <div class="review-author">
+          <div class="avatar" style="background:rgba(37,99,235,.4);border:1px solid rgba(255,255,255,.15)">ДЗ</div>
+          <div>
+            <p style="font-size:13px;font-weight:600;color:var(--text-1)">Дмитрий Захаров</p>
+            <p style="font-size:12px;color:var(--text-3)">Founder, ArcSpace</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── PROCESS ── -->
+  <section class="section" id="process">
+    <div class="section-label">09</div>
+    <h2 class="section-title">Таймлайн процесса</h2>
+    <p class="section-sub">Вертикальный таймлайн. Шаги появляются слева при скролле. Коннектор — gradient line.</p>
+
+    <div style="max-width:480px">
+      <div class="step">
+        <div class="step-line">
+          <div class="step-num" style="background:rgba(109,40,217,.1);border:1px solid rgba(109,40,217,.2);color:#a78bfa">01</div>
+          <div class="step-connector" style="background:linear-gradient(to bottom,rgba(109,40,217,.5),transparent)"></div>
+        </div>
+        <div class="step-body">
+          <div class="step-card" style="background:rgba(109,40,217,.08);border:1px solid rgba(109,40,217,.2)">
+            <div class="step-title">Брифинг</div>
+            <div class="step-desc">Погружаемся в ваш бизнес, аудиторию и цели. Формируем стратегию.</div>
+          </div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-line">
+          <div class="step-num" style="background:rgba(13,148,136,.1);border:1px solid rgba(13,148,136,.2);color:#2dd4bf">02</div>
+          <div class="step-connector" style="background:linear-gradient(to bottom,rgba(13,148,136,.5),transparent)"></div>
+        </div>
+        <div class="step-body">
+          <div class="step-card" style="background:rgba(13,148,136,.08);border:1px solid rgba(13,148,136,.2)">
+            <div class="step-title">Дизайн</div>
+            <div class="step-desc">Создаём прототипы и финальный дизайн с итерациями и вашей обратной связью.</div>
+          </div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-line">
+          <div class="step-num" style="background:rgba(37,99,235,.1);border:1px solid rgba(37,99,235,.2);color:#60a5fa">03</div>
+          <div class="step-connector" style="background:linear-gradient(to bottom,rgba(37,99,235,.5),transparent)"></div>
+        </div>
+        <div class="step-body">
+          <div class="step-card" style="background:rgba(37,99,235,.08);border:1px solid rgba(37,99,235,.2)">
+            <div class="step-title">Разработка</div>
+            <div class="step-desc">Пишем чистый, быстрый код. Регулярные демо и полный контроль версий.</div>
+          </div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-line">
+          <div class="step-num" style="background:rgba(147,51,234,.1);border:1px solid rgba(147,51,234,.2);color:#f0abfc">04</div>
+        </div>
+        <div class="step-body" style="padding-bottom:0">
+          <div class="step-card" style="background:rgba(147,51,234,.08);border:1px solid rgba(147,51,234,.2)">
+            <div class="step-title">Запуск</div>
+            <div class="step-desc">Деплой, тестирование, поддержка. Сдаём проект и остаёмся на связи.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── NAV ── -->
+  <section class="section" id="nav">
+    <div class="section-label">10</div>
+    <h2 class="section-title">Навигация</h2>
+    <p class="section-sub">Fixed, 64px высота. Появляется backdrop-blur при скролле &gt;40px.</p>
+
+    <div class="nav-preview">
+      <div class="nav-logo">
+        <div class="nav-logo-icon">A</div>
+        <div style="display:flex;align-items:baseline;gap:2px">
+          <span style="font-family:var(--font-h);font-size:14px;font-weight:600;color:#fff">AlTeNo</span>
+          <span style="font-family:var(--font-h);font-size:14px;font-weight:500;color:#a78bfa">Dev</span>
+        </div>
+      </div>
+      <div class="nav-links">
+        <a class="nav-link">Услуги</a>
+        <a class="nav-link">Портфолио</a>
+        <a class="nav-link">Процесс</a>
+        <a class="nav-link">Отзывы</a>
+      </div>
+      <div class="nav-right">
+        <div class="lang-switch">
+          <div class="lang-btn active">RU</div>
+          <div class="lang-btn">EN</div>
+          <div class="lang-btn">TJ</div>
+        </div>
+        <button class="btn btn-primary btn-sm">Связаться</button>
+      </div>
+    </div>
+    <div style="font-size:13px;color:var(--text-3);margin-top:12px">
+      Logo placeholder — заменить на SVG логотип. Буква "A" — временная метка.
+    </div>
+  </section>
+
+  <!-- ── FOOTER ── -->
+  <section class="section" id="footer">
+    <div class="section-label">11</div>
+    <h2 class="section-title">Футер</h2>
+    <p class="section-sub">4-column grid. Brand / Services / Company / Contact.</p>
+
+    <div class="footer-prev">
+      <div class="footer-grid" style="margin-bottom:28px;padding-bottom:24px;border-bottom:1px solid var(--border-sub)">
+        <div>
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+            <div class="nav-logo-icon">A</div>
+            <div style="display:flex;align-items:baseline;gap:2px">
+              <span style="font-family:var(--font-h);font-size:14px;font-weight:600;color:#fff">AlTeNo</span>
+              <span style="font-family:var(--font-h);font-size:14px;font-weight:500;color:#a78bfa">Dev</span>
+            </div>
+          </div>
+          <p style="font-size:13px;color:var(--text-3);max-width:180px;line-height:1.6;margin-bottom:14px">Цифровая студия полного цикла. Дизайн, разработка, продвижение.</p>
+          <div>
+            <a class="social-btn">TG</a>
+            <a class="social-btn">GH</a>
+            <a class="social-btn">BE</a>
+          </div>
+        </div>
+        <div>
+          <div class="footer-col-title">Услуги</div>
+          <a class="footer-link">Веб-разработка</a>
+          <a class="footer-link">UI/UX Дизайн</a>
+          <a class="footer-link">Брендинг</a>
+          <a class="footer-link">Продвижение</a>
+        </div>
+        <div>
+          <div class="footer-col-title">Компания</div>
+          <a class="footer-link">О нас</a>
+          <a class="footer-link">Портфолио</a>
+          <a class="footer-link">Процесс</a>
+          <a class="footer-link">Блог</a>
+        </div>
+        <div>
+          <div class="footer-col-title">Contact</div>
+          <a class="footer-link">hello@alteno.dev</a>
+          <a class="footer-link">@alteno_dev</a>
+          <div style="margin-top:12px">
+            <button class="btn btn-primary btn-sm">Связаться →</button>
+          </div>
+        </div>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">
+        <span style="font-size:12px;color:var(--text-4)">© 2024 AlTeNo Dev. Все права защищены.</span>
+        <div style="display:flex;gap:16px">
+          <a style="font-size:12px;color:var(--text-4);text-decoration:none">Конфиденциальность</a>
+          <a style="font-size:12px;color:var(--text-4);text-decoration:none">Условия</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── SPACING ── -->
+  <section class="section" id="spacing">
+    <div class="section-label">12</div>
+    <h2 class="section-title">Система отступов</h2>
+    <p class="section-sub">Container: max-w 1200px, padding 24px (mob) / 48px (desk). Section padding: 96px (py-24).</p>
+
+    <div class="space-demo">
+      <div style="display:flex;flex-direction:column;align-items:center;gap:4px">
+        <div class="space-block" style="width:4px;height:4px"></div>
+        <span style="font-size:11px;color:var(--text-3)">4px</span>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:4px">
+        <div class="space-block" style="width:8px;height:8px"></div>
+        <span style="font-size:11px;color:var(--text-3)">8px</span>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:4px">
+        <div class="space-block" style="width:12px;height:12px"></div>
+        <span style="font-size:11px;color:var(--text-3)">12px</span>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:4px">
+        <div class="space-block" style="width:16px;height:16px"></div>
+        <span style="font-size:11px;color:var(--text-3)">16px</span>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:4px">
+        <div class="space-block" style="width:24px;height:24px"></div>
+        <span style="font-size:11px;color:var(--text-3)">24px</span>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:4px">
+        <div class="space-block" style="width:32px;height:32px"></div>
+        <span style="font-size:11px;color:var(--text-3)">32px</span>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:4px">
+        <div class="space-block" style="width:48px;height:48px"></div>
+        <span style="font-size:11px;color:var(--text-3)">48px</span>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:4px">
+        <div class="space-block" style="width:64px;height:64px"></div>
+        <span style="font-size:11px;color:var(--text-3)">64px</span>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:4px">
+        <div class="space-block" style="width:96px;height:96px"></div>
+        <span style="font-size:11px;color:var(--text-3)">96px<br>section</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── MOTION ── -->
+  <section class="section" id="motion">
+    <div class="section-label">13</div>
+    <h2 class="section-title">Анимации</h2>
+    <p class="section-sub">Все входящие анимации — fade + slideUp. Spring для интерактива. Blob дрейф — CSS keyframes.</p>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px">
+      <div class="card">
+        <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text-3);margin-bottom:10px">Scroll Reveal</div>
+        <div style="font-family:'Courier New',monospace;font-size:12px;color:var(--teal-lt);line-height:1.8">
+          initial: opacity 0, y 28<br>
+          animate: opacity 1, y 0<br>
+          duration: 700ms<br>
+          ease: [0.22, 1, 0.36, 1]<br>
+          trigger: IntersectionObserver<br>
+          margin: -60px
+        </div>
+      </div>
+      <div class="card">
+        <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text-3);margin-bottom:10px">3D Card Tilt</div>
+        <div style="font-family:'Courier New',monospace;font-size:12px;color:var(--violet-lt);line-height:1.8">
+          onMouseMove → rotateX/Y<br>
+          max tilt: ±10°<br>
+          spring stiffness: 300<br>
+          spring damping: 28<br>
+          perspective: 800px<br>
+          scale hover: 1.02
+        </div>
+      </div>
+      <div class="card">
+        <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text-3);margin-bottom:10px">Blob Drift</div>
+        <div style="font-family:'Courier New',monospace;font-size:12px;color:var(--blue-lt);line-height:1.8">
+          animation: drift loop<br>
+          duration: 22s / 28s / 34s<br>
+          ease: ease-in-out<br>
+          filter: blur(80px)<br>
+          opacity: 0.45–0.55<br>
+          keyframes: translate+scale
+        </div>
+      </div>
+      <div class="card">
+        <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text-3);margin-bottom:10px">Stagger</div>
+        <div style="font-family:'Courier New',monospace;font-size:12px;color:var(--fuchsia-lt);line-height:1.8">
+          cards: delay i × 100ms<br>
+          steps: delay i × 140ms<br>
+          stats: delay i × 80ms<br>
+          hero items: delay i × 120ms<br>
+          max stagger: 4 items<br>
+          hero baseline: 100ms
+        </div>
+      </div>
+      <div class="card">
+        <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text-3);margin-bottom:10px">Counters</div>
+        <div style="font-family:'Courier New',monospace;font-size:12px;color:var(--teal-lt);line-height:1.8">
+          trigger: IntersectionObserver<br>
+          once: true<br>
+          duration: 2s<br>
+          easing: cubic (ease-out)<br>
+          formula: 1 - (1-t)³<br>
+          rAF loop
+        </div>
+      </div>
+      <div class="card">
+        <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text-3);margin-bottom:10px">Hover UI</div>
+        <div style="font-family:'Courier New',monospace;font-size:12px;color:var(--violet-lt);line-height:1.8">
+          button bg: 200ms ease<br>
+          card border: 300ms ease<br>
+          nav link: 200ms ease<br>
+          portfolio zoom: 500ms<br>
+          ease: [0.22, 1, 0.36, 1]<br>
+          portfolio badge: opacity+x
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div style="padding:48px 0;text-align:center;color:var(--text-4);font-size:12px">
+    AlTeNo Dev Design Guide · Сгенерировано автоматически · Для импорта в Figma используй <strong>tokens.json</strong> + плагин <strong>Tokens Studio</strong>
+  </div>
+
+</div>
+</body>
+</html>
