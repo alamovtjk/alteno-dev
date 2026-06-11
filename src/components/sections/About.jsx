@@ -60,7 +60,7 @@ export default function About() {
             </div>
 
             <div className="facts reveal d5">
-              <div className="fact"><div className="n">5+</div><div className="l">{t.about.f1}</div></div>
+              <div className="fact"><div className="n">4</div><div className="l">{t.about.f1}</div></div>
               <div className="fact"><div className="n">50+</div><div className="l">{t.about.f2}</div></div>
               <div className="fact"><div className="n">100%</div><div className="l">{t.about.f3}</div></div>
             </div>
@@ -74,7 +74,7 @@ export default function About() {
                 </svg>
                 {t.about.btn1}
               </a>
-              <a className="btn btn-ghost" href="#">
+              <a className="btn btn-ghost" onClick={() => document.getElementById('cases')?.scrollIntoView({ behavior: 'smooth' })} style={{cursor:'pointer'}}>
                 <svg viewBox="0 0 24 24" fill="none">
                   <path d="M12 3v12" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
                   <path d="M7 11l5 5 5-5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>

@@ -10,9 +10,9 @@ const vals = [
 
 const numCards = [
   { n:50, s:'+', lKey:'st1', cls:'n1', icon:<svg viewBox="0 0 24 24" fill="none" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 7h16M4 12h16M4 17h10"/></svg> },
-  { n:98, s:'%', lKey:'st2', cls:'n2', icon:<svg viewBox="0 0 24 24" fill="none" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 6L9 17l-5-5"/></svg> },
-  { n:5,  s:'',  lKey:'st3', cls:'n3', icon:<svg viewBox="0 0 24 24" fill="none" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg> },
-  { n:12, s:'',  lKey:'st4', cls:'n4', icon:<svg viewBox="0 0 24 24" fill="none" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="8" r="5"/><path d="M8 13l-2 8 6-3 6 3-2-8"/></svg> },
+  { n:100,s:'%', lKey:'st2', cls:'n2', icon:<svg viewBox="0 0 24 24" fill="none" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 6L9 17l-5-5"/></svg> },
+  { n:4,  s:'',  lKey:'st3', cls:'n3', icon:<svg viewBox="0 0 24 24" fill="none" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg> },
+  { n:2,  s:'+', lKey:'st4', cls:'n4', icon:<svg viewBox="0 0 24 24" fill="none" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="8" r="5"/><path d="M8 13l-2 8 6-3 6 3-2-8"/></svg> },
 ]
 
 export default function Studio() {
@@ -35,7 +35,7 @@ export default function Studio() {
             <div className="quote-mark">"</div>
             <p>{t.studio.manifesto}</p>
             <div className="sign">
-              <span className="m-av">AN</span>
+              <span className="m-av">СА</span>
               <span className="who">
                 <b>{t.studio.signname}</b>
                 <span>{t.studio.signrole}</span>

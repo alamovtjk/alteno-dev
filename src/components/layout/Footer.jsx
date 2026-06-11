@@ -67,7 +67,7 @@ export default function Footer() {
               <a href="https://t.me/samiralamov" target="_blank" rel="noreferrer">@samiralamov</a>
               <a href="https://instagram.com/alamovtjk" target="_blank" rel="noreferrer">@alamovtjk</a>
               <a href="https://github.com/alamovtjk" target="_blank" rel="noreferrer">github/alamovtjk</a>
-              <a>{t.footer.loc}</a>
+              <a>Душанбе, Таджикистан</a>
             </div>
           </div>
 
