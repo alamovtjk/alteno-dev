@@ -176,6 +176,26 @@ input,textarea,button { font-family:inherit; }
   to   { opacity:1; transform:translateY(0); }
 }
 
+/* ── Logo pill (white container on mobile only) ── */
+.logo-pill {
+  display: flex;
+  align-items: center;
+}
+.logo-img {
+  height: 56px;
+  width: auto;
+  display: block;
+}
+@media(max-width:768px) {
+  .logo-pill {
+    background: rgba(255,255,255,0.97);
+    border-radius: 12px;
+    padding: 5px 9px;
+    box-shadow: 0 2px 12px rgba(0,0,0,.12), 0 0 0 1px rgba(255,255,255,.5);
+  }
+  .logo-img { height: 32px; }
+}
+
 /* ═══════════════════════════════════
    HEADER
    ═══════════════════════════════════ */
@@ -772,14 +792,14 @@ input,textarea,button { font-family:inherit; }
 
 /* ─── 768px ─── */
 @media(max-width:768px) {
-  .section { padding:72px 0; }
-  .hero-section { padding:96px 0 56px; }
-  .hero-copy h1 { font-size:clamp(28px,7.5vw,48px); }
-  .hero-stats { gap:20px; }
-  .hero-stats .stat .num { font-size:24px; }
-  .sec-title { font-size:clamp(24px,6vw,40px); }
-  .sec-sub { font-size:15px; }
-  .sec-head { margin-bottom:36px; }
+  .section { padding:64px 0; }
+  .hero-section { padding:88px 0 48px; }
+  .hero-copy h1 { font-size:clamp(22px,6vw,36px); }
+  .hero-stats { gap:16px; }
+  .hero-stats .stat .num { font-size:21px; }
+  .sec-title { font-size:clamp(20px,5.5vw,32px); }
+  .sec-sub { font-size:14px; }
+  .sec-head { margin-bottom:30px; }
   .dv-svc-labels { flex-wrap:wrap; gap:8px; justify-content:center; }
   .dv-svc-lbl { padding:8px 14px; }
   .dv-svc-name { font-size:10px; }
@@ -788,31 +808,59 @@ input,textarea,button { font-family:inherit; }
   .proc-grid { gap:28px; }
   .dv-tags { gap:7px; margin-top:60px; }
   .dv-tag { font-size:11.5px; padding:6px 13px; }
+  /* скрываем лишние тексты на планшете */
+  .manifesto { display:none; }
+  .proc-left > p { display:none; }
 }
 
 /* ─── 600px ─── */
 @media(max-width:600px) {
-  .section { padding:60px 0; }
-  .hero-section { text-align:left; padding:88px 0 48px; }
-  .hero-cta { gap:10px; }
-  .hero-cta .btn { flex:1; min-width:0; font-size:14px; padding:12px 16px; }
-  .visual { height:360px; }
+  .section { padding:52px 0; }
+  .hero-section { text-align:left; padding:84px 0 40px; }
+  .hero-cta { gap:9px; }
+  .hero-cta .btn { flex:1; min-width:0; font-size:13px; padding:10px 14px; }
+  .visual { height:340px; }
   .card-main { width:84%; left:0; }
   .card-chips { width:180px; }
   .card-stat { width:168px; }
-  .hero-stats { gap:14px; }
-  .hero-stats .stat .num { font-size:22px; }
-  .hero-stats .stat .lbl { font-size:11px; }
+  .hero-stats { gap:12px; }
+  .hero-stats .stat .num { font-size:20px; }
+  .hero-stats .stat .lbl { font-size:10px; }
+  /* скрываем объёмные тексты — остаются только заголовки и действия */
+  .sec-sub { display:none; }
+  .step-body > p { display:none; }
+  .checks { display:none; }
+  .banner-inner .lead { display:none; }
+  .val > p { display:none; }
   .case-grid { grid-template-columns:1fr; }
   .values { grid-template-columns:1fr; }
-  .num-band { grid-template-columns:1fr 1fr; }
+  .num-band { grid-template-columns:repeat(4,1fr); }
   .numcard+.numcard::before { display:none; }
+  .numcard { padding:14px 8px; gap:6px; }
+  .numcard .ni { width:30px; height:30px; border-radius:8px; }
+  .numcard .ni svg { width:14px; height:14px; }
+  .numcard .n { font-size:17px; }
+  .numcard .l { display:none; }
   .facts { flex-direction:column; }
   .fact+.fact::before { display:none; }
   .fact+.fact { border-top:1px solid var(--glass-b); padding-top:16px; margin-top:4px; }
-  .footer-grid { grid-template-columns:1fr; }
-  .banner-inner { padding:24px 18px; gap:28px; }
-  .contacts-row { grid-template-columns:1fr; display:flex; flex-direction:column; }
+  .fact .n { font-size:20px; }
+  .footer-grid { grid-template-columns:repeat(3,1fr); }
+  .fbrand { grid-column:1/-1; display:flex; flex-direction:row; align-items:center; gap:16px; flex-wrap:wrap; padding-bottom:16px; border-bottom:1px solid var(--glass-b); }
+  .fbrand > p { margin-bottom:0; max-width:none; flex:1; min-width:140px; }
+  .fbrand .socials { margin-top:0; }
+  .banner-inner { padding:20px 16px; gap:20px; }
+  .banner { border-radius:20px; }
+  .b-head h2 { font-size:clamp(18px,5.5vw,26px); margin-bottom:10px; }
+  /* иконки контактов в ряд — без текста, чисто и компактно */
+  .contacts-row { display:flex; flex-direction:row; gap:8px; }
+  .clink { font-size:0; padding:10px 12px; gap:0; border-radius:10px; flex:1; justify-content:center; }
+  .clink svg { width:16px; height:16px; flex-shrink:0; }
+  .form-card { padding:16px 14px; border-radius:14px; }
+  .field { margin-bottom:12px; }
+  .field label { font-size:11px; margin-bottom:5px; }
+  .field input, .field textarea { font-size:12px; padding:9px 12px; }
+  .field textarea { min-height:80px; }
   .cases-soon { padding:40px 18px; gap:12px; }
   .cases-soon h3 { font-size:18px; }
   .cases-soon p { font-size:14px; }
@@ -826,20 +874,26 @@ input,textarea,button { font-family:inherit; }
 
 /* ─── 480px ─── */
 @media(max-width:480px) {
-  .section { padding:48px 0; }
-  .hero-section { padding:80px 0 40px; }
-  .hero-copy h1 { font-size:clamp(22px,8.5vw,32px); letter-spacing:-.02em; margin-bottom:20px; }
-  .sub { font-size:14px; margin-bottom:28px; }
-  .badge { font-size:12px; padding:6px 12px 6px 6px; }
-  .hero-stats { gap:10px; flex-wrap:wrap; }
-  .hero-stats .stat .num { font-size:20px; }
-  .sec-title { font-size:clamp(20px,7.5vw,28px); }
-  .sec-sub { font-size:14px; }
-  .sec-head { margin-bottom:28px; }
-  .eyebrow { font-size:11px; padding:6px 12px; }
-  .btn { font-size:13px; padding:11px 16px; }
-  .num-band { grid-template-columns:1fr 1fr; gap:0; }
-  .numcard { padding:22px 16px; }
+  .section { padding:40px 0; }
+  .hero-section { padding:76px 0 36px; }
+  .hero-copy h1 { font-size:clamp(18px,7vw,24px); letter-spacing:-.02em; margin-bottom:16px; }
+  .sub { font-size:13px; margin-bottom:22px; }
+  .badge { font-size:11px; padding:5px 10px 5px 5px; }
+  .hero-stats { gap:8px; flex-wrap:wrap; }
+  .hero-stats .stat .num { font-size:18px; }
+  .hero-stats .stat .lbl { font-size:10px; }
+  .sec-title { font-size:clamp(16px,6vw,22px); }
+  .sec-sub { font-size:12px; }
+  .sec-head { margin-bottom:22px; }
+  .eyebrow { font-size:10px; padding:5px 10px; }
+  .btn { font-size:12px; padding:10px 14px; }
+  .num-band { grid-template-columns:repeat(4,1fr); gap:0; }
+  .numcard { padding:12px 6px; gap:5px; }
+  .numcard .ni { width:26px; height:26px; border-radius:7px; }
+  .numcard .ni svg { width:12px; height:12px; }
+  .numcard .n { font-size:15px; }
+  .numcard .l { display:none; }
+  .fact .n { font-size:18px; }
   .cases-soon-icon { width:56px; height:56px; border-radius:16px; }
   .cases-soon-icon svg { width:28px; height:28px; }
   .cases-soon { padding:36px 16px; }
@@ -847,8 +901,15 @@ input,textarea,button { font-family:inherit; }
   .banner-inner { padding:20px 14px; gap:24px; }
   .form-card { padding:20px 14px; border-radius:16px; }
   .clink { font-size:13px; padding:9px 12px; }
-  .footer-grid { gap:28px; }
-  .footer-bottom { flex-direction:column; align-items:flex-start; gap:6px; }
+  .footer-grid { gap:16px; }
+  .footer-bottom { flex-direction:column; align-items:flex-start; gap:4px; }
+  .footer { padding:36px 0 20px; }
+  .fbrand > p { font-size:11px; line-height:1.5; }
+  .fcol h5 { font-size:8px; margin-bottom:8px; letter-spacing:.08em; }
+  .fcol a { font-size:10px; margin-bottom:6px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .footer-bottom { font-size:9px; }
+  .socials a { width:30px; height:30px; }
+  .socials a svg { width:13px; height:13px; }
 }
 
 /* Scrollbar */
@@ -1350,14 +1411,18 @@ input,textarea,button { font-family:inherit; }
   .dv-stage .dv-wrap { zoom: .80; }
 }
 @media(max-width:768px) {
-  .dv-ipad, .dv-phone { display: none; }
-  .dv-mon { transform: rotateX(2deg); margin: 0; }
-  .hero-visual .dv-wrap { zoom: .72; }
-  .dv-stage .dv-wrap { zoom: .68; }
+  .hero-visual .dv-wrap { zoom: .34; }
+  .dv-stage .dv-wrap { zoom: .30; }
+  .dv-stage { overflow: visible; }
+  .hero-visual .dv-scene { overflow: visible; }
 }
 @media(max-width:520px) {
-  .hero-visual .dv-wrap { zoom: .52; }
-  .dv-stage .dv-wrap { zoom: .50; }
+  .hero-visual .dv-wrap { zoom: .28; }
+  .dv-stage .dv-wrap { zoom: .26; }
+}
+@media(max-width:380px) {
+  .hero-visual .dv-wrap { zoom: .24; }
+  .dv-stage .dv-wrap { zoom: .22; }
 }
 
 /* Eyebrow line grow animation */

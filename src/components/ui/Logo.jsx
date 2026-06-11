@@ -3,11 +3,9 @@ import logoImg from '../../assets/logo.png'
 // ── Логотип в шапке ──────────────────────────────────────
 export function LogoMark() {
   return (
-    <img
-      src={logoImg}
-      alt="AlTeNo Dev"
-      style={{ height: 56, width: 'auto', display: 'block' }}
-    />
+    <div className="logo-pill">
+      <img className="logo-img" src={logoImg} alt="AlTeNo Dev" />
+    </div>
   )
 }
 
