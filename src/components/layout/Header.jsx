@@ -29,10 +29,14 @@ export default function Header() {
     return () => document.removeEventListener('keydown', onKey)
   }, [open])
 
-  /* блокируем скролл пока drawer открыт */
+  /* блокируем скролл и скрываем FAB пока drawer открыт */
   useEffect(() => {
     document.body.style.overflow = open ? 'hidden' : ''
-    return () => { document.body.style.overflow = '' }
+    document.body.classList.toggle('drawer-open', open)
+    return () => {
+      document.body.style.overflow = ''
+      document.body.classList.remove('drawer-open')
+    }
   }, [open])
 
   const navItems = [

@@ -1406,6 +1406,14 @@ input,textarea,button { font-family:inherit; }
    ARIEL FLOAT BUTTON + MODAL
    ═══════════════════════════════════ */
 
+/* Скрываем FAB когда открыт drawer */
+body.drawer-open .ariel-fab {
+  opacity: 0;
+  pointer-events: none;
+  transform: scale(0.7) translateY(8px);
+  transition: opacity .25s ease, transform .25s ease;
+}
+
 /* ── Floating button ── */
 .ariel-fab {
   position: fixed;
