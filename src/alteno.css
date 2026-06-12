@@ -2148,26 +2148,21 @@ body.drawer-open .ariel-fab {
   .dv-stage .dv-wrap { zoom: .80; }
 }
 @media(max-width:768px) {
-  .hero-visual .dv-wrap { zoom: .42; }
+  .hero-visual .dv-wrap { zoom: .52; }
   .dv-stage .dv-wrap { zoom: .28; }
   .dv-stage { overflow: visible; }
   .hero-visual .dv-scene { overflow: visible; justify-content: center; }
-  .hero-visual { max-height: 230px; overflow: hidden; }
-  /* Увеличиваем ключевой текст внутри устройств — чтобы читался при маленьком zoom */
-  .dsc-h1 { font-size: 22px; }
-  .psc-num { font-size: 18px; }
-  .phsc-hi { font-size: 15px; }
-  .phsc-card-title { font-size: 16px; }
+  .hero-visual { max-height: 280px; overflow: hidden; }
 }
 @media(max-width:520px) {
-  .hero-visual .dv-wrap { zoom: .37; }
+  .hero-visual .dv-wrap { zoom: .46; }
   .dv-stage .dv-wrap { zoom: .23; }
-  .hero-visual { max-height: 200px; }
+  .hero-visual { max-height: 255px; }
 }
 @media(max-width:380px) {
-  .hero-visual .dv-wrap { zoom: .32; }
+  .hero-visual .dv-wrap { zoom: .40; }
   .dv-stage .dv-wrap { zoom: .19; }
-  .hero-visual { max-height: 180px; }
+  .hero-visual { max-height: 230px; }
 }
 
 /* Eyebrow line grow animation */
