@@ -2148,25 +2148,26 @@ body.drawer-open .ariel-fab {
   .dv-stage .dv-wrap { zoom: .80; }
 }
 @media(max-width:768px) {
-  /* На мобилке — только монитор, читаемый zoom */
-  .hero-visual .dv-ipad { display: none; }
-  .hero-visual .dv-phone { display: none; }
-  .hero-visual .dv-mon { transform: none; margin: 0; }
-  .hero-visual .dv-wrap { zoom: .58; }
-  .hero-visual { max-height: 300px; overflow: hidden; }
+  .hero-visual .dv-wrap { zoom: .42; }
   .dv-stage .dv-wrap { zoom: .28; }
   .dv-stage { overflow: visible; }
   .hero-visual .dv-scene { overflow: visible; justify-content: center; }
+  .hero-visual { max-height: 230px; overflow: hidden; }
+  /* Увеличиваем ключевой текст внутри устройств — чтобы читался при маленьком zoom */
+  .dsc-h1 { font-size: 22px; }
+  .psc-num { font-size: 18px; }
+  .phsc-hi { font-size: 15px; }
+  .phsc-card-title { font-size: 16px; }
 }
 @media(max-width:520px) {
-  .hero-visual .dv-wrap { zoom: .50; }
-  .hero-visual { max-height: 270px; }
+  .hero-visual .dv-wrap { zoom: .37; }
   .dv-stage .dv-wrap { zoom: .23; }
+  .hero-visual { max-height: 200px; }
 }
 @media(max-width:380px) {
-  .hero-visual .dv-wrap { zoom: .44; }
-  .hero-visual { max-height: 240px; }
+  .hero-visual .dv-wrap { zoom: .32; }
   .dv-stage .dv-wrap { zoom: .19; }
+  .hero-visual { max-height: 180px; }
 }
 
 /* Eyebrow line grow animation */
