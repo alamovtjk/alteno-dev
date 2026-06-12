@@ -879,7 +879,7 @@ input,textarea,button { font-family:inherit; }
   .hero-copy h1 { font-size:clamp(18px,7vw,24px); letter-spacing:-.02em; margin-bottom:16px; }
   .sub { font-size:13px; margin-bottom:22px; }
   .badge { font-size:11px; padding:5px 10px 5px 5px; }
-  .hero-stats { gap:8px; flex-wrap:wrap; }
+  .hero-stats { gap:8px; flex-wrap:wrap; padding-right:72px; }
   .hero-stats .stat .num { font-size:18px; }
   .hero-stats .stat .lbl { font-size:10px; }
   .sec-title { font-size:clamp(16px,6vw,22px); }
@@ -2059,18 +2059,22 @@ input,textarea,button { font-family:inherit; }
   .dv-stage .dv-wrap { zoom: .80; }
 }
 @media(max-width:768px) {
-  .hero-visual .dv-wrap { zoom: .34; }
-  .dv-stage .dv-wrap { zoom: .30; }
+  .hero-visual .dv-wrap { zoom: .30; }
+  .dv-stage .dv-wrap { zoom: .28; }
   .dv-stage { overflow: visible; }
   .hero-visual .dv-scene { overflow: visible; }
+  /* ограничиваем высоту блока устройств — показываем только верхнюю часть */
+  .hero-visual { max-height: 200px; overflow: hidden; }
 }
 @media(max-width:520px) {
-  .hero-visual .dv-wrap { zoom: .28; }
-  .dv-stage .dv-wrap { zoom: .26; }
+  .hero-visual .dv-wrap { zoom: .25; }
+  .dv-stage .dv-wrap { zoom: .23; }
+  .hero-visual { max-height: 180px; }
 }
 @media(max-width:380px) {
-  .hero-visual .dv-wrap { zoom: .24; }
-  .dv-stage .dv-wrap { zoom: .22; }
+  .hero-visual .dv-wrap { zoom: .21; }
+  .dv-stage .dv-wrap { zoom: .19; }
+  .hero-visual { max-height: 160px; }
 }
 
 /* Eyebrow line grow animation */
