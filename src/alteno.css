@@ -265,11 +265,12 @@ input,textarea,button { font-family:inherit; }
   box-shadow: var(--lg-spec), 0 4px 16px rgba(0,0,0,.15);
 }
 .lang .pill {
-  position:absolute; top:5px; bottom:5px; width:46px;
+  position:absolute; top:5px; bottom:5px;
+  width:calc((100% - 10px) / 3);
   border-radius:999px;
   background:linear-gradient(135deg,var(--violet),var(--teal));
   box-shadow:0 4px 16px rgba(124,58,237,.4);
-  transition:transform .38s cubic-bezier(.22,1,.36,1); z-index:0;
+  transition:left .38s cubic-bezier(.22,1,.36,1); z-index:0;
 }
 .lang button {
   position:relative; z-index:1; width:46px; border:none; background:none;
@@ -393,7 +394,7 @@ input,textarea,button { font-family:inherit; }
 
 @media(max-width:1080px) { .nav-links { display:none; } }
 @media(max-width:760px) { .nav-cta { display:none; } .burger { display:flex; } }
-@media(max-width:560px) { .nav { padding:16px 18px; } .lang button,.lang .pill { width:38px; } }
+@media(max-width:560px) { .nav { padding:16px 18px; } }
 
 /* ═══════════════════════════════════
    HERO

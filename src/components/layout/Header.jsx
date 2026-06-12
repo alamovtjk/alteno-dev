@@ -77,7 +77,7 @@ export default function Header() {
 
           <div className="nav-right">
             <div className="lang" role="tablist">
-              <span className="pill" style={{ transform: `translateX(${langIdx * 46}px)` }} />
+              <span className="pill" style={{ left: `calc(5px + ${langIdx} * ((100% - 10px) / 3))` }} />
               {LANGS.map(l => (
                 <button key={l} className={lang === l ? 'active' : ''} onClick={() => setLang(l)}>
                   {LABELS[l]}
@@ -133,7 +133,7 @@ export default function Header() {
         <div className="drawer-foot">
           <span className="drawer-foot-label">Язык</span>
           <div className="lang">
-            <span className="pill" style={{ transform: `translateX(${langIdx * 46}px)` }} />
+            <span className="pill" style={{ left: `calc(5px + ${langIdx} * ((100% - 10px) / 3))` }} />
             {LANGS.map(l => (
               <button key={l} className={lang === l ? 'active' : ''} onClick={() => setLang(l)}>
                 {LABELS[l]}
