@@ -15,7 +15,7 @@ export default defineConfig({
         short_name: 'AlTeNo Dev',
         description: 'AI веб-студия из Душанбе. Создаём сайты, приложения и дизайн с использованием AI.',
         theme_color: '#7c3aed',
-        background_color: '#050510',
+        background_color: '#ffffff',
         display: 'standalone',
         orientation: 'portrait-primary',
         scope: '/',
