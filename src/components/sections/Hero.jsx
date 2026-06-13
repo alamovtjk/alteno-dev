@@ -49,15 +49,22 @@ function TypewriterH1({ line1, line2 }) {
   }, [line1, line2])
 
   return (
-    <h1 className="ub hero-h1">
-      <span className="tw-line">
-        {t1}
-        {phase === 1 && <span className="tw-cur" />}
+    <h1 className="ub hero-h1" style={{ position: 'relative' }}>
+      {/* Невидимый призрак — держит высоту h1 постоянной */}
+      <span aria-hidden="true" style={{ visibility: 'hidden', display: 'block', pointerEvents: 'none' }}>
+        <span className="tw-line">{line1}</span>
+        <span className="tw-line"><span className="grad">{line2}</span></span>
       </span>
-      <span className="tw-line">
-        <span className="grad">{t2}</span>
-        {phase === 2 && <span className="tw-cur" />}
-        {phase === 3 && <span className="tw-cur tw-cur--done" />}
+      {/* Анимированный текст поверх */}
+      <span style={{ position: 'absolute', top: 0, left: 0, right: 0 }}>
+        <span className="tw-line">
+          {t1}
+          {phase === 1 && <span className="tw-cur" />}
+        </span>
+        <span className="tw-line">
+          <span className="grad">{t2}</span>
+          {(phase === 2 || phase === 3) && <span className="tw-cur" style={{ opacity: phase === 3 ? 0 : 1 }} />}
+        </span>
       </span>
     </h1>
   )
