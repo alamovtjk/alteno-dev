@@ -9,7 +9,7 @@ export default defineConfig({
     tailwindcss(),
     VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: ['favicon.svg', 'logo.png', 'icon-192.png', 'apple-touch-icon.png'],
+      includeAssets: ['favicon.svg', 'logo.png', 'icon-192.png', 'apple-touch-icon.png', 'splash/*.png'],
       manifest: {
         name: 'AlTeNo Dev — AI Веб-студия',
         short_name: 'AlTeNo Dev',

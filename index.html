@@ -43,6 +43,30 @@
     <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;500;600;700;800&family=Manrope:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet" />
   </head>
   <body>
+
+    <style>
+      #splash {
+        position: fixed; inset: 0; z-index: 99999;
+        background: #fff url('/splash/splash-mobile.png') center/cover no-repeat;
+        transition: opacity .5s ease;
+      }
+      @media (min-width: 601px) {
+        #splash { background-image: url('/splash/splash-desktop.png'); }
+      }
+      #splash.sp-out { opacity: 0; pointer-events: none; }
+    </style>
+
+    <div id="splash"></div>
+
+    <script>
+      setTimeout(function() {
+        var s = document.getElementById('splash');
+        if (!s) return;
+        s.classList.add('sp-out');
+        setTimeout(function() { if (s) s.remove(); }, 500);
+      }, 2000);
+    </script>
+
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>
