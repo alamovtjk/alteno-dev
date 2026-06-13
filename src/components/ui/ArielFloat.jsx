@@ -1,8 +1,9 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import ArielChat from './ArielChat'
 
 export default function ArielFloat() {
   const [open, setOpen] = useState(false)
+  const backdropRef = useRef(null)
 
   useEffect(() => {
     document.body.style.overflow = open ? 'hidden' : ''
@@ -15,6 +16,45 @@ export default function ArielFloat() {
     return () => document.removeEventListener('keydown', onKey)
   }, [open])
 
+  /* Подстраиваем высоту под реальный viewport когда открывается клавиатура */
+  useEffect(() => {
+    if (!open) return
+    const vv = window.visualViewport
+    if (!vv) return
+
+    const adjust = () => {
+      const el = backdropRef.current
+      if (!el) return
+      // Backdrop = весь видимый viewport (вычитает клавиатуру)
+      el.style.height = vv.height + 'px'
+      el.style.top    = vv.offsetTop + 'px'
+      el.style.bottom = 'auto'
+      // Панель на мобилке = 92% высоты видимого viewport
+      if (window.innerWidth <= 480) {
+        const panel = el.querySelector('.ariel-panel')
+        if (panel) panel.style.height = Math.floor(vv.height * 0.92) + 'px'
+      }
+    }
+
+    vv.addEventListener('resize', adjust)
+    vv.addEventListener('scroll', adjust)
+    adjust()
+
+    return () => {
+      vv.removeEventListener('resize', adjust)
+      vv.removeEventListener('scroll', adjust)
+      // Сбрасываем inline стили при закрытии
+      const el = backdropRef.current
+      if (el) {
+        el.style.height = ''
+        el.style.top    = ''
+        el.style.bottom = ''
+        const panel = el.querySelector('.ariel-panel')
+        if (panel) panel.style.height = ''
+      }
+    }
+  }, [open])
+
   return (
     <>
       {/* Плавающая кнопка */}
@@ -23,14 +63,9 @@ export default function ArielFloat() {
         onClick={() => setOpen(true)}
         aria-label="Открыть AI-ассистента Ариэль"
       >
-        {/* Периодический ping */}
         <span className="ariel-fab-ping" />
-
-        {/* Вращающиеся кольца */}
         <span className="ariel-fab-ring r1" />
         <span className="ariel-fab-ring r2" />
-
-        {/* Ядро */}
         <span className="ariel-fab-core">
           <svg viewBox="0 0 20 23" fill="none">
             <path d="M10 1L19 6v11L10 22 1 17V6z"
@@ -43,14 +78,13 @@ export default function ArielFloat() {
             </defs>
           </svg>
         </span>
-
-        {/* Тултип */}
         <span className="ariel-fab-tip">Обсудить идею</span>
       </button>
 
       {/* Модалка */}
       {open && (
         <div
+          ref={backdropRef}
           className="ariel-backdrop"
           onClick={e => { if (e.target === e.currentTarget) setOpen(false) }}
         >

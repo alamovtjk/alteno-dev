@@ -1676,10 +1676,18 @@ body.drawer-open .ariel-fab {
   .ariel-fab-tip { display: none; }
   /* totop sits above the FAB on mobile */
   .totop { bottom:88px; right:16px; }
-  .ariel-backdrop { padding:12px; align-items: flex-end; }
-  .ariel-modal { max-width:100%; }
-  .ariel-modal .ariel-panel { height: 85dvh; border-radius: 12px 12px 4px 4px; }
-  .ariel-modal-close { top: -14px; right: 8px; }
+  .ariel-backdrop { padding: 0; align-items: flex-end; }
+  .ariel-modal { max-width: 100%; width: 100%; }
+  .ariel-modal .ariel-panel {
+    height: 88dvh;
+    border-radius: 16px 16px 0 0;
+    padding: 18px 14px 14px;
+  }
+  /* Кнопка закрыть — внутри панели сверху */
+  .ariel-modal-close { top: 12px; right: 12px; position: absolute; }
+  /* Инпут крупнее на мобилке */
+  .ariel-modal .ariel-input { font-size: 14px; padding: 11px 14px; }
+  .ariel-modal .ariel-send-btn { width: 44px; height: 44px; }
   .ariel-idle-title { font-size: 13px; }
 }
 
