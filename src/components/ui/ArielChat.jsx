@@ -282,7 +282,7 @@ export default function ArielChat() {
           const text    = cleanContent(msg.content)
           if (!text && !hasTz) return null
           return (
-            <div key={i} className={`ariel-msg ariel-msg--${msg.role}`}>
+            <div key={i} className={`ariel-msg ariel-msg--${msg.role}${hasTz ? ' has-tz' : ''}`}>
               <div className="ariel-msg-label">{isAriel ? '▸ ARIEL' : '▸ ВЫ'}</div>
               <div className="ariel-msg-body">
                 {text}

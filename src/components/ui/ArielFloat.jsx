@@ -29,11 +29,7 @@ export default function ArielFloat() {
       el.style.height = vv.height + 'px'
       el.style.top    = vv.offsetTop + 'px'
       el.style.bottom = 'auto'
-      // Панель на мобилке = 92% высоты видимого viewport
-      if (window.innerWidth <= 480) {
-        const panel = el.querySelector('.ariel-panel')
-        if (panel) panel.style.height = Math.floor(vv.height * 0.92) + 'px'
-      }
+      // На мобилке панель — flex-колонка на 100%, height задаётся через CSS
     }
 
     vv.addEventListener('resize', adjust)
@@ -49,8 +45,6 @@ export default function ArielFloat() {
         el.style.height = ''
         el.style.top    = ''
         el.style.bottom = ''
-        const panel = el.querySelector('.ariel-panel')
-        if (panel) panel.style.height = ''
       }
     }
   }, [open])
