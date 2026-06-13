@@ -16,7 +16,7 @@ export default function About() {
               <span className="corner tl"/><span className="corner tr"/>
               <span className="corner bl"/><span className="corner br"/>
               {MY_PHOTO ? (
-                <img src={MY_PHOTO} alt={t.about.photoph} />
+                <img src={MY_PHOTO} alt={t.about.photoph} loading="lazy" decoding="async" />
               ) : (
                 <div className="photo-placeholder">
                   <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
