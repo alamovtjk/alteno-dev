@@ -25,11 +25,11 @@ export default function ArielFloat() {
     const adjust = () => {
       const el = backdropRef.current
       if (!el) return
-      // Backdrop = весь видимый viewport (вычитает клавиатуру)
+      // На мобилке (≤600px) CSS сам держит layout — JS-resize вызывает прыжки
+      if (window.innerWidth <= 600) return
       el.style.height = vv.height + 'px'
       el.style.top    = vv.offsetTop + 'px'
       el.style.bottom = 'auto'
-      // На мобилке панель — flex-колонка на 100%, height задаётся через CSS
     }
 
     vv.addEventListener('resize', adjust)

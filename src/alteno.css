@@ -1821,26 +1821,34 @@ body.drawer-open .ariel-fab {
   .ariel-fab-tip { display: none; }
   .totop { bottom:88px; right:16px; }
 
-  /* Backdrop — полный экран, без padding */
+  /* Backdrop — полный экран, жёсткий, без анимаций и JS-resize */
   .ariel-backdrop {
     padding: 0;
     align-items: stretch;
-    background: rgba(4,4,18,.97);
+    background: #0d0d1e;
     backdrop-filter: none;
     -webkit-backdrop-filter: none;
+    animation: none;
+    /* Свой compositing-слой — без reflow при скролле */
+    will-change: transform;
   }
   .ariel-modal {
+    position: fixed;
+    inset: 0;
     max-width: 100%;
     width: 100%;
     height: 100%;
     display: flex;
     flex-direction: column;
     animation: none;
+    /* Блокируем скролл страницы сквозь чат */
+    overscroll-behavior: contain;
   }
 
-  /* Панель — flex-колонка на весь экран */
+  /* Панель — flex-колонка, строго занимает весь экран */
   .ariel-modal .ariel-panel {
-    height: 100%;
+    flex: 1;
+    min-height: 0;
     border-radius: 0;
     padding: 0;
     display: flex;
@@ -1848,46 +1856,59 @@ body.drawer-open .ariel-fab {
     background: #0d0d1e;
     overflow: hidden;
     animation: none;
+    /* Слой для GPU-рендера */
+    transform: translateZ(0);
   }
-  /* Убираем уголки */
+  /* Убираем уголки и glow */
   .ariel-modal .ariel-panel .cb { display: none; }
-  /* Убираем glow-линии */
   .ariel-modal .ariel-panel::before,
   .ariel-modal .ariel-panel::after { display: none; }
 
   /* Кнопка закрыть — X в правом верхнем углу */
   .ariel-modal-close {
-    position: absolute;
+    position: fixed;
     top: 13px;
     right: 14px;
     width: 32px; height: 32px;
     background: rgba(255,255,255,.08);
     border: 1px solid rgba(255,255,255,.12);
     border-radius: 50%;
+    z-index: 20;
   }
   .ariel-modal-close:hover { background: rgba(255,255,255,.15); box-shadow: none; }
 
-  /* Шапка — padding под кнопку закрыть */
+  /* Шапка — фиксированная высота, не двигается */
   .ariel-modal .ariel-header {
-    padding: 14px 52px 14px 16px;
+    padding: 13px 52px 13px 16px;
     border-bottom: 1px solid rgba(255,255,255,.07);
     flex-shrink: 0;
     border-radius: 0;
+    height: 54px;
+    box-sizing: border-box;
   }
 
-  /* Прогресс */
+  /* Прогресс — фиксированная высота, всегда занимает место */
   .ariel-modal .ariel-progress-row {
-    padding: 8px 16px 6px;
+    padding: 7px 16px 6px;
     flex-shrink: 0;
+    height: 34px;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    gap: 10px;
   }
 
-  /* Сообщения */
+  /* Сообщения — единственная зона, которая скроллится */
   .ariel-modal .ariel-msgs {
     flex: 1;
     min-height: 0;
     padding: 14px 14px 8px;
     overflow-y: auto;
+    overflow-x: hidden;
+    overscroll-behavior: contain;
     -webkit-overflow-scrolling: touch;
+    /* Браузер сам держит скролл внизу при новых сообщениях */
+    overflow-anchor: auto;
   }
 
   /* Чат-пузырьки — убираем метки ▸ */
@@ -1949,16 +1970,18 @@ body.drawer-open .ariel-fab {
   .ariel-modal .ariel-idle { padding: 24px 20px; }
   .ariel-modal .ariel-idle-title { font-size: 14px; }
 
-  /* Строка ввода — закреплена внизу */
+  /* Строка ввода — закреплена внизу, никогда не двигается */
   .ariel-modal .ariel-input-row {
-    padding: 10px 12px env(safe-area-inset-bottom, 16px);
-    padding-bottom: max(16px, env(safe-area-inset-bottom));
+    flex-shrink: 0;
+    padding: 10px 12px;
+    padding-bottom: max(16px, env(safe-area-inset-bottom, 16px));
     border-top: 1px solid rgba(255,255,255,.07);
     background: #0d0d1e;
     margin: 0;
-    flex-shrink: 0;
     gap: 10px;
     align-items: center;
+    /* Собственный слой — не перекрашивается при скролле */
+    transform: translateZ(0);
   }
   .ariel-modal .ariel-input {
     font-size: 15px;

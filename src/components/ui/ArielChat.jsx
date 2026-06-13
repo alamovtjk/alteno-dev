@@ -110,8 +110,12 @@ export default function ArielChat() {
   const bottomRef = useRef(null)
   const inputRef  = useRef(null)
 
+  const isMobile = () => window.innerWidth <= 600
+
   const scrollDown = () =>
-    setTimeout(() => bottomRef.current?.scrollIntoView({ behavior: 'smooth' }), 80)
+    setTimeout(() => bottomRef.current?.scrollIntoView({
+      behavior: isMobile() ? 'instant' : 'smooth'
+    }), isMobile() ? 0 : 80)
 
   const questionNum = Math.min(
     messages.filter(m => m.role === 'assistant').length, 10
@@ -334,6 +338,7 @@ export default function ArielChat() {
             value={input}
             onChange={e => setInput(e.target.value)}
             onKeyDown={onKey}
+            onFocus={() => setTimeout(scrollDown, 320)}
             disabled={loading}
             autoComplete="off"
           />
