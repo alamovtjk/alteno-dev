@@ -9,6 +9,7 @@ import Services from './components/sections/Services'
 import Portfolio from './components/sections/Portfolio'
 import Process from './components/sections/Process'
 import Studio from './components/sections/Studio'
+import Team from './components/sections/Team'
 import Testimonials from './components/sections/Testimonials'
 import Contact from './components/sections/Contact'
 import Cursor from './components/ui/Cursor'
@@ -95,6 +96,7 @@ function AppInner() {
         <Portfolio />
         <Process />
         <Studio />
+        <Team />
         <Testimonials />
         <Contact />
       </main>
