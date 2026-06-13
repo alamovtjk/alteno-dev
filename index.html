@@ -43,6 +43,94 @@
     <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;500;600;700;800&family=Manrope:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet" />
   </head>
   <body>
+
+    <!-- ═══════════════════════════════════
+         SPLASH SCREEN — показывается до React
+         ═══════════════════════════════════ -->
+    <style>
+      #splash {
+        position: fixed; inset: 0; z-index: 99999;
+        background: #ffffff;
+        display: flex; flex-direction: column;
+        align-items: center; justify-content: center;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        opacity: 1;
+        transition: opacity .45s ease;
+      }
+      #splash.sp-out { opacity: 0; pointer-events: none; }
+
+      .sp-center {
+        flex: 1; display: flex;
+        align-items: center; justify-content: center;
+        width: 100%; padding: 32px;
+      }
+      .sp-lockup {
+        display: inline-flex; align-items: center; gap: 24px;
+        --h: 96px;
+        animation: spRise .9s cubic-bezier(.2,.7,.2,1) both;
+      }
+      .sp-wm   { height: var(--h); width: auto; display: block; }
+      .sp-rule {
+        width: 4px; align-self: stretch;
+        background: #d3d3da; border-radius: 2px; margin: 10px 0;
+      }
+      .sp-dev {
+        font-weight: 800;
+        font-size: calc(var(--h) * .70);
+        line-height: 1; letter-spacing: -.01em;
+        background: linear-gradient(95deg, #6f06a3 0%, #8c2068 48%, #0b6012 100%);
+        -webkit-background-clip: text; background-clip: text;
+        -webkit-text-fill-color: transparent; color: transparent;
+      }
+
+      .sp-footer {
+        display: flex; flex-direction: column; align-items: center; gap: 12px;
+        padding-bottom: calc(48px + env(safe-area-inset-bottom, 0px));
+        animation: spRise .9s cubic-bezier(.2,.7,.2,1) .12s both;
+      }
+      .sp-by {
+        font-size: 13px; letter-spacing: .22em; text-transform: uppercase;
+        font-weight: 800; color: #b8b8c0;
+      }
+      .sp-primary { height: 30px; width: auto; display: block; opacity: .85; }
+
+      @keyframes spRise {
+        from { transform: translateY(16px); opacity: 0; }
+        to   { transform: none; opacity: 1; }
+      }
+      @media (max-width: 560px) {
+        .sp-lockup { --h: 64px; gap: 16px; }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .sp-lockup, .sp-footer { animation: none; }
+      }
+    </style>
+
+    <div id="splash">
+      <div class="sp-center">
+        <div class="sp-lockup">
+          <img class="sp-wm" src="/logo.png" alt="AlTeNo">
+          <span class="sp-rule"></span>
+          <span class="sp-dev">Dev</span>
+        </div>
+      </div>
+      <div class="sp-footer">
+        <span class="sp-by">by</span>
+        <img class="sp-primary" src="/logo.png" alt="AlTeNo">
+      </div>
+    </div>
+
+    <script>
+      // Убираем splash через 2.2с (анимация выхода 0.45с)
+      setTimeout(function() {
+        var s = document.getElementById('splash');
+        if (!s) return;
+        s.classList.add('sp-out');
+        setTimeout(function() { s && s.remove(); }, 500);
+      }, 2200);
+    </script>
+    <!-- ════════════════════════════════════ -->
+
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>
