@@ -98,6 +98,8 @@ export default function Team() {
     requestAnimationFrame(() => scrollToIdx(N, false))
   }, [scrollToIdx])
 
+  const jumpTimer = useRef(null)
+
   const detectActive = useCallback(() => {
     if (jumping.current) return
     const el = trackRef.current
@@ -109,16 +111,20 @@ export default function Team() {
       const dist = Math.abs((card.offsetLeft + card.offsetWidth / 2) - center)
       if (dist < minDist) { minDist = dist; idx = i }
     })
+
     setActive(idx % N)
-    if (idx < N || idx >= N * 2) {
+
+    // Прыгаем только ПОСЛЕ остановки скролла — прыжок невидим
+    clearTimeout(jumpTimer.current)
+    jumpTimer.current = setTimeout(() => {
+      if (jumping.current || (idx >= N && idx < N * 2)) return
       const targetIdx  = idx < N ? idx + N : idx - N
       const targetCard = cards[targetIdx]
-      if (targetCard) {
-        jumping.current = true
-        el.scrollLeft   = targetCard.offsetLeft - (el.clientWidth - targetCard.offsetWidth) / 2
-        setTimeout(() => { jumping.current = false }, 80)
-      }
-    }
+      if (!targetCard) return
+      jumping.current = true
+      el.scrollLeft = targetCard.offsetLeft - (el.clientWidth - targetCard.offsetWidth) / 2
+      setTimeout(() => { jumping.current = false }, 60)
+    }, 60)
   }, [])
 
   useEffect(() => {
