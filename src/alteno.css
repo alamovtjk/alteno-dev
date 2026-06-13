@@ -3,6 +3,8 @@
    Converted from claude.ai/design HTML files
    ====================================================== */
 
+html { scrollbar-gutter: stable; }
+
 :root {
   --bg: #06060f;
   --violet: #7c3aed;
@@ -172,8 +174,8 @@ input,textarea,button { font-family:inherit; }
 .d1{animation-delay:.05s} .d2{animation-delay:.13s} .d3{animation-delay:.21s}
 .d4{animation-delay:.29s} .d5{animation-delay:.37s} .d6{animation-delay:.45s}
 @keyframes rise {
-  from { opacity:0; transform:translateY(28px); }
-  to   { opacity:1; transform:translateY(0); }
+  from { opacity:0; }
+  to   { opacity:1; }
 }
 
 /* ── Logo pill (white container on mobile only) ── */
