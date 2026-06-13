@@ -1184,6 +1184,8 @@ input,textarea,button { font-family:inherit; }
   position: relative;
   z-index: 2;
   min-height: 0;
+  /* Якорь — скролл держится внизу при новых сообщениях */
+  overflow-anchor: auto;
 }
 .ariel-msgs::-webkit-scrollbar { width: 2px; }
 .ariel-msgs::-webkit-scrollbar-track { background: transparent; }
@@ -1480,6 +1482,71 @@ input,textarea,button { font-family:inherit; }
 .tz-email-fail {
   font-size: 10px;
   color: rgba(255,100,100,.7);
+}
+
+/* ── Messages wrap (для кнопки прокрутки) ── */
+.ariel-msgs-wrap {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── Кнопка "вниз" ── */
+.ariel-scroll-btn {
+  position: absolute;
+  bottom: 12px;
+  right: 12px;
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  background: rgba(0,212,255,.15);
+  border: 1px solid rgba(0,212,255,.4);
+  color: #00d4ff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 5;
+  box-shadow: 0 4px 16px rgba(0,0,0,.4);
+  transition: background .2s;
+  padding: 0;
+}
+.ariel-scroll-btn:hover { background: rgba(0,212,255,.28); }
+.ariel-scroll-btn svg { width: 14px; height: 14px; stroke: currentColor; }
+
+/* ── Варианты ответов (чипы) ── */
+.ariel-suggestions {
+  display: flex;
+  gap: 6px;
+  padding: 8px 14px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  flex-shrink: 0;
+  border-top: 1px solid rgba(0,212,255,.1);
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+.ariel-suggestions::-webkit-scrollbar { display: none; }
+
+.ariel-sug-btn {
+  flex-shrink: 0;
+  padding: 5px 12px;
+  background: rgba(0,212,255,.07);
+  border: 1px solid rgba(0,212,255,.25);
+  border-radius: 20px;
+  color: rgba(0,212,255,.85);
+  font-size: 10.5px;
+  font-family: 'JetBrains Mono', 'Courier New', monospace;
+  cursor: pointer;
+  transition: background .18s, border-color .18s, color .18s;
+  white-space: nowrap;
+  letter-spacing: .03em;
+}
+.ariel-sug-btn:hover {
+  background: rgba(0,212,255,.18);
+  border-color: rgba(0,212,255,.55);
+  color: #00d4ff;
 }
 
 /* ── Input row ── */
@@ -1898,17 +1965,47 @@ body.drawer-open .ariel-fab {
     gap: 10px;
   }
 
-  /* Сообщения — единственная зона, которая скроллится */
-  .ariel-modal .ariel-msgs {
+  /* Обёртка сообщений */
+  .ariel-modal .ariel-msgs-wrap {
     flex: 1;
     min-height: 0;
+  }
+
+  /* Сообщения — единственная зона, которая скроллится */
+  .ariel-modal .ariel-msgs {
     padding: 14px 14px 8px;
     overflow-y: auto;
     overflow-x: hidden;
     overscroll-behavior: contain;
     -webkit-overflow-scrolling: touch;
-    /* Браузер сам держит скролл внизу при новых сообщениях */
     overflow-anchor: auto;
+  }
+
+  /* Кнопка прокрутки вниз — крупнее на мобилке */
+  .ariel-modal .ariel-scroll-btn {
+    width: 38px; height: 38px;
+    bottom: 14px; right: 14px;
+  }
+  .ariel-modal .ariel-scroll-btn svg { width: 18px; height: 18px; }
+
+  /* Чипы вариантов — больше на мобилке */
+  .ariel-modal .ariel-suggestions {
+    padding: 10px 14px;
+    gap: 8px;
+    border-top-color: rgba(255,255,255,.07);
+  }
+  .ariel-modal .ariel-sug-btn {
+    padding: 8px 16px;
+    font-size: 13px;
+    background: rgba(124,58,237,.15);
+    border-color: rgba(124,58,237,.4);
+    color: #c4b5fd;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    letter-spacing: 0;
+    border-radius: 20px;
+  }
+  .ariel-modal .ariel-sug-btn:active {
+    background: rgba(124,58,237,.35);
   }
 
   /* Чат-пузырьки — убираем метки ▸ */

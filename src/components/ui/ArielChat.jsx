@@ -2,6 +2,21 @@ import { useState, useRef } from 'react'
 
 const CHIPS = ['Тип проекта', 'Функции', 'Дизайн', 'Интеграции', 'Бюджет', 'Контакт']
 
+// Варианты ответов по порядку вопросов (индекс = номер вопроса)
+const SUGGESTIONS = [
+  [],
+  ['Лендинг', 'Интернет-магазин', 'Корпоративный сайт', 'Веб-приложение', 'Другое'],
+  ['Бизнес / B2B', 'Ресторан / Кафе', 'Медицина / Клиника', 'Образование', 'Розничная торговля'],
+  ['Привлечь клиентов', 'Продавать онлайн', 'Собирать заявки', 'Показать портфолио'],
+  ['Каталог + корзина', 'Личный кабинет', 'Форма заявки', 'Блог', 'Онлайн-чат'],
+  ['Минимализм', 'Яркий / Креативный', 'Строгий корпоративный', 'Тёмная тема'],
+  ['Telegram', 'WhatsApp', 'Оплата онлайн', 'CRM', 'Карты', 'Без интеграций'],
+  ['Всё готово', 'Только логотип', 'Нужно с нуля', 'Частично есть'],
+  ['1 месяц', '2–3 месяца', 'Не срочно', 'Конкретная дата'],
+  ['До $500', '$500–1500', '$1500–5000', 'Обсудим'],
+  [],
+]
+
 function parseTz(content) {
   const match = content.match(/===TZ_START===([\s\S]*?)===TZ_END===/)
   if (!match) return null
@@ -32,15 +47,15 @@ function cleanContent(content) {
 
 function TzCard({ tz, onDownload, downloading, emailSent }) {
   const rows = [
-    ['💼', 'Тип', tz.type],
-    ['🏢', 'Сфера', tz.sphere],
-    ['🎯', 'Цель', tz.goal],
-    ['⚙️', 'Функции', tz.features],
-    ['🎨', 'Дизайн', tz.design],
-    ['🔗', 'Интеграции', tz.integrations],
-    ['📁', 'Контент', tz.content],
-    ['📅', 'Срок', tz.deadline],
-    ['💰', 'Бюджет', tz.budget],
+    ['💼', 'Тип',          tz.type],
+    ['🏢', 'Сфера',        tz.sphere],
+    ['🎯', 'Цель',         tz.goal],
+    ['⚙️', 'Функции',      tz.features],
+    ['🎨', 'Дизайн',       tz.design],
+    ['🔗', 'Интеграции',   tz.integrations],
+    ['📁', 'Контент',      tz.content],
+    ['📅', 'Срок',         tz.deadline],
+    ['💰', 'Бюджет',       tz.budget],
   ]
   return (
     <div className="tz-card">
@@ -97,29 +112,44 @@ function TzCard({ tz, onDownload, downloading, emailSent }) {
 }
 
 export default function ArielChat() {
-  const [messages,    setMessages]    = useState([])
-  const [input,       setInput]       = useState('')
-  const [loading,     setLoading]     = useState(false)
-  const [started,     setStarted]     = useState(false)
-  const [done,        setDone]        = useState(false)
-  const [tz,          setTz]          = useState(null)
-  const [downloading, setDownloading] = useState(false)
-  const [emailSent,   setEmailSent]   = useState(null)
+  const [messages,     setMessages]     = useState([])
+  const [input,        setInput]        = useState('')
+  const [loading,      setLoading]      = useState(false)
+  const [started,      setStarted]      = useState(false)
+  const [done,         setDone]         = useState(false)
+  const [tz,           setTz]           = useState(null)
+  const [downloading,  setDownloading]  = useState(false)
+  const [emailSent,    setEmailSent]    = useState(null)
+  const [showScrollBtn,setShowScrollBtn]= useState(false)
 
   const tzSentRef = useRef(false)
   const bottomRef = useRef(null)
   const inputRef  = useRef(null)
+  const msgsRef   = useRef(null)
 
   const isMobile = () => window.innerWidth <= 600
 
-  const scrollDown = () =>
-    setTimeout(() => bottomRef.current?.scrollIntoView({
-      behavior: isMobile() ? 'instant' : 'smooth'
-    }), isMobile() ? 0 : 80)
+  const scrollDown = () => {
+    const behavior = isMobile() ? 'instant' : 'smooth'
+    const delay    = isMobile() ? 0 : 80
+    setTimeout(() => bottomRef.current?.scrollIntoView({ behavior }), delay)
+  }
+
+  const handleMsgsScroll = () => {
+    const el = msgsRef.current
+    if (!el) return
+    const atBottom = el.scrollHeight - el.scrollTop - el.clientHeight < 80
+    setShowScrollBtn(!atBottom)
+  }
 
   const questionNum = Math.min(
     messages.filter(m => m.role === 'assistant').length, 10
   )
+
+  const currentSuggestions =
+    started && !done && !loading && questionNum > 0 && !input.trim()
+      ? (SUGGESTIONS[questionNum] || [])
+      : []
 
   const callApi = async (msgs) => {
     const res = await fetch('/api/ariel', {
@@ -177,23 +207,12 @@ export default function ArielChat() {
   const reset = () => {
     setMessages([]); setInput(''); setLoading(false)
     setStarted(false); setDone(false); setTz(null)
-    setEmailSent(null); tzSentRef.current = false
+    setEmailSent(null); setShowScrollBtn(false)
+    tzSentRef.current = false
   }
 
-  const startChat = async () => {
-    setStarted(true); setLoading(true)
-    try {
-      const content = await callApi([])
-      setMessages([{ role: 'assistant', content }])
-    } catch {
-      setMessages([{ role: 'assistant', content: 'Ошибка соединения. Попробуйте позже.' }])
-    }
-    setLoading(false); scrollDown()
-    setTimeout(() => inputRef.current?.focus(), 150)
-  }
-
-  const send = async () => {
-    const text = input.trim()
+  // Основная логика отправки — используется и кнопкой, и чипами
+  const sendText = async (text) => {
     if (!text || loading || done) return
     const userMsg = { role: 'user', content: text }
     const newMsgs = [...messages, userMsg]
@@ -214,8 +233,23 @@ export default function ArielChat() {
     if (!done) setTimeout(() => inputRef.current?.focus(), 100)
   }
 
+  const send      = ()     => sendText(input.trim())
+  const quickSend = (text) => sendText(text)
+
   const onKey = (e) => {
     if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send() }
+  }
+
+  const startChat = async () => {
+    setStarted(true); setLoading(true)
+    try {
+      const content = await callApi([])
+      setMessages([{ role: 'assistant', content }])
+    } catch {
+      setMessages([{ role: 'assistant', content: 'Ошибка соединения. Попробуйте позже.' }])
+    }
+    setLoading(false); scrollDown()
+    setTimeout(() => inputRef.current?.focus(), 150)
   }
 
   return (
@@ -229,7 +263,9 @@ export default function ArielChat() {
           <path d="M10 1L19 6v11L10 22 1 17V6z" stroke="#00d4ff" strokeWidth="1.2"/>
         </svg>
         <span className="ariel-logo-text">ARIEL_OS</span>
-        <span className="ariel-sep">// PROJECT_INTAKE</span>
+        <span className="ariel-sep">
+          {loading ? '// ПЕЧАТАЕТ...' : '// PROJECT_INTAKE'}
+        </span>
         {started && !done && (
           <button className="ariel-reset-btn" onClick={reset} title="Начать заново">
             <svg viewBox="0 0 24 24" fill="none" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -254,81 +290,110 @@ export default function ArielChat() {
         </div>
       )}
 
-      {/* Messages */}
-      <div className="ariel-msgs">
+      {/* Messages — обёртка для кнопки прокрутки */}
+      <div className="ariel-msgs-wrap">
+        <div ref={msgsRef} className="ariel-msgs" onScroll={handleMsgsScroll}>
 
-        {!started && !loading && (
-          <div className="ariel-idle">
-            <div className="ariel-idle-top">
-              <p className="ariel-idle-title">Опишите ваш проект</p>
-              <p className="ariel-idle-sub">
-                AI задаст 10 вопросов о проекте, составит<br/>
-                детальное ТЗ и отправит его вам на email
-              </p>
-              <div className="ariel-chips">
-                {CHIPS.map(c => <span key={c} className="ariel-chip">{c}</span>)}
+          {!started && !loading && (
+            <div className="ariel-idle">
+              <div className="ariel-idle-top">
+                <p className="ariel-idle-title">Опишите ваш проект</p>
+                <p className="ariel-idle-sub">
+                  AI задаст 10 вопросов о проекте, составит<br/>
+                  детальное ТЗ и отправит его вам на email
+                </p>
+                <div className="ariel-chips">
+                  {CHIPS.map(c => <span key={c} className="ariel-chip">{c}</span>)}
+                </div>
               </div>
+              <div className="ariel-orb">
+                <div className="ao-ring r1" /><div className="ao-ring r2" />
+                <div className="ao-core">AI</div>
+              </div>
+              <button className="ariel-start-btn" onClick={startChat}>
+                ▸ НАЧАТЬ ДИАЛОГ
+              </button>
             </div>
-            <div className="ariel-orb">
-              <div className="ao-ring r1" /><div className="ao-ring r2" />
-              <div className="ao-core">AI</div>
-            </div>
-            <button className="ariel-start-btn" onClick={startChat}>
-              ▸ НАЧАТЬ ДИАЛОГ
-            </button>
-          </div>
-        )}
+          )}
 
-        {messages.map((msg, i) => {
-          const isLast  = i === messages.length - 1
-          const isAriel = msg.role === 'assistant'
-          const hasTz   = isLast && done && isAriel && tz
-          const text    = cleanContent(msg.content)
-          if (!text && !hasTz) return null
-          return (
-            <div key={i} className={`ariel-msg ariel-msg--${msg.role}${hasTz ? ' has-tz' : ''}`}>
-              <div className="ariel-msg-label">{isAriel ? '▸ ARIEL' : '▸ ВЫ'}</div>
+          {messages.map((msg, i) => {
+            const isLast  = i === messages.length - 1
+            const isAriel = msg.role === 'assistant'
+            const hasTz   = isLast && done && isAriel && tz
+            const text    = cleanContent(msg.content)
+            if (!text && !hasTz) return null
+            return (
+              <div key={i} className={`ariel-msg ariel-msg--${msg.role}${hasTz ? ' has-tz' : ''}`}>
+                <div className="ariel-msg-label">{isAriel ? '▸ ARIEL' : '▸ ВЫ'}</div>
+                <div className="ariel-msg-body">
+                  {text}
+                  {hasTz && (
+                    <>
+                      <div className="ariel-tz-badge">
+                        <svg viewBox="0 0 24 24" fill="none" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <path d="M9 12l2 2 4-4m6 2a9 9 0 1 1-18 0 9 9 0 0 1 18 0z"/>
+                        </svg>
+                        ТЗ отправлено в студию
+                      </div>
+                      <TzCard
+                        tz={tz}
+                        onDownload={downloadDocx}
+                        downloading={downloading}
+                        emailSent={emailSent}
+                      />
+                    </>
+                  )}
+                </div>
+              </div>
+            )
+          })}
+
+          {done && (
+            <div className="ariel-done-row">
+              <button className="ariel-restart-btn" onClick={reset}>↺ Новый диалог</button>
+            </div>
+          )}
+
+          {loading && (
+            <div className="ariel-msg ariel-msg--assistant">
+              <div className="ariel-msg-label">▸ ARIEL</div>
               <div className="ariel-msg-body">
-                {text}
-                {hasTz && (
-                  <>
-                    <div className="ariel-tz-badge">
-                      <svg viewBox="0 0 24 24" fill="none" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M9 12l2 2 4-4m6 2a9 9 0 1 1-18 0 9 9 0 0 1 18 0z"/>
-                      </svg>
-                      ТЗ отправлено в студию
-                    </div>
-                    <TzCard
-                      tz={tz}
-                      onDownload={downloadDocx}
-                      downloading={downloading}
-                      emailSent={emailSent}
-                    />
-                  </>
-                )}
+                <span className="ariel-typing"><span /><span /><span /></span>
               </div>
             </div>
-          )
-        })}
+          )}
 
-        {done && (
-          <div className="ariel-done-row">
-            <button className="ariel-restart-btn" onClick={reset}>↺ Новый диалог</button>
-          </div>
+          <div ref={bottomRef} />
+        </div>
+
+        {/* Кнопка прокрутки вниз */}
+        {showScrollBtn && (
+          <button
+            className="ariel-scroll-btn"
+            onClick={() => {
+              bottomRef.current?.scrollIntoView({ behavior: isMobile() ? 'instant' : 'smooth' })
+              setShowScrollBtn(false)
+            }}
+          >
+            <svg viewBox="0 0 24 24" fill="none" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M19 9l-7 7-7-7"/>
+            </svg>
+          </button>
         )}
-
-        {loading && (
-          <div className="ariel-msg ariel-msg--assistant">
-            <div className="ariel-msg-label">▸ ARIEL</div>
-            <div className="ariel-msg-body">
-              <span className="ariel-typing"><span /><span /><span /></span>
-            </div>
-          </div>
-        )}
-
-        <div ref={bottomRef} />
       </div>
 
+      {/* Варианты ответов */}
+      {currentSuggestions.length > 0 && (
+        <div className="ariel-suggestions">
+          {currentSuggestions.map(s => (
+            <button key={s} className="ariel-sug-btn" onClick={() => quickSend(s)}>
+              {s}
+            </button>
+          ))}
+        </div>
+      )}
+
+      {/* Поле ввода */}
       {started && !done && (
         <div className="ariel-input-row">
           <input
