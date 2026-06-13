@@ -9,7 +9,7 @@ export default defineConfig({
     tailwindcss(),
     VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: ['favicon.svg', 'logo.png'],
+      includeAssets: ['favicon.svg', 'logo.png', 'icon-192.png', 'apple-touch-icon.png'],
       manifest: {
         name: 'AlTeNo Dev — AI Веб-студия',
         short_name: 'AlTeNo Dev',
@@ -22,8 +22,9 @@ export default defineConfig({
         start_url: '/',
         lang: 'ru',
         icons: [
-          { src: '/logo.png', sizes: '192x192', type: 'image/png' },
-          { src: '/logo.png', sizes: '512x512', type: 'image/png', purpose: 'any maskable' },
+          { src: '/icon-192.png',       sizes: '192x192', type: 'image/png' },
+          { src: '/logo.png',           sizes: '512x512', type: 'image/png' },
+          { src: '/logo.png',           sizes: '512x512', type: 'image/png', purpose: 'maskable' },
         ],
       },
       workbox: {
