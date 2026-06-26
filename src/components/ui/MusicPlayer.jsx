@@ -2,9 +2,9 @@ import { useRef, useState, useEffect } from 'react'
 
 // ─── Когда будет admin — заменить на fetch('/api/track') ───────────────────
 const TRACK = {
-  title:  'Название трека',   // ← поменяй
-  artist: 'AlTeNo Dev',       // ← поменяй
-  src:    '/music/track.mp3', // ← положи файл в public/music/track.mp3
+  title:  'Hand Covers Bruise',
+  artist: 'Trent Reznor & Atticus Ross',
+  src:    '/music/track.mp3',
 }
 // ───────────────────────────────────────────────────────────────────────────
 
