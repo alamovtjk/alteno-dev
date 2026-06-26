@@ -13,6 +13,7 @@ import Team from './components/sections/Team'
 import Testimonials from './components/sections/Testimonials'
 import Contact from './components/sections/Contact'
 import Cursor from './components/ui/Cursor'
+import MusicPlayer from './components/ui/MusicPlayer'
 import ArielFloat from './components/ui/ArielFloat'
 
 // Бегущая строка технологий
@@ -103,6 +104,7 @@ function AppInner() {
 
       <Footer />
       <ArielFloat />
+      <MusicPlayer />
     </div>
   )
 }
