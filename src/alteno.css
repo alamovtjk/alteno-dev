@@ -1023,39 +1023,57 @@ input,textarea,button { font-family:inherit; }
    ═══════════════════════════════════ */
 .mp-toggle {
   position: fixed;
-  top: 18px;
-  right: 18px;
+  top: 16px;
+  right: 16px;
   z-index: 10001;
-  width: 40px;
-  height: 40px;
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
-  background: rgba(13,13,22,.75);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  border: 1px solid rgba(124,58,237,.3);
-  color: rgba(255,255,255,.55);
+  background: var(--glass-bg);
+  backdrop-filter: blur(20px) saturate(1.6);
+  -webkit-backdrop-filter: blur(20px) saturate(1.6);
+  border: 1px solid var(--glass-b);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.12),
+    inset 0 -1px 0 rgba(0,0,0,.15),
+    0 4px 16px rgba(0,0,0,.3);
+  color: var(--text-dim);
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: border-color .3s, box-shadow .3s, color .3s, background .3s;
+  transition: background .25s, border-color .25s, box-shadow .25s, color .25s;
 }
 .mp-toggle:hover {
-  border-color: rgba(124,58,237,.7);
-  color: #d2bbff;
-  background: rgba(124,58,237,.15);
-  box-shadow: 0 0 18px rgba(124,58,237,.3);
+  background: var(--glass-bg-s);
+  border-color: var(--glass-bs);
+  color: var(--text);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.18),
+    inset 0 -1px 0 rgba(0,0,0,.15),
+    0 6px 24px rgba(0,0,0,.35);
 }
 .mp-toggle.mp-on {
-  border-color: rgba(124,58,237,.6);
-  color: #d2bbff;
-  background: rgba(124,58,237,.12);
+  background: rgba(124,58,237,.13);
+  border-color: rgba(124,58,237,.5);
+  color: #c4b5fd;
+  box-shadow:
+    inset 0 1px 0 rgba(167,139,250,.2),
+    inset 0 -1px 0 rgba(0,0,0,.15),
+    0 0 20px rgba(124,58,237,.35),
+    0 4px 16px rgba(0,0,0,.3);
   animation: mpPulse 2.5s ease-in-out infinite;
 }
 @keyframes mpPulse {
-  0%, 100% { box-shadow: 0 0 10px rgba(124,58,237,.25); }
-  50%       { box-shadow: 0 0 24px rgba(124,58,237,.55), 0 0 48px rgba(124,58,237,.15); }
+  0%, 100% { box-shadow: inset 0 1px 0 rgba(167,139,250,.2), inset 0 -1px 0 rgba(0,0,0,.15), 0 0 14px rgba(124,58,237,.25), 0 4px 16px rgba(0,0,0,.3); }
+  50%       { box-shadow: inset 0 1px 0 rgba(167,139,250,.2), inset 0 -1px 0 rgba(0,0,0,.15), 0 0 28px rgba(124,58,237,.55), 0 4px 16px rgba(0,0,0,.3); }
 }
+.mp-toggle svg {
+  filter: drop-shadow(0 1px 2px rgba(0,0,0,.4));
+  transition: filter .25s, transform .25s;
+}
+.mp-toggle:hover svg { transform: scale(1.1); }
+.mp-toggle.mp-on svg { filter: drop-shadow(0 0 5px rgba(167,139,250,.6)); }
 
 /* ═══════════════════════════════════
    FOOTER
