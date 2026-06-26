@@ -14,6 +14,19 @@ export default function MusicPlayer() {
     if (!a) return
     a.volume = 0.4
     a.loop   = true
+
+    // Пробуем автоплей сразу
+    a.play().then(() => setPlaying(true)).catch(() => {
+      // Браузер заблокировал — запускаем при первом взаимодействии
+      const start = () => {
+        a.play().then(() => setPlaying(true)).catch(() => {})
+      }
+      const opts = { once: true, passive: true }
+      document.addEventListener('click',      start, opts)
+      document.addEventListener('scroll',     start, opts)
+      document.addEventListener('keydown',    start, opts)
+      document.addEventListener('touchstart', start, opts)
+    })
   }, [])
 
   const toggle = async () => {
