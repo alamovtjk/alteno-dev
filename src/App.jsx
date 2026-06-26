@@ -1,6 +1,8 @@
 import { useEffect } from 'react'
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import Lenis from 'lenis'
 import { LanguageProvider } from './context/LanguageContext'
+import Admin from './pages/Admin'
 import Header from './components/layout/Header'
 import Footer from './components/layout/Footer'
 import Hero from './components/sections/Hero'
@@ -111,8 +113,15 @@ function AppInner() {
 
 export default function App() {
   return (
-    <LanguageProvider>
-      <AppInner />
-    </LanguageProvider>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/admin/*" element={<Admin />} />
+        <Route path="*" element={
+          <LanguageProvider>
+            <AppInner />
+          </LanguageProvider>
+        } />
+      </Routes>
+    </BrowserRouter>
   )
 }
