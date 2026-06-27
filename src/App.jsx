@@ -2,6 +2,7 @@ import { useEffect } from 'react'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import Lenis from 'lenis'
 import { LanguageProvider } from './context/LanguageContext'
+import { MusicProvider } from './context/MusicContext'
 import Admin from './pages/Admin'
 import Header from './components/layout/Header'
 import Footer from './components/layout/Footer'
@@ -118,7 +119,9 @@ export default function App() {
         <Route path="/admin/*" element={<Admin />} />
         <Route path="*" element={
           <LanguageProvider>
-            <AppInner />
+            <MusicProvider>
+              <AppInner />
+            </MusicProvider>
           </LanguageProvider>
         } />
       </Routes>

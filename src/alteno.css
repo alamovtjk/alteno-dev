@@ -394,6 +394,45 @@ input,textarea,button { font-family:inherit; }
   text-transform:uppercase; color:rgba(255,255,255,.3);
 }
 
+/* Музыка в drawer */
+.drawer-music {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 20px;
+  border-top: 1px solid rgba(255,255,255,.07);
+  cursor: pointer;
+  transition: background .2s;
+  user-select: none;
+}
+.drawer-music:hover { background: rgba(255,255,255,.04); }
+.drawer-music-left  { display: flex; align-items: center; gap: 12px; }
+.drawer-music-icon  {
+  width: 36px; height: 36px; border-radius: 10px;
+  background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.1);
+  display: flex; align-items: center; justify-content: center;
+  color: rgba(255,255,255,.45); transition: background .25s, color .25s, border-color .25s;
+}
+.drawer-music-icon.on {
+  background: rgba(124,58,237,.15); border-color: rgba(124,58,237,.4); color: #c4b5fd;
+}
+.drawer-music-title { font-size: 14px; font-weight: 600; color: rgba(255,255,255,.85); }
+.drawer-music-sub   { font-size: 11px; color: rgba(255,255,255,.35); margin-top: 1px;
+  font-family: 'JetBrains Mono', monospace; }
+
+/* Toggle switch */
+.drawer-music-toggle {
+  width: 40px; height: 22px; border-radius: 11px;
+  background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.12);
+  position: relative; transition: background .25s, border-color .25s; flex-shrink: 0;
+}
+.drawer-music-toggle span {
+  position: absolute; top: 3px; left: 3px;
+  width: 14px; height: 14px; border-radius: 50%;
+  background: rgba(255,255,255,.5);
+  transition: transform .25s cubic-bezier(.34,1.56,.64,1), background .25s;
+}
+.drawer-music-toggle.on { background: rgba(124,58,237,.5); border-color: rgba(124,58,237,.6); }
+.drawer-music-toggle.on span { transform: translateX(18px); background: #fff; }
+
 @media(max-width:1080px) { .nav-links { display:none; } }
 @media(max-width:760px) { .nav-cta { display:none; } .burger { display:flex; } }
 @media(max-width:560px) { .nav { padding:16px 18px; } }
@@ -1021,6 +1060,10 @@ input,textarea,button { font-family:inherit; }
 /* ═══════════════════════════════════
    MUSIC PLAYER — кнопка вкл/выкл
    ═══════════════════════════════════ */
+
+/* На мобиле скрыта — управление через drawer */
+@media (max-width: 1080px) { .mp-toggle { display: none !important; } }
+
 .mp-toggle {
   position: fixed;
   top: 16px;

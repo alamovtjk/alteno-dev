@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useLanguage } from '../../context/LanguageContext'
+import { useMusic } from '../../context/MusicContext'
 import { LogoMark } from '../ui/Logo'
 
 const LANGS  = ['ru', 'tj', 'en']
@@ -53,6 +54,7 @@ export default function Header() {
     setOpen(false)
   }
 
+  const { playing, toggle: toggleMusic } = useMusic()
   const langIdx = LANGS.indexOf(lang)
 
   return (
@@ -127,6 +129,31 @@ export default function Header() {
               <path d="M5 12h14M13 5l7 7-7 7" stroke="#fff"/>
             </svg>
           </button>
+        </div>
+
+        {/* Музыка */}
+        <div className="drawer-music" onClick={toggleMusic}>
+          <div className="drawer-music-left">
+            <div className={`drawer-music-icon${playing ? ' on' : ''}`}>
+              {playing ? (
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                  <rect x="6"  y="4" width="4" height="16" rx="1.5"/>
+                  <rect x="14" y="4" width="4" height="16" rx="1.5"/>
+                </svg>
+              ) : (
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/>
+                </svg>
+              )}
+            </div>
+            <div>
+              <div className="drawer-music-title">Музыка</div>
+              <div className="drawer-music-sub">Hand Covers Bruise</div>
+            </div>
+          </div>
+          <div className={`drawer-music-toggle${playing ? ' on' : ''}`}>
+            <span />
+          </div>
         </div>
 
         {/* Язык */}
