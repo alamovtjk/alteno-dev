@@ -1,14 +1,17 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import { supabase } from '../../../lib/supabase'
 
 const EMPTY = { title: '', description: '', tags: '', image_url: '', link: '' }
 
 export default function PortfolioTab() {
-  const [rows,    setRows]    = useState([])
-  const [loading, setLoading] = useState(true)
-  const [editing, setEditing] = useState(null)
-  const [form,    setForm]    = useState(EMPTY)
-  const [saving,  setSaving]  = useState(false)
+  const [rows,      setRows]      = useState([])
+  const [loading,   setLoading]   = useState(true)
+  const [editing,   setEditing]   = useState(null)
+  const [form,      setForm]      = useState(EMPTY)
+  const [saving,    setSaving]    = useState(false)
+  const [uploading, setUploading] = useState(false)
+  const [upErr,     setUpErr]     = useState('')
+  const fileRef = useRef(null)
 
   const load = useCallback(async () => {
     setLoading(true)
@@ -21,12 +24,32 @@ export default function PortfolioTab() {
 
   const f = (field) => (e) => setForm(p => ({ ...p, [field]: e.target.value }))
 
-  const openNew  = () => { setForm(EMPTY); setEditing('new') }
+  const openNew  = () => { setForm(EMPTY); setUpErr(''); setEditing('new') }
   const openEdit = (row) => {
     setForm({ ...row, tags: (row.tags || []).join(', ') })
+    setUpErr('')
     setEditing(row)
   }
   const close = () => setEditing(null)
+
+  /* Скриншот проекта в Storage — тот же бакет media, что у команды и музыки */
+  const uploadImage = async (e) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+    setUploading(true)
+    setUpErr('')
+    const ext  = file.name.split('.').pop()
+    const path = `portfolio/case_${Date.now()}.${ext}`
+    const { error } = await supabase.storage.from('media').upload(path, file, { upsert: true })
+    if (error) {
+      setUpErr('Ошибка загрузки: ' + error.message)
+    } else {
+      const { data } = supabase.storage.from('media').getPublicUrl(path)
+      setForm(p => ({ ...p, image_url: data.publicUrl }))
+    }
+    setUploading(false)
+    e.target.value = ''
+  }
 
   const save = async () => {
     setSaving(true)
@@ -111,7 +134,31 @@ export default function PortfolioTab() {
                 <input value={form.tags} onChange={f('tags')} placeholder="React, Figma, SEO" />
               </div>
               <div className="adm-field">
-                <label>URL изображения</label>
+                <label>Изображение проекта</label>
+                <input
+                  type="file"
+                  accept="image/*"
+                  ref={fileRef}
+                  style={{ display: 'none' }}
+                  onChange={uploadImage}
+                />
+                {form.image_url && (
+                  <div className="adm-project-img" style={{ marginBottom: 10 }}>
+                    <img src={form.image_url} alt="" onError={e => { e.target.style.display = 'none' }} />
+                  </div>
+                )}
+                <div className="adm-upload-row">
+                  <button className="adm-btn-ghost" onClick={() => fileRef.current?.click()} disabled={uploading}>
+                    {uploading ? 'Загрузка...' : '📷 Загрузить изображение'}
+                  </button>
+                  {form.image_url && (
+                    <button className="adm-btn-sm adm-btn-danger" onClick={() => setForm(p => ({ ...p, image_url: '' }))}>
+                      Убрать
+                    </button>
+                  )}
+                </div>
+                {upErr && <div className="adm-msg err">{upErr}</div>}
+                <div className="adm-field-hint">или вставь прямую ссылку ниже — без картинки покажем стеклянный мок</div>
                 <input value={form.image_url} onChange={f('image_url')} placeholder="https://..." />
               </div>
               <div className="adm-field">

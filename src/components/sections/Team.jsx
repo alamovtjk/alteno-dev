@@ -1,5 +1,7 @@
 import { useRef, useEffect, useState, useCallback } from 'react'
-import { supabase } from '../../lib/supabase'
+import { Link } from 'react-router-dom'
+import { useLanguage } from '../../context/LanguageContext'
+import { fetchTable } from '../../lib/supabase'
 
 const PARTICLES = [
   { id:0,  x:6,  y:10, s:2,   c:'#7c3aed', dur:7, del:0   },
@@ -25,26 +27,80 @@ function buildRing(blob) {
 }
 
 export default function Team() {
+  const { t } = useLanguage()
   const [members, setMembers] = useState([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    supabase
-      .from('team')
-      .select('*')
-      .order('order_index')
-      .then(({ data }) => {
-        setMembers(data || [])
-        setLoading(false)
-      })
+    fetchTable('team').then(data => {
+      setMembers(data)
+      setLoading(false)
+    })
   }, [])
 
-  if (loading || members.length === 0) return null
+  return (
+    <section id="team" className="section team-section" style={{ position: 'relative', zIndex: 2 }}>
+      <div className="team-bg" aria-hidden="true">
+        <div className="team-grid" />
+        {PARTICLES.map(p => (
+          <div key={p.id} className="team-particle" style={{
+            left: `${p.x}%`, top: `${p.y}%`,
+            width: `${p.s}px`, height: `${p.s}px`,
+            background: p.c, color: p.c,
+            animationDelay: `${p.del}s`,
+            animationDuration: `${p.dur}s`,
+          }} />
+        ))}
+      </div>
 
-  return <TeamCarousel members={members} />
+      <div className="shell" style={{ position: 'relative', zIndex: 1 }}>
+        <div className="sec-head">
+          <div className="eyebrow reveal"><span className="line" />{t.team.eyebrow}</div>
+          <h2 className="sec-title ub reveal">
+            {t.team.t1} <span className="grad">{t.team.t2}</span>
+          </h2>
+          <p className="sec-sub reveal">{t.team.sub}</p>
+        </div>
+      </div>
+
+      {members.length > 0 ? (
+        <>
+          <TeamCarousel members={members} labels={t.team} />
+          <div className="shell" style={{ position: 'relative', zIndex: 1 }}>
+            <div className="sec-more reveal">
+              <Link to="/team" className="btn btn-ghost">
+                {t.team.seeAll}
+                <svg viewBox="0 0 24 24" fill="none" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M5 12h14M13 5l7 7-7 7"/>
+                </svg>
+              </Link>
+            </div>
+          </div>
+        </>
+      ) : loading ? null : (
+        <div className="shell" style={{ position: 'relative', zIndex: 1 }}>
+          <div className="cases-soon reveal" style={{ marginTop: 64 }}>
+            <div className="cases-soon-icon">
+              <svg viewBox="0 0 48 48" fill="none" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" stroke="currentColor">
+                <circle cx="18" cy="17" r="6"/>
+                <path d="M8 39c0-5.5 4.5-10 10-10s10 4.5 10 10"/>
+                <circle cx="33" cy="19" r="5"/>
+                <path d="M33 29c4.4 0 8 3.6 8 8"/>
+              </svg>
+            </div>
+            <h3 className="ub">{t.team.soonT}</h3>
+            <p>{t.team.soonD}</p>
+            <div className="cases-soon-dots">
+              <span /><span /><span />
+            </div>
+          </div>
+        </div>
+      )}
+    </section>
+  )
 }
 
-function TeamCarousel({ members }) {
+function TeamCarousel({ members, labels }) {
   const N      = members.length
   const ALL    = [...members, ...members, ...members]
 
@@ -131,31 +187,7 @@ function TeamCarousel({ members }) {
   const next = () => scrollTo(active + 1)
 
   return (
-    <section id="team" className="section team-section" style={{ position: 'relative', zIndex: 2 }}>
-      <div className="team-bg" aria-hidden="true">
-        <div className="team-grid" />
-        {PARTICLES.map(p => (
-          <div key={p.id} className="team-particle" style={{
-            left: `${p.x}%`, top: `${p.y}%`,
-            width: `${p.s}px`, height: `${p.s}px`,
-            background: p.c, color: p.c,
-            animationDelay: `${p.del}s`,
-            animationDuration: `${p.dur}s`,
-          }} />
-        ))}
-      </div>
-
-      <div className="shell" style={{ position: 'relative', zIndex: 1 }}>
-        <div className="sec-label reveal d1">// КОМАНДА</div>
-        <h2 className="sec-h2 reveal d2">
-          Люди, которые <span className="grad">строят результат</span>
-        </h2>
-        <p className="sec-sub reveal d3">
-          Небольшая, но сильная команда — каждый специалист в своём деле.
-        </p>
-      </div>
-
-      <div className="team-carousel-wrap reveal d4" style={{ position: 'relative', zIndex: 1 }}>
+    <div className="team-carousel-wrap reveal" style={{ position: 'relative', zIndex: 1 }}>
         <div className="team-track" ref={trackRef}>
           {ALL.map((m, i) => {
             const isActive = active === i % N
@@ -208,23 +240,22 @@ function TeamCarousel({ members }) {
         </div>
 
         <div className="team-nav">
-          <button className="team-arr" onClick={prev} aria-label="Предыдущий">
+          <button className="team-arr" onClick={prev} aria-label={labels.prev}>
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
               <path d="M15 18l-6-6 6-6" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
           </button>
           <div className="team-dots">
             {members.map((_, i) => (
-              <button key={i} className={`team-dot${active === i ? ' on' : ''}`} onClick={() => scrollTo(i)} aria-label={`Карточка ${i + 1}`} />
+              <button key={i} className={`team-dot${active === i ? ' on' : ''}`} onClick={() => scrollTo(i)} aria-label={`${labels.card} ${i + 1}`} />
             ))}
           </div>
-          <button className="team-arr" onClick={next} aria-label="Следующий">
+          <button className="team-arr" onClick={next} aria-label={labels.next}>
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
               <path d="M9 18l6-6-6-6" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
           </button>
         </div>
-      </div>
-    </section>
+    </div>
   )
 }

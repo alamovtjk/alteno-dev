@@ -1,54 +1,43 @@
 import { useState, useEffect } from 'react'
 import { useLanguage } from '../../context/LanguageContext'
+import { useSettings } from '../../context/SettingsContext'
 
 const TG_TOKEN   = import.meta.env.VITE_TG_TOKEN   || ''
 const TG_CHAT_ID = import.meta.env.VITE_TG_CHAT_ID || ''
 const RL_KEY      = 'alteno_rl'
 const MAX_PER_DAY = 2
 
-const SOCIAL = [
-  {
-    key: 'email',
-    href: 'mailto:alamovsamir4@gmail.com',
-    label: 'alamovsamir4@gmail.com',
-    icon: (
-      <svg viewBox="0 0 24 24" fill="none" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/>
-      </svg>
-    ),
-  },
-  {
-    key: 'tg',
-    href: 'https://t.me/samiralamov',
-    label: '@samiralamov',
-    icon: (
-      <svg viewBox="0 0 24 24" fill="none" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M21 4L3 11l6 2 2 6 3-4 4 3z"/>
-      </svg>
-    ),
-  },
-  {
-    key: 'ig',
-    href: 'https://instagram.com/alamovtjk',
-    label: '@alamovtjk',
-    icon: (
-      <svg viewBox="0 0 24 24" fill="none" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <rect x="2" y="2" width="20" height="20" rx="5.5"/><circle cx="12" cy="12" r="4.5"/>
-        <circle cx="17.5" cy="6.5" r=".8" fill="currentColor" stroke="none"/>
-      </svg>
-    ),
-  },
-  {
-    key: 'gh',
-    href: 'https://github.com/alamovtjk',
-    label: 'alamovtjk',
-    icon: (
-      <svg viewBox="0 0 24 24" fill="none" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M9 19c-4 1.5-4-2-6-2m12 4v-3a3 3 0 0 0-1-2c3 0 5-2 5-5a4 4 0 0 0-1-3 4 4 0 0 0 0-3s-1 0-3 1a11 11 0 0 0-6 0C7 2 6 2 6 2a4 4 0 0 0 0 3 4 4 0 0 0-1 3c0 3 2 5 5 5a3 3 0 0 0-1 2v3"/>
-      </svg>
-    ),
-  },
-]
+const ICONS = {
+  email: (
+    <svg viewBox="0 0 24 24" fill="none" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/>
+    </svg>
+  ),
+  telegram: (
+    <svg viewBox="0 0 24 24" fill="none" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M21 4L3 11l6 2 2 6 3-4 4 3z"/>
+    </svg>
+  ),
+  instagram: (
+    <svg viewBox="0 0 24 24" fill="none" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <rect x="2" y="2" width="20" height="20" rx="5.5"/><circle cx="12" cy="12" r="4.5"/>
+      <circle cx="17.5" cy="6.5" r=".8" fill="currentColor" stroke="none"/>
+    </svg>
+  ),
+  github: (
+    <svg viewBox="0 0 24 24" fill="none" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M9 19c-4 1.5-4-2-6-2m12 4v-3a3 3 0 0 0-1-2c3 0 5-2 5-5a4 4 0 0 0-1-3 4 4 0 0 0 0-3s-1 0-3 1a11 11 0 0 0-6 0C7 2 6 2 6 2a4 4 0 0 0 0 3 4 4 0 0 0-1 3c0 3 2 5 5 5a3 3 0 0 0-1 2v3"/>
+    </svg>
+  ),
+  whatsapp: (
+    <svg viewBox="0 0 24 24" fill="none" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M21 11.5a8.5 8.5 0 0 1-12.6 7.4L3 20.5l1.7-5.2A8.5 8.5 0 1 1 21 11.5z"/>
+      <path d="M8.8 9.2c.4 2.4 2.6 4.6 5 5l1-1.4 1.8.8-.4 1.6c-2.6.5-6.6-2.7-7.6-6l1.5-.6.8 1.8-.9 1"/>
+    </svg>
+  ),
+}
+
+const SOCIAL_ORDER = ['email', 'telegram', 'instagram', 'github', 'whatsapp']
 
 function getRLData() {
   try { return JSON.parse(localStorage.getItem(RL_KEY) || '{}') } catch { return {} }
@@ -63,7 +52,7 @@ function recordSubmission() {
   localStorage.setItem(RL_KEY, JSON.stringify({ date: today, count: getTodayCount() + 1 }))
 }
 
-async function sendNotifications(form) {
+async function sendNotifications(form, email) {
   const now = new Date().toLocaleString('ru-RU', {
     day: '2-digit', month: '2-digit', year: 'numeric',
     hour: '2-digit', minute: '2-digit',
@@ -84,7 +73,7 @@ async function sendNotifications(form) {
         }).catch(() => {})
       : Promise.resolve(),
 
-    fetch('https://formsubmit.co/ajax/alamovsamir4@gmail.com', {
+    fetch(`https://formsubmit.co/ajax/${email}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
       body: JSON.stringify({
@@ -100,6 +89,7 @@ async function sendNotifications(form) {
 
 export default function Contact() {
   const { t } = useLanguage()
+  const { settings, links } = useSettings()
   const [form, setForm]       = useState({ name: '', contact: '', task: '' })
   const [sending, setSending] = useState(false)
   const [status, setStatus]   = useState('idle')
@@ -114,7 +104,7 @@ export default function Contact() {
     if (getTodayCount() >= MAX_PER_DAY) { setStatus('limited'); return }
 
     setSending(true)
-    await sendNotifications(form)
+    await sendNotifications(form, settings.email)
     recordSubmission()
     setSending(false)
     setForm({ name: '', contact: '', task: '' })
@@ -150,11 +140,11 @@ export default function Contact() {
               </div>
 
               <div className="contacts-row">
-                {SOCIAL.map(s => (
-                  <a key={s.key} className="clink" href={s.href}
-                    target={s.key !== 'email' ? '_blank' : undefined} rel="noreferrer">
-                    {s.icon}
-                    {s.label}
+                {SOCIAL_ORDER.filter(k => links[k]).map(k => (
+                  <a key={k} className="clink" href={links[k].href}
+                    target={k !== 'email' ? '_blank' : undefined} rel="noreferrer">
+                    {ICONS[k]}
+                    {links[k].label}
                   </a>
                 ))}
               </div>

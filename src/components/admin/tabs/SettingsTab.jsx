@@ -1,14 +1,16 @@
 import { useState, useEffect } from 'react'
 import { supabase } from '../../../lib/supabase'
 
+/* Совпадает с DEFAULT_SETTINGS в SettingsContext — админка показывает то,
+   что реально отрисовано на сайте, пока настройки не сохранены */
 const DEFAULTS = {
   company_name: 'AlTeNo Dev',
   tagline: 'AI Веб-студия из Душанбе',
-  email: '',
+  email: 'alamovsamir4@gmail.com',
   phone: '',
-  telegram: '',
-  instagram: '',
-  github: '',
+  telegram: 'samiralamov',
+  instagram: 'alamovtjk',
+  github: 'alamovtjk',
   whatsapp: '',
 }
 

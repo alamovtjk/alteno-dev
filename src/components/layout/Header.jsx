@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { useNavigate, useLocation } from 'react-router-dom'
 import { useLanguage } from '../../context/LanguageContext'
 import { useMusic } from '../../context/MusicContext'
 import { LogoMark } from '../ui/Logo'
@@ -8,6 +9,8 @@ const LABELS = { ru: 'РУ', tj: 'ТҶ', en: 'EN' }
 
 export default function Header() {
   const { lang, setLang, t } = useLanguage()
+  const navigate = useNavigate()
+  const isHome   = useLocation().pathname === '/'
   const [scrolled,  setScrolled]  = useState(false)
   const [open,      setOpen]      = useState(false)
   const [progress,  setProgress]  = useState(0)
@@ -46,15 +49,25 @@ export default function Header() {
     { href: '#cases',    label: t.nav.cases     },
     { href: '#process',  label: t.nav.process   },
     { href: '#studio',   label: t.nav.studio    },
+    { href: '#team',     label: t.nav.team      },
     { href: '#reviews',  label: t.nav.reviews   },
   ]
 
+  /* С подстраниц (/projects, /team) секций главной в DOM нет —
+     сначала уводим на главную, скроллом займётся Home по state */
   const go = (href) => {
-    document.querySelector(href)?.scrollIntoView({ behavior: 'smooth' })
+    setOpen(false)
+    if (isHome) document.querySelector(href)?.scrollIntoView({ behavior: 'smooth' })
+    else navigate('/', { state: { scrollTo: href } })
+  }
+
+  const goHome = () => {
+    if (isHome) window.scrollTo({ top: 0, behavior: 'smooth' })
+    else navigate('/')
     setOpen(false)
   }
 
-  const { playing, toggle: toggleMusic } = useMusic()
+  const { playing, toggle: toggleMusic, track } = useMusic()
   const langIdx = LANGS.indexOf(lang)
 
   return (
@@ -65,7 +78,7 @@ export default function Header() {
       <header className={`header${scrolled ? ' scrolled' : ''}`}>
         <div className="nav">
           {/* Лого */}
-          <a href="#" onClick={e => { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }) }}
+          <a href="/" onClick={e => { e.preventDefault(); goHome() }}
             style={{ textDecoration: 'none', display: 'flex', alignItems: 'center' }}>
             <LogoMark />
           </a>
@@ -148,7 +161,7 @@ export default function Header() {
             </div>
             <div>
               <div className="drawer-music-title">Музыка</div>
-              <div className="drawer-music-sub">Hand Covers Bruise</div>
+              <div className="drawer-music-sub">{track.title}</div>
             </div>
           </div>
           <div className={`drawer-music-toggle${playing ? ' on' : ''}`}>

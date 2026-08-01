@@ -1,14 +1,15 @@
 import { useMusic } from '../../context/MusicContext'
 
 export default function MusicPlayer() {
-  const { playing, toggle } = useMusic()
+  const { playing, toggle, track } = useMusic()
+  const label = playing ? 'Выключить музыку' : 'Включить музыку'
 
   return (
     <button
       className={`mp-toggle${playing ? ' mp-on' : ''}`}
       onClick={toggle}
-      aria-label={playing ? 'Выключить музыку' : 'Включить музыку'}
-      title={playing ? 'Выключить музыку' : 'Включить музыку'}
+      aria-label={label}
+      title={`${label} — ${track.title}`}
     >
       {playing ? (
         <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
