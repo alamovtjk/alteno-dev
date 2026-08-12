@@ -1,18 +1,10 @@
 import { useLanguage } from '../../context/LanguageContext'
-import AnimatedCounter from '../ui/AnimatedCounter'
 
 const vals = [
   { cls: 'v1', icon: <svg viewBox="0 0 24 24" fill="none" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M13 2L3 14h7l-1 8 10-12h-7z"/></svg>, tKey:'v1t', dKey:'v1d' },
   { cls: 'v2', icon: <svg viewBox="0 0 24 24" fill="none" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="9"/><path d="M2 12h20"/><path d="M12 3a14 14 0 0 1 0 18 14 14 0 0 1 0-18z"/></svg>, tKey:'v2t', dKey:'v2d' },
   { cls: 'v3', icon: <svg viewBox="0 0 24 24" fill="none" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 3v18"/><path d="M3 8l9-5 9 5-9 5z"/></svg>, tKey:'v3t', dKey:'v3d' },
   { cls: 'v4', icon: <svg viewBox="0 0 24 24" fill="none" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>, tKey:'v4t', dKey:'v4d' },
-]
-
-const numCards = [
-  { n:50, s:'+', lKey:'st1', cls:'n1', icon:<svg viewBox="0 0 24 24" fill="none" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 7h16M4 12h16M4 17h10"/></svg> },
-  { n:100,s:'%', lKey:'st2', cls:'n2', icon:<svg viewBox="0 0 24 24" fill="none" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 6L9 17l-5-5"/></svg> },
-  { n:4,  s:'',  lKey:'st3', cls:'n3', icon:<svg viewBox="0 0 24 24" fill="none" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg> },
-  { n:2,  s:'+', lKey:'st4', cls:'n4', icon:<svg viewBox="0 0 24 24" fill="none" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="8" r="5"/><path d="M8 13l-2 8 6-3 6 3-2-8"/></svg> },
 ]
 
 export default function Studio() {
@@ -53,19 +45,6 @@ export default function Studio() {
               </div>
             ))}
           </div>
-        </div>
-
-        {/* Stats */}
-        <div className="num-band">
-          {numCards.map((c, i) => (
-            <div key={i} className={`numcard ${c.cls} reveal`}>
-              <span className="ni">{c.icon}</span>
-              <div className="n">
-                <AnimatedCounter value={c.n} suffix={c.s} duration={2} />
-              </div>
-              <div className="l">{t.studio[c.lKey]}</div>
-            </div>
-          ))}
         </div>
       </div>
     </section>

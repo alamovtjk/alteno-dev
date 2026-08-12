@@ -78,6 +78,13 @@ export default {
     c5cat: 'Payments',
     c6cat: 'Eco',
   },
+  apps: {
+    eyebrow: 'Mobile apps',
+    t1: 'Currently',
+    t2: 'in development',
+    sub: 'Two in-house apps by the studio. Shown while still being built — release is coming soon.',
+    wip: 'In development',
+  },
   process: {
     eyebrow: 'Process',
     t1: 'Transparent',
@@ -112,10 +119,6 @@ export default {
     v3d: 'One team owns both the beauty and what\'s under the hood.',
     v4t: 'Always reachable',
     v4d: 'We reply within 2 hours during work hours — never radio silence.',
-    st1: 'orders completed',
-    st2: 'happy clients',
-    st3: 'years with AI',
-    st4: 'developers on team',
   },
   team: {
     eyebrow: 'Team',
