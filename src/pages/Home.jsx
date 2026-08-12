@@ -4,6 +4,7 @@ import Hero from '../components/sections/Hero'
 import About from '../components/sections/About'
 import Services from '../components/sections/Services'
 import Portfolio from '../components/sections/Portfolio'
+import MobileApps from '../components/sections/MobileApps'
 import Process from '../components/sections/Process'
 import Studio from '../components/sections/Studio'
 import Team from '../components/sections/Team'
@@ -51,6 +52,7 @@ export default function Home() {
       <About />
       <Services />
       <Portfolio />
+      <MobileApps />
       <Process />
       <Studio />
       <Team />

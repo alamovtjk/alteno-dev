@@ -82,7 +82,7 @@ export default {
     eyebrow: 'Mobile apps',
     t1: 'Currently',
     t2: 'in development',
-    sub: 'Two in-house apps by the studio. Shown while still being built — release is coming soon.',
+    sub: 'In-house apps by the studio. Shown while still being built — release is coming soon.',
     wip: 'In development',
   },
   process: {
