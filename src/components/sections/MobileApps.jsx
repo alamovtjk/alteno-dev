@@ -1,17 +1,19 @@
 import { useRef, useEffect, useState, useCallback } from 'react'
 import { useLanguage } from '../../context/LanguageContext'
 
-/* Приложения студии в разработке.
-   shots — экраны в /public/apps/<id>/, нормализованные под 9:16.
-   Пустой массив — внутри корпуса крутится скелетон вместо галереи,
-   так что новое приложение можно добавить ещё до готовых скриншотов. */
+/* Приложения студии в разработке — идут строками: 01, 02, ...
+   Нечётные — телефон слева, чётные — справа.
+   shots: экраны в /public/apps/<id>/, нормализованные под 9:16.
+   Пустой массив — вместо галереи шиммер-скелетон, можно завести
+   приложение ещё до готовых скриншотов. */
 const APPS = [
   {
     id: 'rneft',
     name: 'R-NEFT',
-    note: 'Бонусы и карта АЗС',
-    accent: 'var(--violet)',
-    glow: 'rgba(124,58,237,.28)',
+    descKey: 'rneftD',
+    featKeys: ['rneftF1', 'rneftF2', 'rneftF3', 'rneftF4'],
+    accent: '#7c3aed',
+    accent2: '#4f46e5',
     shots: [
       '/apps/rneft/01.webp',
       '/apps/rneft/02.webp',
@@ -51,9 +53,15 @@ const Chevron = ({ d }) => (
   </svg>
 )
 
-/* Телефон с галереей экранов: свайп пальцем, перетаскивание мышью,
-   стрелки на десктопе, точки-индикаторы под корпусом. */
-function Phone({ app, label }) {
+const Check = () => (
+  <svg viewBox="0 0 24 24" fill="none" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M20 6L9 17l-5-5" />
+  </svg>
+)
+
+/* Телефон с галереей: свайп пальцем, перетаскивание мышью,
+   стрелки на десктопе, точки-индикаторы, наклон вслед за курсором. */
+function PhoneGallery({ app, t }) {
   const shots = app.shots
   const many  = shots.length > 1
   const last  = shots.length - 1
@@ -61,8 +69,9 @@ function Phone({ app, label }) {
   const [idx, setIdx]   = useState(0)
   const [drag, setDrag] = useState(0)     // смещение пальца в % ширины экрана
   const [held, setHeld] = useState(false) // пауза автопрокрутки
-  const startX = useRef(null)
+  const startX   = useRef(null)
   const widthRef = useRef(1)              // ширину меряем в pointerdown, не в рендере
+  const tiltRef  = useRef(null)
 
   const go = useCallback((n) => {
     setIdx(prev => {
@@ -71,13 +80,31 @@ function Phone({ app, label }) {
     })
   }, [last])
 
-  /* Автопрокрутка — на паузе, пока курсор внутри или идёт свайп */
   useEffect(() => {
     if (!many || held) return
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
     const id = setInterval(() => go(i => i + 1), AUTOPLAY_MS)
     return () => clearInterval(id)
   }, [many, held, go])
+
+  /* Наклон корпуса за курсором — только на десктопе */
+  useEffect(() => {
+    const el = tiltRef.current
+    if (!el || window.innerWidth < 960) return
+    const onMove = (e) => {
+      const r  = el.getBoundingClientRect()
+      const cx = ((e.clientX - r.left) / r.width  - 0.5) * 12
+      const cy = ((e.clientY - r.top)  / r.height - 0.5) * 8
+      el.style.transform = `rotateY(${cx}deg) rotateX(${-cy}deg)`
+    }
+    const onLeave = () => { el.style.transform = '' }
+    el.addEventListener('mousemove', onMove, { passive: true })
+    el.addEventListener('mouseleave', onLeave)
+    return () => {
+      el.removeEventListener('mousemove', onMove)
+      el.removeEventListener('mouseleave', onLeave)
+    }
+  }, [])
 
   const onDown = (e) => {
     if (!many) return
@@ -99,15 +126,14 @@ function Phone({ app, label }) {
     setHeld(false)
   }
 
-  /* Во время перетаскивания трек следует за пальцем, потом — плавный доводчик */
   const shift = -idx * 100 + drag
 
   return (
-    <div className="mapp-item reveal" style={{ '--c': app.accent, '--glow': app.glow }}>
-      <div className="mapp-phone">
-        <div className="mapp-frame">
-          <span className="mapp-island" />
+    <div className="mapp-stage">
+      <span className="mapp-glow" aria-hidden="true" />
 
+      <div className="mapp-tilt" ref={tiltRef}>
+        <div className="mapp-frame">
           <div className="mapp-scr">
             {shots.length === 0 ? <AppSkeleton /> : (
               <div
@@ -127,7 +153,7 @@ function Phone({ app, label }) {
                     <img
                       key={src}
                       src={src}
-                      alt={`${app.name} — экран ${i + 1}`}
+                      alt={`${app.name} — ${t.screen} ${i + 1}`}
                       draggable="false"
                       loading={i === 0 ? 'eager' : 'lazy'}
                     />
@@ -137,11 +163,11 @@ function Phone({ app, label }) {
                 {many && (
                   <>
                     <button type="button" className="mapp-arrow mapp-arrow-l"
-                      onClick={() => go(i => i - 1)} aria-label="Предыдущий экран">
+                      onClick={() => go(i => i - 1)} aria-label={t.prev}>
                       <Chevron d="M15 5l-7 7 7 7" />
                     </button>
                     <button type="button" className="mapp-arrow mapp-arrow-r"
-                      onClick={() => go(i => i + 1)} aria-label="Следующий экран">
+                      onClick={() => go(i => i + 1)} aria-label={t.next}>
                       <Chevron d="M9 5l7 7-7 7" />
                     </button>
                   </>
@@ -149,67 +175,66 @@ function Phone({ app, label }) {
               </div>
             )}
           </div>
-
-          <span className="mapp-homebar" />
         </div>
-
-        {/* Точки живут вне экрана — у .mapp-scr стоит overflow:hidden */}
-        {many && (
-          <div className="mapp-dots">
-            {shots.map((src, i) => (
-              <button
-                key={src}
-                type="button"
-                className={`mapp-dot${i === idx ? ' is-on' : ''}`}
-                onClick={() => go(i)}
-                aria-label={`Экран ${i + 1}`}
-              />
-            ))}
-          </div>
-        )}
-
-        <span className="mapp-shadow" aria-hidden="true" />
       </div>
 
-      <div className="mapp-meta">
+      {many && (
+        <div className="mapp-dots">
+          {shots.map((src, i) => (
+            <button
+              key={src}
+              type="button"
+              className={`mapp-dot${i === idx ? ' is-on' : ''}`}
+              onClick={() => go(i)}
+              aria-label={`${t.screen} ${i + 1}`}
+            />
+          ))}
+        </div>
+      )}
+    </div>
+  )
+}
+
+function AppRow({ app, index, t }) {
+  return (
+    <article
+      className="mapp-row reveal"
+      style={{ '--c': app.accent, '--c2': app.accent2 }}
+    >
+      <PhoneGallery app={app} t={t} />
+
+      <div className="mapp-info">
+        <span className="mapp-num">{String(index + 1).padStart(2, '0')}</span>
+
         <span className="mapp-badge">
           <span className="mapp-pulse" />
-          {label}
+          {t.wip}
         </span>
+
         <h3 className="mapp-name ub">{app.name}</h3>
-        {app.note && <p className="mapp-note">{app.note}</p>}
+        <p className="mapp-desc">{t[app.descKey]}</p>
+
+        <ul className="mapp-feats">
+          {app.featKeys.map(k => (
+            <li key={k}>
+              <span className="mapp-feat-ico"><Check /></span>
+              {t[k]}
+            </li>
+          ))}
+        </ul>
+
+        <div className="mapp-plat">
+          <span className="mapp-plat-chip">iOS</span>
+          <span className="mapp-plat-chip">Android</span>
+        </div>
       </div>
-    </div>
+    </article>
   )
 }
 
 export default function MobileApps() {
   const { t } = useLanguage()
   const a = t.apps
-  const wrapRef  = useRef(null)
-  const sceneRef = useRef(null)
-
-  /* Тот же параллакс, что у DeviceScene — на десктопе телефоны ведут за курсором */
-  useEffect(() => {
-    const wrap  = wrapRef.current
-    const scene = sceneRef.current
-    if (!wrap || !scene || window.innerWidth < 960) return
-
-    const onMove = (e) => {
-      const r  = wrap.getBoundingClientRect()
-      const cx = ((e.clientX - r.left) / r.width  - 0.5) * 7
-      const cy = ((e.clientY - r.top)  / r.height - 0.5) * 4
-      scene.style.transform = `rotateY(${cx}deg) rotateX(${-cy}deg)`
-    }
-    const onLeave = () => { scene.style.transform = '' }
-
-    wrap.addEventListener('mousemove', onMove, { passive: true })
-    wrap.addEventListener('mouseleave', onLeave)
-    return () => {
-      wrap.removeEventListener('mousemove', onMove)
-      wrap.removeEventListener('mouseleave', onLeave)
-    }
-  }, [])
 
   return (
     <section id="apps" className="section" style={{ position: 'relative', zIndex: 2 }}>
@@ -222,12 +247,10 @@ export default function MobileApps() {
           <p className="sec-sub reveal">{a.sub}</p>
         </div>
 
-        <div className="mapp-wrap" ref={wrapRef}>
-          <div className="mapp-scene" ref={sceneRef}>
-            {APPS.map(app => (
-              <Phone key={app.id} app={app} label={a.wip} />
-            ))}
-          </div>
+        <div className="mapp-list">
+          {APPS.map((app, i) => (
+            <AppRow key={app.id} app={app} index={i} t={a} />
+          ))}
         </div>
       </div>
     </section>

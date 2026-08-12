@@ -3153,56 +3153,79 @@ body.drawer-open .ariel-fab {
 /* ═══════════════════════════════════
    Мобильные приложения в разработке
    ═══════════════════════════════════ */
-.mapp-wrap { perspective: 1600px; overflow: visible; padding: 10px 0 20px; }
-.mapp-scene {
-  display: flex;
-  align-items: flex-start;
-  justify-content: center;
-  gap: 90px;
+.mapp-list { display: flex; flex-direction: column; gap: 120px; }
+
+/* Строка: телефон + описание. Чётные — телефон справа. */
+.mapp-row {
+  display: grid;
+  grid-template-columns: minmax(0, 460px) minmax(0, 1fr);
+  gap: clamp(32px, 6vw, 90px);
+  align-items: center;
+}
+/* Чётные строки зеркалим: узкая колонка под телефон уезжает вправо */
+.mapp-row:nth-child(even) {
+  grid-template-columns: minmax(0, 1fr) minmax(0, 460px);
+}
+.mapp-row:nth-child(even) .mapp-stage { order: 2; }
+.mapp-row:nth-child(even) .mapp-info  { order: 1; }
+
+/* ── Сцена с телефоном ── */
+.mapp-stage {
+  position: relative;
+  display: flex; flex-direction: column; align-items: center;
+  perspective: 1400px;
+  padding: 10px 0 44px;
+}
+.mapp-glow {
+  position: absolute; top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: min(420px, 90%); height: 78%;
+  border-radius: 50%;
+  background: radial-gradient(ellipse at center,
+    color-mix(in srgb, var(--c) 30%, transparent), transparent 68%);
+  filter: blur(52px);
+  pointer-events: none;
+}
+.mapp-tilt {
+  position: relative;
   transform-style: preserve-3d;
   transition: transform .5s cubic-bezier(.22,1,.36,1);
 }
 
-.mapp-item { display: flex; flex-direction: column; align-items: center; }
-
 /* ── Корпус ── */
-.mapp-phone { position: relative; transform-style: preserve-3d; }
-.mapp-item:nth-child(1) .mapp-phone { transform: rotateY(9deg)  rotateX(2deg); }
-.mapp-item:nth-child(2) .mapp-phone { transform: rotateY(-9deg) rotateX(2deg); }
 .mapp-frame {
   position: relative;
-  width: 260px; padding: 13px;
-  border-radius: 46px;
-  background: linear-gradient(145deg, #2a2a42, #1a1a2e);
-  border: 1.5px solid rgba(255,255,255,.22);
+  width: 296px; padding: 12px;
+  border-radius: 52px;
+  background: linear-gradient(145deg, #33334e, #17172a);
+  border: 1px solid rgba(255,255,255,.26);
   box-shadow:
-    0 50px 100px rgba(0,0,0,.7),
-    0 0 60px var(--glow),
-    inset 0 1px 0 rgba(255,255,255,.18);
+    0 46px 90px rgba(0,0,0,.62),
+    0 0 0 1px rgba(0,0,0,.5),
+    0 0 70px color-mix(in srgb, var(--c) 22%, transparent),
+    inset 0 1px 0 rgba(255,255,255,.24);
 }
-/* 234x416 — ровно 9:16, под пропорции скриншотов, поэтому ничего не режется */
+/* 272x484 — ровно 9:16 под пропорции скриншотов, ничего не режется.
+   Своих «острова» и home-бара нет: скриншоты сняты с реального экрана
+   и уже содержат статус-бар и навигацию приложения. */
 .mapp-scr {
   position: relative;
-  width: 234px; height: 416px;
-  border-radius: 34px;
+  width: 272px; height: 484px;
+  border-radius: 42px;
   overflow: hidden;
   background: #06060f;
-  box-shadow: inset 0 0 30px rgba(0,0,0,.5);
 }
 
-/* ── Свайп-галерея экранов ── */
+/* ── Свайп-галерея ── */
 .mapp-slider {
-  position: relative;
-  width: 100%; height: 100%;
-  overflow: hidden;
-  cursor: grab;
-  touch-action: pan-y;          /* вертикальный скролл страницы не перехватываем */
+  position: relative; width: 100%; height: 100%;
+  overflow: hidden; cursor: grab;
+  touch-action: pan-y;            /* вертикальный скролл страницы не перехватываем */
   -webkit-user-select: none; user-select: none;
 }
 .mapp-slider:active { cursor: grabbing; }
 .mapp-track {
-  display: flex;
-  width: 100%; height: 100%;
+  display: flex; width: 100%; height: 100%;
   transition: transform .55s cubic-bezier(.22,1,.36,1);
   will-change: transform;
 }
@@ -3210,109 +3233,83 @@ body.drawer-open .ariel-fab {
 .mapp-track img {
   width: 100%; height: 100%;
   flex: 0 0 100%;
-  object-fit: cover;
-  display: block;
-  -webkit-user-drag: none;
+  object-fit: cover; object-position: top center;
+  display: block; -webkit-user-drag: none;
 }
 
-/* Стрелки — только на десктопе, проявляются при наведении */
 .mapp-arrow {
   position: absolute; top: 50%; transform: translateY(-50%);
-  width: 30px; height: 30px; border-radius: 50%;
+  width: 34px; height: 34px; border-radius: 50%;
   display: grid; place-items: center;
-  background: rgba(8,8,18,.55);
-  border: 1px solid rgba(255,255,255,.18);
+  background: rgba(8,8,18,.6);
+  border: 1px solid rgba(255,255,255,.2);
   color: #fff; cursor: pointer;
   opacity: 0; transition: opacity .25s ease, background .2s ease;
-  backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
 }
-.mapp-arrow svg { width: 15px; height: 15px; stroke: currentColor; }
-.mapp-arrow-l { left: 8px; }
-.mapp-arrow-r { right: 8px; }
-.mapp-slider:hover .mapp-arrow { opacity: 1; }
-.mapp-arrow:hover { background: rgba(8,8,18,.8); }
+.mapp-arrow svg { width: 16px; height: 16px; stroke: currentColor; }
+.mapp-arrow-l { left: 9px; }
+.mapp-arrow-r { right: 9px; }
+.mapp-stage:hover .mapp-arrow { opacity: 1; }
+.mapp-arrow:hover { background: rgba(8,8,18,.85); }
 @media (hover: none) { .mapp-arrow { display: none; } }
 
-/* Точки под корпусом — вне экрана, иначе их срежет overflow */
+/* Точки под корпусом */
 .mapp-dots {
-  position: absolute; left: 50%; bottom: -28px;
+  position: absolute; bottom: 8px; left: 50%;
   transform: translateX(-50%);
-  display: flex; gap: 7px; z-index: 4;
+  display: flex; gap: 8px; z-index: 4;
 }
 .mapp-dot {
-  width: 7px; height: 7px; padding: 0;
+  width: 7px; height: 7px; padding: 0; border: none;
   border-radius: 999px; cursor: pointer;
-  background: rgba(255,255,255,.24);
-  border: none;
+  background: rgba(255,255,255,.26);
   transition: width .3s ease, background .3s ease;
 }
-.mapp-dot.is-on { width: 20px; background: var(--c); }
+.mapp-dot.is-on { width: 22px; background: var(--c); }
 
-/* Динамический остров и home-бар */
-.mapp-island {
-  position: absolute; z-index: 3;
-  top: 24px; left: 50%; transform: translateX(-50%);
-  width: 78px; height: 22px; border-radius: 999px;
-  background: #06060f;
-  border: 1px solid rgba(255,255,255,.07);
-}
-.mapp-homebar {
-  position: absolute; z-index: 3;
-  bottom: 24px; left: 50%; transform: translateX(-50%);
-  width: 92px; height: 4px; border-radius: 2px;
-  background: rgba(255,255,255,.34);
-}
-
-/* Мягкая тень-подложка под корпусом */
-.mapp-shadow {
-  position: absolute; left: 50%; bottom: -34px;
-  transform: translateX(-50%);
-  width: 210px; height: 34px; border-radius: 50%;
-  background: radial-gradient(ellipse at center, rgba(0,0,0,.55), transparent 70%);
-  filter: blur(9px);
-  pointer-events: none;
-}
-
-/* ── Скелетон вместо скриншота ── */
-.mapp-skel { padding: 62px 18px 30px; display: flex; flex-direction: column; gap: 11px; }
-.mapp-skel-hd  { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
-.mapp-skel-row { display: flex; gap: 9px; margin: 4px 0 8px; }
-
+/* ── Скелетон вместо скриншотов ── */
+.mapp-skel { padding: 46px 20px 28px; display: flex; flex-direction: column; gap: 12px; }
+.mapp-skel-hd  { display: flex; align-items: center; gap: 11px; margin-bottom: 6px; }
+.mapp-skel-row { display: flex; gap: 10px; margin: 4px 0 8px; }
 .mapp-sk {
-  display: block; border-radius: 7px;
-  background: linear-gradient(
-    90deg,
-    rgba(255,255,255,.05) 0%,
-    rgba(255,255,255,.13) 50%,
-    rgba(255,255,255,.05) 100%
-  );
+  display: block; border-radius: 8px;
+  background: linear-gradient(90deg,
+    rgba(255,255,255,.05) 0%, rgba(255,255,255,.13) 50%, rgba(255,255,255,.05) 100%);
   background-size: 220% 100%;
   animation: mappShimmer 1.9s ease-in-out infinite;
 }
-.mapp-sk-avatar { width: 34px; height: 34px; border-radius: 50%; flex-shrink: 0; }
-.mapp-sk-line   { height: 11px; }
-.mapp-sk-hero   { height: 116px; border-radius: 15px; }
-.mapp-sk-tile   { flex: 1; height: 54px; border-radius: 12px; }
-
+.mapp-sk-avatar { width: 38px; height: 38px; border-radius: 50%; flex-shrink: 0; }
+.mapp-sk-line   { height: 12px; }
+.mapp-sk-hero   { height: 132px; border-radius: 16px; }
+.mapp-sk-tile   { flex: 1; height: 62px; border-radius: 13px; }
 @keyframes mappShimmer {
   0%   { background-position: 120% 0; }
   100% { background-position: -120% 0; }
 }
 
-/* ── Подпись под телефоном ── */
-.mapp-meta { margin-top: 54px; text-align: center; }
+/* ── Описание ── */
+.mapp-info { position: relative; min-width: 0; }
+.mapp-num {
+  display: block;
+  font-family: 'Unbounded', sans-serif;
+  font-size: clamp(40px, 6vw, 64px); font-weight: 800; line-height: 1;
+  background: linear-gradient(135deg, var(--c), var(--c2));
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent;
+  opacity: .32; margin-bottom: 14px;
+}
 .mapp-badge {
   display: inline-flex; align-items: center; gap: 8px;
   padding: 6px 14px; border-radius: 999px;
-  font-size: 12px; font-weight: 600; letter-spacing: .02em;
+  font-size: 12.5px; font-weight: 600; letter-spacing: .02em;
   color: var(--c);
-  background: color-mix(in srgb, var(--c) 12%, transparent);
-  border: 1px solid color-mix(in srgb, var(--c) 34%, transparent);
+  background: color-mix(in srgb, var(--c) 13%, transparent);
+  border: 1px solid color-mix(in srgb, var(--c) 36%, transparent);
 }
 .mapp-pulse {
   width: 7px; height: 7px; border-radius: 50%;
   background: var(--c);
-  box-shadow: 0 0 0 0 var(--c);
   animation: mappPulse 2s ease-out infinite;
 }
 @keyframes mappPulse {
@@ -3320,26 +3317,55 @@ body.drawer-open .ariel-fab {
   70%  { box-shadow: 0 0 0 9px transparent; }
   100% { box-shadow: 0 0 0 0 transparent; }
 }
-.mapp-name { margin-top: 14px; font-size: 21px; }
-.mapp-note { margin-top: 6px; font-size: 13.5px; color: var(--text-dim); }
+.mapp-name { margin: 16px 0 10px; font-size: clamp(26px, 3.4vw, 38px); }
+.mapp-desc { color: var(--text-dim); font-size: 15.5px; line-height: 1.65; max-width: 44ch; }
+
+.mapp-feats { list-style: none; margin: 24px 0 0; padding: 0; display: grid; gap: 12px; }
+.mapp-feats li {
+  display: flex; align-items: flex-start; gap: 11px;
+  font-size: 14.5px; color: var(--text);
+}
+.mapp-feat-ico {
+  flex-shrink: 0; width: 21px; height: 21px; margin-top: 1px;
+  border-radius: 50%; display: grid; place-items: center;
+  background: color-mix(in srgb, var(--c) 16%, transparent);
+  color: var(--c);
+}
+.mapp-feat-ico svg { width: 12px; height: 12px; stroke: currentColor; }
+
+.mapp-plat { display: flex; gap: 9px; margin-top: 26px; }
+.mapp-plat-chip {
+  padding: 6px 14px; border-radius: 999px;
+  font-size: 12.5px; font-weight: 600; color: var(--text-dim);
+  background: rgba(255,255,255,.05);
+  border: 1px solid rgba(255,255,255,.11);
+}
 
 /* ── Адаптив ── */
-@media (max-width: 900px) {
-  .mapp-scene { gap: 54px; }
-  .mapp-frame { width: 216px; padding: 11px; border-radius: 40px; }
-  .mapp-scr   { width: 194px; height: 345px; border-radius: 30px; }
-  .mapp-island { top: 20px; width: 66px; height: 19px; }
-  .mapp-skel  { padding: 52px 15px 26px; }
+@media (max-width: 1024px) {
+  .mapp-row { grid-template-columns: minmax(0, 400px) minmax(0, 1fr); gap: 40px; }
+  .mapp-frame { width: 262px; padding: 11px; border-radius: 46px; }
+  .mapp-scr   { width: 240px; height: 427px; border-radius: 37px; }
 }
-@media (max-width: 640px) {
-  .mapp-scene { flex-direction: column; align-items: center; gap: 78px; }
-  .mapp-item:nth-child(1) .mapp-phone,
-  .mapp-item:nth-child(2) .mapp-phone { transform: none; }
-  .mapp-meta { margin-top: 46px; }
+@media (max-width: 860px) {
+  .mapp-list { gap: 88px; }
+  .mapp-row,
+  .mapp-row:nth-child(even) { grid-template-columns: 1fr; gap: 34px; justify-items: center; }
+  .mapp-row:nth-child(even) .mapp-stage { order: 0; }
+  .mapp-row:nth-child(even) .mapp-info  { order: 0; }
+  .mapp-info { text-align: center; max-width: 520px; }
+  .mapp-desc { max-width: none; }
+  .mapp-num  { margin-bottom: 10px; }
+  .mapp-feats { text-align: left; display: inline-grid; }
+  .mapp-plat { justify-content: center; }
+}
+@media (max-width: 420px) {
+  .mapp-frame { width: 232px; padding: 10px; border-radius: 42px; }
+  .mapp-scr   { width: 212px; height: 377px; border-radius: 33px; }
+  .mapp-skel  { padding: 38px 16px 24px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .mapp-sk { animation: none; }
-  .mapp-pulse { animation: none; }
-  .mapp-scene { transition: none; }
+  .mapp-sk, .mapp-pulse { animation: none; }
+  .mapp-tilt, .mapp-track { transition: none; }
 }
