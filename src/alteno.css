@@ -947,15 +947,21 @@ input,textarea,button { font-family:inherit; }
   overflow: hidden;
   position: relative;
   background: linear-gradient(180deg,
-    transparent 0%, rgba(3,3,8,.42) 9%, rgba(2,2,6,.72) 26%,
-    rgba(1,1,4,.78) 52%, rgba(2,2,7,.72) 74%, rgba(3,3,9,.38) 92%, transparent 100%);
+    transparent 0%, rgba(3,3,8,.20) 8%, rgba(2,2,6,.58) 22%,
+    rgba(1,1,4,.74) 50%, rgba(2,2,7,.58) 78%, rgba(3,3,9,.18) 92%, transparent 100%);
 }
 .team-section .sec-sub { max-width: 520px; margin-bottom: 0; }
 /* Отступ до карусели задаёт .team-carousel-wrap — иначе он сложится с sec-head */
 .team-section .sec-head { margin-bottom: 0; }
 
 /* ── Космический фон раздела ── */
-.team-bg { position: absolute; inset: 0; pointer-events: none; z-index: 0; }
+.team-bg {
+  position: absolute; inset: 0; pointer-events: none; z-index: 0;
+  -webkit-mask-image: linear-gradient(180deg,
+    transparent 0%, #000 14%, #000 86%, transparent 100%);
+  mask-image: linear-gradient(180deg,
+    transparent 0%, #000 14%, #000 86%, transparent 100%);
+}
 
 /* Туманности — крупные мягкие облака света */
 .team-nebula {
