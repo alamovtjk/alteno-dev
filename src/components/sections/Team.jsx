@@ -103,12 +103,10 @@ export default function Team() {
   return (
     <section id="team" className="section team-section" style={{ position: 'relative', zIndex: 2 }}>
       <div className="team-bg" aria-hidden="true">
-        {/* Космос: туманности, три слоя звёзд с разной скоростью — это даёт
-            ощущение глубины, — и редкие падающие звёзды */}
+        {/* Звёзды идут глобальным слоем за всей страницей и просвечивают
+            сквозь полупрозрачный фон секции. Здесь — только то, что делает
+            этот участок космоса особенным. */}
         <div className="team-nebula" />
-        <div className="team-stars team-stars-far" />
-        <div className="team-stars team-stars-mid" />
-        <div className="team-stars team-stars-near" />
         <span className="team-shoot team-shoot-1" />
         <span className="team-shoot team-shoot-2" />
 

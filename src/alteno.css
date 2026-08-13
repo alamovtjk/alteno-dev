@@ -794,7 +794,7 @@ input,textarea,button { font-family:inherit; }
     radial-gradient(ellipse 72% 62% at 8% 2%,   rgba(139,72,255,.44), transparent 62%),
     radial-gradient(ellipse 58% 56% at 96% 94%, rgba(13,148,136,.30), transparent 62%),
     radial-gradient(ellipse 50% 48% at 88% 6%,  rgba(37,99,235,.24),  transparent 62%),
-    linear-gradient(150deg, #1c1436 0%, #141b30 54%, #0e1c24 100%);
+    linear-gradient(150deg, rgba(28,20,54,.82) 0%, rgba(20,27,48,.82) 54%, rgba(14,28,36,.82) 100%);
   backdrop-filter:blur(20px);
   border:1px solid rgba(255,255,255,.12); box-shadow:var(--shadow);
   position:relative; overflow:hidden;
@@ -818,7 +818,7 @@ input,textarea,button { font-family:inherit; }
   background:
     radial-gradient(ellipse 84% 76% at 6% 0%, color-mix(in srgb, var(--c) 30%, transparent), transparent 66%),
     radial-gradient(ellipse 70% 66% at 100% 100%, rgba(37,99,235,.16), transparent 66%),
-    linear-gradient(150deg, #191330 0%, #131a2c 56%, #0d1a21 100%);
+    linear-gradient(150deg, rgba(25,19,48,.78) 0%, rgba(19,26,44,.78) 56%, rgba(13,26,33,.78) 100%);
   backdrop-filter:blur(20px);
   border:1px solid rgba(255,255,255,.11); box-shadow:var(--shadow);
   transition:transform .3s,border-color .3s; cursor:default;
@@ -841,7 +841,7 @@ input,textarea,button { font-family:inherit; }
     radial-gradient(ellipse 46% 120% at 38% 100%, rgba(13,148,136,.30), transparent 62%),
     radial-gradient(ellipse 46% 120% at 68% 0%,  rgba(37,99,235,.28),  transparent 62%),
     radial-gradient(ellipse 52% 130% at 100% 100%, rgba(192,38,211,.30), transparent 64%),
-    linear-gradient(150deg, #1c1436 0%, #141b30 52%, #0e1c24 100%);
+    linear-gradient(150deg, rgba(28,20,54,.80) 0%, rgba(20,27,48,.80) 52%, rgba(14,28,36,.80) 100%);
   backdrop-filter:var(--lg-blur); -webkit-backdrop-filter:var(--lg-blur);
   border:1px solid rgba(255,255,255,.12);
   box-shadow:var(--lg-spec),var(--lg-shadow);
@@ -883,7 +883,7 @@ input,textarea,button { font-family:inherit; }
     radial-gradient(ellipse 58% 64% at 84% 10%,  rgba(37,99,235,.42),  transparent 60%),
     radial-gradient(ellipse 66% 74% at 90% 96%,  rgba(13,148,136,.46), transparent 62%),
     radial-gradient(ellipse 50% 56% at 32% 104%, rgba(192,38,211,.32), transparent 64%),
-    linear-gradient(150deg, #1c1436 0%, #141b30 52%, #0e1c24 100%);
+    linear-gradient(150deg, rgba(28,20,54,.80) 0%, rgba(20,27,48,.80) 52%, rgba(14,28,36,.80) 100%);
   backdrop-filter:blur(20px);
 }
 /* Раньше здесь была сетка 48px. Теперь — мягкая засветка сверху слева:
@@ -943,8 +943,8 @@ input,textarea,button { font-family:inherit; }
   overflow: hidden;
   position: relative;
   background: linear-gradient(180deg,
-    transparent 0%, rgba(3,3,8,.55) 9%, #020206 26%,
-    #010104 52%, #020207 74%, rgba(3,3,9,.5) 92%, transparent 100%);
+    transparent 0%, rgba(3,3,8,.42) 9%, rgba(2,2,6,.72) 26%,
+    rgba(1,1,4,.78) 52%, rgba(2,2,7,.72) 74%, rgba(3,3,9,.38) 92%, transparent 100%);
 }
 .team-section .sec-sub { max-width: 520px; margin-bottom: 0; }
 /* Отступ до карусели задаёт .team-carousel-wrap — иначе он сложится с sec-head */
@@ -969,43 +969,6 @@ input,textarea,button { font-family:inherit; }
   to   { transform: translate3d(1.5%, 1%, 0)   scale(1.06); }
 }
 
-/* Звёзды: три плитки разного масштаба, плывут с разной скоростью */
-.team-stars { position: absolute; inset: -50px; }
-.team-stars-far {
-  background-image:
-    radial-gradient(1px 1px at 30px 40px,   rgba(255,255,255,.55), transparent),
-    radial-gradient(1px 1px at 120px 90px,  rgba(255,255,255,.40), transparent),
-    radial-gradient(1px 1px at 200px 30px,  rgba(190,200,255,.45), transparent),
-    radial-gradient(1px 1px at 80px 170px,  rgba(255,255,255,.35), transparent);
-  background-size: 240px 240px;
-  animation: teamStars 190s linear infinite;
-  opacity: .7;
-}
-.team-stars-mid {
-  background-image:
-    radial-gradient(1.4px 1.4px at 60px 20px,  rgba(255,255,255,.75), transparent),
-    radial-gradient(1.2px 1.2px at 180px 130px, rgba(210,220,255,.65), transparent),
-    radial-gradient(1.4px 1.4px at 250px 70px, rgba(255,255,255,.6),  transparent);
-  background-size: 320px 320px;
-  animation: teamStars 120s linear infinite;
-  opacity: .85;
-}
-.team-stars-near {
-  background-image:
-    radial-gradient(2px 2px at 90px 60px,   rgba(255,255,255,.95), transparent),
-    radial-gradient(1.8px 1.8px at 300px 200px, rgba(196,181,253,.9), transparent),
-    radial-gradient(2px 2px at 420px 100px, rgba(153,246,228,.75), transparent);
-  background-size: 520px 520px;
-  animation: teamStars 70s linear infinite, teamTwinkle 6s ease-in-out infinite;
-}
-@keyframes teamStars {
-  from { transform: translate3d(0, 0, 0); }
-  to   { transform: translate3d(-520px, 0, 0); }
-}
-@keyframes teamTwinkle {
-  0%, 100% { opacity: .95; }
-  50%      { opacity: .65; }
-}
 
 /* Падающие звёзды — редкие, чтобы не превратиться в мишуру */
 .team-shoot {
@@ -1093,7 +1056,7 @@ input,textarea,button { font-family:inherit; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .team-nebula, .team-stars, .team-shoot, .team-particle, .team-orbit-spin { animation: none; }
+  .team-nebula, .team-shoot, .team-particle, .team-orbit-spin { animation: none; }
   .team-shoot { display: none; }
 }
 
@@ -2897,7 +2860,7 @@ body.drawer-open .ariel-fab {
     radial-gradient(ellipse 70% 90% at 12% 4%,  rgba(139,72,255,.30), transparent 62%),
     radial-gradient(ellipse 60% 80% at 92% 96%, rgba(13,148,136,.24), transparent 62%),
     radial-gradient(ellipse 50% 70% at 78% 6%,  rgba(37,99,235,.20),  transparent 62%),
-    linear-gradient(150deg, #1a1332 0%, #131a2d 55%, #0d1a22 100%);
+    linear-gradient(150deg, rgba(26,19,50,.60) 0%, rgba(19,26,45,.60) 55%, rgba(13,26,34,.60) 100%);
   border: 1px solid rgba(255,255,255,.11);
   backdrop-filter: blur(12px);
   gap: 16px;
