@@ -3377,8 +3377,8 @@ body.drawer-open .ariel-fab {
 
 /* ── Корпус iPhone 14 Pro Max ──
    Слои: стальная рамка → чёрное стекло → статус-бар, экран, home-индикатор.
-   Корпус 246×463: высота задана так, чтобы под статус-баром осталось
-   ровно 240×427 — пропорция скриншотов 9:16, обрезки нет. */
+   Корпус 246×433: стекло 240×427 — ровно пропорция скриншотов 9:16,
+   поэтому фото занимает экран целиком и ничего не обрезается. */
 .mapp-tilt {
   position: relative;
   transform-style: preserve-3d;
@@ -3394,7 +3394,7 @@ body.drawer-open .ariel-fab {
    пропорция скриншотов 9:16, поэтому они не обрезаются. */
 .mapp-frame {
   position: relative;
-  width: 246px; height: 463px;
+  width: 246px; height: 433px;
   padding: 3px;
   border-radius: 55px;
   display: flex; flex-direction: column;
@@ -3432,24 +3432,11 @@ body.drawer-open .ariel-fab {
   transform: translateX(calc(var(--sx) * 26%));
 }
 
-/* ── Статус-бар ── */
-.mapp-status {
-  position: relative;
-  flex-shrink: 0;
-  height: 30px;
-  padding: 0 22px 0 26px;
-  display: flex; align-items: center; justify-content: space-between;
-  background: #000;
-  border-radius: 52px 52px 0 0;
-  color: #fff;
-  z-index: 2;
-}
-.mapp-time { font-size: 11.5px; font-weight: 700; letter-spacing: -.01em; }
-.mapp-sys svg { width: 42px; height: 13px; display: block; }
 
-/* Dynamic Island с глазком камеры */
+/* Dynamic Island — лежит поверх скриншота, как на настоящем экране */
 .mapp-island {
-  position: absolute; left: 50%; top: 4px;
+  position: absolute; left: 50%; top: 11px;
+  z-index: 6;
   transform: translateX(-50%);
   width: 82px; height: 23px;
   border-radius: 999px;
