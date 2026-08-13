@@ -50,8 +50,14 @@ export default function ProjectDetail() {
   const isOnly = rows.length < 2
   const year   = project.created_at ? new Date(project.created_at).getFullYear() : null
 
+  /* Скриншот ведёт на сайт проекта, если ссылка есть */
+  const Shot = project.link ? 'a' : 'div'
+  const shotProps = project.link
+    ? { href: project.link, target: '_blank', rel: 'noreferrer' }
+    : {}
+
   return (
-    <section className="section page-section" style={{ position: 'relative', zIndex: 2 }}>
+    <section className="section pd-page" style={{ position: 'relative', zIndex: 2 }}>
       <div className="shell">
 
         <Link to="/projects" className="pd-back reveal">
@@ -61,30 +67,38 @@ export default function ProjectDetail() {
           {t.projects.backToAll}
         </Link>
 
-        <div className="pd-head">
-          <h1 className="sec-title ub reveal">{project.title}</h1>
-          {project.tags?.length > 0 && (
-            <div className="pd-tags reveal">
-              {project.tags.map(tg => <span key={tg} className="chip">{tg}</span>)}
-            </div>
+        <div className="pd-layout">
+
+          {project.image_url && (
+            <Shot {...shotProps} className="pd-hero reveal">
+              <img src={project.image_url} alt={project.title} />
+              {project.link && (
+                <span className="pd-hero-hint">
+                  {t.projects.visit}
+                  <svg viewBox="0 0 24 24" fill="none" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M7 17L17 7M7 7h10v10"/>
+                  </svg>
+                </span>
+              )}
+            </Shot>
           )}
-        </div>
 
-        {project.image_url && (
-          <div className="pd-hero reveal">
-            <img src={project.image_url} alt={project.title} />
-          </div>
-        )}
+          <div className="pd-side reveal">
+            <h1 className="pd-title ub">{project.title}</h1>
 
-        <div className="pd-body">
-          <div className="pd-desc reveal">
-            {project.description
-              ? project.description.split('\n').filter(Boolean).map((p, i) => <p key={i}>{p}</p>)
-              : <p>{t.projects.noDesc}</p>}
-          </div>
+            {project.tags?.length > 0 && (
+              <div className="pd-tags">
+                {project.tags.map(tg => <span key={tg} className="chip">{tg}</span>)}
+              </div>
+            )}
 
-          <aside className="pd-aside reveal">
-            <div className="pd-aside-card">
+            <div className="pd-desc">
+              {project.description
+                ? project.description.split('\n').filter(Boolean).map((p, i) => <p key={i}>{p}</p>)
+                : <p>{t.projects.noDesc}</p>}
+            </div>
+
+            <div className="pd-meta">
               {year && (
                 <div className="pd-row">
                   <span className="pd-row-l">{t.projects.year}</span>
@@ -97,6 +111,9 @@ export default function ProjectDetail() {
                   <span className="pd-row-v">{project.tags.join(', ')}</span>
                 </div>
               )}
+            </div>
+
+            <div className="pd-actions">
               {project.link && (
                 <a href={project.link} target="_blank" rel="noreferrer" className="btn btn-primary pd-visit">
                   {t.projects.visit}
@@ -109,20 +126,20 @@ export default function ProjectDetail() {
                 {t.projects.order}
               </Link>
             </div>
-          </aside>
-        </div>
 
-        {!isOnly && next && (
-          <Link to={`/projects/${rowSlug(next, rows)}`} className="pd-next reveal">
-            <span className="pd-next-l">{t.projects.next}</span>
-            <span className="pd-next-t ub">{next.title}</span>
-            <span className="arrow">
-              <svg viewBox="0 0 24 24" fill="none" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M5 12h14M13 5l7 7-7 7"/>
-              </svg>
-            </span>
-          </Link>
-        )}
+            {!isOnly && next && (
+              <Link to={`/projects/${rowSlug(next, rows)}`} className="pd-next">
+                <span className="pd-next-l">{t.projects.next}</span>
+                <span className="pd-next-t">{next.title}</span>
+                <span className="pd-next-a">
+                  <svg viewBox="0 0 24 24" fill="none" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M5 12h14M13 5l7 7-7 7"/>
+                  </svg>
+                </span>
+              </Link>
+            )}
+          </div>
+        </div>
 
       </div>
     </section>

@@ -2978,53 +2978,97 @@ body.drawer-open .ariel-fab {
   background: rgba(0,0,0,.22); color: inherit;
 }
 
-/* ── Страница проекта ── */
+/* ── Страница проекта ──
+   На десктопе умещается в один экран: скриншот слева, всё остальное
+   справа. Скроллить нечего — высоты считаются от вьюпорта. */
+.pd-page { padding-top: 108px; padding-bottom: 40px; }
+
 .pd-back {
   display: inline-flex; align-items: center; gap: 8px;
   font-size: 14px; font-weight: 600; color: var(--text-dim);
-  text-decoration: none; margin-bottom: 28px; transition: color .25s, gap .25s;
+  text-decoration: none; margin-bottom: 20px; transition: color .25s, gap .25s;
 }
 .pd-back:hover { color: var(--text); gap: 12px; }
 .pd-back svg { width: 17px; height: 17px; stroke: currentColor; }
 
-.pd-head { margin-bottom: 32px; }
-.pd-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+.pd-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(0, .95fr);
+  gap: 44px; align-items: center;
+}
 
+/* Скриншот — ссылка на сайт проекта */
 .pd-hero {
-  border-radius: var(--r); overflow: hidden; margin-bottom: 44px;
-  border: 1px solid var(--lg-border); box-shadow: var(--lg-spec), var(--lg-shadow);
+  position: relative; display: block;
+  border-radius: var(--r); overflow: hidden;
+  border: 1px solid var(--lg-border);
+  box-shadow: var(--lg-spec), var(--lg-shadow);
   background: var(--lg-bg);
+  transition: transform .45s cubic-bezier(.22,1,.36,1), border-color .3s;
 }
-.pd-hero img { display: block; width: 100%; height: auto; }
-
-.pd-body { display: grid; grid-template-columns: 1fr 340px; gap: 44px; align-items: start; }
-.pd-desc p { font-size: 16px; line-height: 1.72; color: var(--text-dim); margin-bottom: 16px; }
-
-.pd-aside-card {
-  position: sticky; top: 110px;
-  border-radius: var(--r); padding: 26px;
-  background: var(--lg-bg); backdrop-filter: var(--lg-blur); -webkit-backdrop-filter: var(--lg-blur);
-  border: 1px solid var(--lg-border); box-shadow: var(--lg-spec), var(--lg-shadow);
+a.pd-hero:hover { transform: translateY(-5px); border-color: var(--glass-bs); }
+.pd-hero img {
+  display: block; width: 100%; height: auto;
+  max-height: calc(100vh - 220px); object-fit: cover; object-position: top center;
 }
-.pd-row { display: flex; justify-content: space-between; gap: 14px; padding: 12px 0; border-bottom: 1px solid var(--glass-b); }
+/* Подсказка проявляется при наведении на скриншот */
+.pd-hero-hint {
+  position: absolute; right: 14px; bottom: 14px;
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 9px 15px; border-radius: 999px;
+  font-size: 13px; font-weight: 600; color: #fff;
+  background: rgba(10,10,22,.62);
+  border: 1px solid rgba(255,255,255,.18);
+  backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+  opacity: 0; transform: translateY(6px);
+  transition: opacity .3s ease, transform .3s ease;
+  pointer-events: none;
+}
+.pd-hero-hint svg { width: 14px; height: 14px; stroke: currentColor; }
+a.pd-hero:hover .pd-hero-hint { opacity: 1; transform: translateY(0); }
+
+/* ── Правая колонка ── */
+.pd-side { min-width: 0; display: flex; flex-direction: column; }
+.pd-title {
+  font-size: clamp(26px, 3vw, 40px); line-height: 1.1;
+  letter-spacing: -.02em; margin: 0 0 14px;
+}
+.pd-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
+.pd-desc p { font-size: 15.5px; line-height: 1.65; color: var(--text-dim); margin: 0 0 10px; }
+
+.pd-meta { margin: 16px 0 4px; }
+.pd-row { display: flex; justify-content: space-between; gap: 14px; padding: 10px 0; border-bottom: 1px solid var(--glass-b); }
 .pd-row-l { font-size: 13px; color: var(--text-faint); flex: none; }
 .pd-row-v { font-size: 13.5px; font-weight: 600; text-align: right; }
-.pd-visit { width: 100%; justify-content: center; margin-top: 22px; }
-.pd-visit svg { width: 16px; height: 16px; }
-.pd-order { width: 100%; justify-content: center; margin-top: 10px; }
 
+.pd-actions { display: flex; gap: 10px; margin-top: 20px; flex-wrap: wrap; }
+.pd-visit, .pd-order { flex: 1 1 160px; justify-content: center; }
+.pd-visit svg { width: 16px; height: 16px; }
+
+/* Переход к следующему проекту — компактной строкой */
 .pd-next {
-  display: flex; align-items: center; gap: 16px; margin-top: 64px;
-  padding: 26px 28px; border-radius: var(--r); text-decoration: none; color: inherit;
-  background: var(--lg-bg); backdrop-filter: var(--lg-blur); -webkit-backdrop-filter: var(--lg-blur);
-  border: 1px solid var(--lg-border); box-shadow: var(--lg-spec), var(--lg-shadow);
-  transition: transform .35s cubic-bezier(.22,1,.36,1), border-color .3s;
+  display: flex; align-items: center; gap: 12px; margin-top: 18px;
+  padding: 14px 16px; border-radius: 16px; text-decoration: none; color: inherit;
+  background: rgba(255,255,255,.05);
+  border: 1px solid var(--glass-b);
+  transition: transform .35s cubic-bezier(.22,1,.36,1), border-color .3s, background .3s;
 }
-.pd-next:hover { transform: translateY(-4px); border-color: var(--glass-bs); }
-.pd-next-l { font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--text-faint); }
-.pd-next-t { font-size: clamp(18px, 2.2vw, 26px); font-weight: 600; flex: 1; }
-.pd-next .arrow { position: static; }
-.pd-next:hover .arrow { background: linear-gradient(135deg, var(--violet), var(--teal)); }
+.pd-next:hover { transform: translateY(-3px); border-color: var(--glass-bs); background: rgba(255,255,255,.09); }
+.pd-next-l { font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--text-faint); flex: none; }
+.pd-next-t { font-size: 15px; font-weight: 600; flex: 1; text-align: right; }
+.pd-next-a {
+  flex: none; width: 30px; height: 30px; border-radius: 50%;
+  display: grid; place-items: center;
+  background: rgba(255,255,255,.07); border: 1px solid var(--glass-b);
+}
+.pd-next-a svg { width: 14px; height: 14px; stroke: currentColor; }
+
+/* На узких экранах вертикально и со скроллом — так удобнее */
+@media (max-width: 1024px) {
+  .pd-page { padding-top: 96px; }
+  .pd-layout { grid-template-columns: 1fr; gap: 28px; align-items: start; }
+  .pd-hero img { max-height: none; }
+}
 
 /* ── Страница команды ── */
 .tp-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
@@ -3069,8 +3113,6 @@ body.drawer-open .ariel-fab {
 .tp-cta p { font-size: 15px; color: var(--text-dim); max-width: 460px; margin: 0 auto 24px; }
 
 @media (max-width: 1024px) {
-  .pd-body { grid-template-columns: 1fr; gap: 32px; }
-  .pd-aside-card { position: static; }
   .tp-grid { grid-template-columns: repeat(2, 1fr); }
 }
 @media (max-width: 640px) {
