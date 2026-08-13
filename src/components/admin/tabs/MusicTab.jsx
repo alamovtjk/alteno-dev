@@ -12,7 +12,9 @@ export default function MusicTab() {
 
   const load = async () => {
     setLoading(true)
-    const { data } = await supabase.from('music').select('*').eq('active', true).single()
+    /* maybeSingle, а не single: при пустой таблице single возвращает ошибку
+       и вкладка молча показывала пустую форму */
+    const { data } = await supabase.from('music').select('*').eq('active', true).maybeSingle()
     if (data) {
       setTrack(data)
       setForm({ title: data.title || '', artist: data.artist || '', file_url: data.file_url || '' })
@@ -66,7 +68,9 @@ export default function MusicTab() {
       <div className="adm-tab-hd">
         <div>
           <h2 className="adm-tab-title">Музыка</h2>
-          <p className="adm-tab-sub">Активный трек на сайте</p>
+          <p className="adm-tab-sub">
+            {track ? "Активный трек на сайте" : "Трек ещё не задан — играет файл по умолчанию"}
+          </p>
         </div>
       </div>
 
