@@ -29,13 +29,18 @@ export default function ProjectCard({ row, to, accent }) {
 
         <div className="pcard-laptop">
           <div className="pcard-lid">
-            <div className="pcard-screen">
-              {row.image_url
-                ? <img src={row.image_url} alt="" loading="lazy" />
-                : <MockUI />}
+            <div className="pcard-bezel">
+              <span className="pcard-cam" aria-hidden="true" />
+              <div className="pcard-screen">
+                {row.image_url
+                  ? <img src={row.image_url} alt="" loading="lazy" />
+                  : <MockUI />}
+              </div>
             </div>
           </div>
+          <div className="pcard-hinge" aria-hidden="true" />
           <div className="pcard-base" aria-hidden="true" />
+          <span className="pcard-drop" aria-hidden="true" />
         </div>
       </div>
 
