@@ -2981,7 +2981,13 @@ body.drawer-open .ariel-fab {
 /* ── Страница проекта ──
    На десктопе умещается в один экран: скриншот слева, всё остальное
    справа. Скроллить нечего — высоты считаются от вьюпорта. */
-.pd-page { padding-top: 108px; padding-bottom: 40px; }
+.pd-page {
+  padding-top: 108px; padding-bottom: 40px;
+  min-height: 100vh;
+  min-height: 100svh;          /* на мобильных учитывает адресную строку */
+  display: flex; align-items: center;
+}
+.pd-page > .shell { width: 100%; }
 
 .pd-back {
   display: inline-flex; align-items: center; gap: 8px;

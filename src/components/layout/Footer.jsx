@@ -44,7 +44,7 @@ export default function Footer() {
         <div className="shell">
           <div className="footer-grid">
             {/* Brand */}
-            <div className="fbrand">
+            <div className="fbrand reveal">
               <a href="/" onClick={e => {
                   e.preventDefault()
                   if (isHome) window.scrollTo({ top: 0, behavior: 'smooth' })
@@ -66,7 +66,7 @@ export default function Footer() {
             </div>
 
             {/* Services */}
-            <div className="fcol">
+            <div className="fcol reveal">
               <h5 className="ub">{t.footer.col1}</h5>
               <a onClick={() => go('#services')}>{t.services.s1t}</a>
               <a onClick={() => go('#services')}>{t.services.s2t}</a>
@@ -75,7 +75,7 @@ export default function Footer() {
             </div>
 
             {/* Company */}
-            <div className="fcol">
+            <div className="fcol reveal">
               <h5 className="ub">{t.footer.col2}</h5>
               <a onClick={() => go('#studio')}>{t.footer.l_about}</a>
               <Link to="/projects">{t.projects.navLabel}</Link>
@@ -85,7 +85,7 @@ export default function Footer() {
             </div>
 
             {/* Contact */}
-            <div className="fcol">
+            <div className="fcol reveal">
               <h5 className="ub">{t.footer.col3}</h5>
               {CONTACT_ORDER.filter(k => links[k]).map(k => (
                 <a key={k} href={links[k].href}
@@ -98,7 +98,7 @@ export default function Footer() {
             </div>
           </div>
 
-          <div className="footer-bottom">
+          <div className="footer-bottom reveal">
             <span>{t.footer.rights}</span>
             <span>Unbounded × Manrope · Glassmorphism</span>
           </div>
