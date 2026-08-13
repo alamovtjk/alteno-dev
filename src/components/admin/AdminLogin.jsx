@@ -1,20 +1,24 @@
 import { useState } from 'react'
 import { login } from '../../lib/adminAuth'
 
-export default function AdminLogin({ onLogin }) {
+export default function AdminLogin() {
+  const [email,   setEmail]   = useState('')
   const [pwd,     setPwd]     = useState('')
-  const [err,     setErr]     = useState(false)
+  const [err,     setErr]     = useState('')
   const [loading, setLoading] = useState(false)
 
-  const submit = (e) => {
+  /* Успешный вход не трогает состояние здесь: Admin слушает Supabase
+     и переключит экран сам, когда появится сессия. */
+  const submit = async (e) => {
     e.preventDefault()
-    if (!pwd) return
+    if (!email || !pwd) return
     setLoading(true)
-    setErr(false)
-    setTimeout(() => {
-      if (login(pwd)) { onLogin() }
-      else { setErr(true); setLoading(false) }
-    }, 500)
+    setErr('')
+    const { ok, error } = await login(email, pwd)
+    if (!ok) {
+      setErr(error === 'Invalid login credentials' ? 'Неверная почта или пароль' : error)
+      setLoading(false)
+    }
   }
 
   return (
@@ -28,24 +32,39 @@ export default function AdminLogin({ onLogin }) {
 
         <form className="adm-login-form" onSubmit={submit}>
           <div className="adm-field">
+            <label htmlFor="adm-email">Почта</label>
+            <input
+              id="adm-email"
+              type="email"
+              autoComplete="username"
+              value={email}
+              onChange={e => { setEmail(e.target.value); setErr('') }}
+              placeholder="admin@example.com"
+              autoFocus
+              className={err ? 'adm-input-err' : ''}
+            />
+          </div>
+
+          <div className="adm-field">
             <label htmlFor="adm-pwd">Пароль</label>
             <input
               id="adm-pwd"
               type="password"
+              autoComplete="current-password"
               value={pwd}
-              onChange={e => { setPwd(e.target.value); setErr(false) }}
-              placeholder="Введите пароль администратора"
-              autoFocus
+              onChange={e => { setPwd(e.target.value); setErr('') }}
+              placeholder="Пароль администратора"
               className={err ? 'adm-input-err' : ''}
             />
-            {err && <span className="adm-err-msg">Неверный пароль</span>}
+            {err && <span className="adm-err-msg">{err}</span>}
           </div>
+
           <button
             type="submit"
             className="adm-btn-primary adm-btn-full"
-            disabled={loading || !pwd}
+            disabled={loading || !email || !pwd}
           >
-            {loading ? 'Проверка...' : 'Войти'}
+            {loading ? 'Вход...' : 'Войти'}
           </button>
         </form>
       </div>

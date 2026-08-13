@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import { logout } from '../../lib/adminAuth'
 import TeamTab         from './tabs/TeamTab'
 import PortfolioTab    from './tabs/PortfolioTab'
 import TestimonialsTab from './tabs/TestimonialsTab'
@@ -28,7 +27,8 @@ const NAV = [
 export default function AdminLayout({ onLogout }) {
   const [tab, setTab] = useState('team')
 
-  const handleLogout = () => { logout(); onLogout() }
+  /* Выход делает Supabase; экран переключит слушатель сессии в Admin */
+  const handleLogout = () => { onLogout() }
 
   return (
     <div className="adm-layout">
