@@ -103,7 +103,14 @@ export default function Team() {
   return (
     <section id="team" className="section team-section" style={{ position: 'relative', zIndex: 2 }}>
       <div className="team-bg" aria-hidden="true">
-        <div className="team-grid" />
+        {/* Космос: туманности, три слоя звёзд с разной скоростью — это даёт
+            ощущение глубины, — и редкие падающие звёзды */}
+        <div className="team-nebula" />
+        <div className="team-stars team-stars-far" />
+        <div className="team-stars team-stars-mid" />
+        <div className="team-stars team-stars-near" />
+        <span className="team-shoot team-shoot-1" />
+        <span className="team-shoot team-shoot-2" />
         {PARTICLES.map(p => (
           <div key={p.id} className="team-particle" style={{
             left: `${p.x}%`, top: `${p.y}%`,

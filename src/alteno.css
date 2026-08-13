@@ -888,21 +888,97 @@ input,textarea,button { font-family:inherit; }
 /* ═══════════════════════════════════
    TEAM — GLASSMORPHISM MAX
    ═══════════════════════════════════ */
-.team-section { overflow: hidden; }
+/* Секция уходит в космос: базу делаем заметно темнее остальной страницы,
+   но с прозрачными краями — чтобы не было резкой полосы между секциями */
+.team-section {
+  overflow: hidden;
+  position: relative;
+  background: linear-gradient(180deg,
+    transparent 0%, #05050c 10%, #030308 46%, #04040b 86%, transparent 100%);
+}
 .team-section .sec-sub { max-width: 520px; margin-bottom: 0; }
 /* Отступ до карусели задаёт .team-carousel-wrap — иначе он сложится с sec-head */
 .team-section .sec-head { margin-bottom: 0; }
 
-/* Голографический фон раздела */
+/* ── Космический фон раздела ── */
 .team-bg { position: absolute; inset: 0; pointer-events: none; z-index: 0; }
-.team-grid {
-  position: absolute; inset: 0;
+
+/* Туманности — крупные мягкие облака света */
+.team-nebula {
+  position: absolute; inset: -10%;
+  background:
+    radial-gradient(ellipse 46% 40% at 16% 22%, rgba(124,58,237,.30), transparent 62%),
+    radial-gradient(ellipse 40% 36% at 84% 30%, rgba(37,99,235,.22),  transparent 62%),
+    radial-gradient(ellipse 52% 40% at 72% 84%, rgba(13,148,136,.20), transparent 64%),
+    radial-gradient(ellipse 34% 30% at 34% 88%, rgba(192,38,211,.16), transparent 64%);
+  filter: blur(24px);
+  animation: teamDrift 46s ease-in-out infinite alternate;
+}
+@keyframes teamDrift {
+  from { transform: translate3d(-1.5%, -1%, 0) scale(1); }
+  to   { transform: translate3d(1.5%, 1%, 0)   scale(1.06); }
+}
+
+/* Звёзды: три плитки разного масштаба, плывут с разной скоростью */
+.team-stars { position: absolute; inset: -50px; }
+.team-stars-far {
   background-image:
-    linear-gradient(rgba(124,58,237,.06) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(124,58,237,.06) 1px, transparent 1px);
-  background-size: 48px 48px;
-  -webkit-mask-image: radial-gradient(ellipse 100% 100% at 50% 50%, black 20%, transparent 75%);
-  mask-image: radial-gradient(ellipse 100% 100% at 50% 50%, black 20%, transparent 75%);
+    radial-gradient(1px 1px at 30px 40px,   rgba(255,255,255,.55), transparent),
+    radial-gradient(1px 1px at 120px 90px,  rgba(255,255,255,.40), transparent),
+    radial-gradient(1px 1px at 200px 30px,  rgba(190,200,255,.45), transparent),
+    radial-gradient(1px 1px at 80px 170px,  rgba(255,255,255,.35), transparent);
+  background-size: 240px 240px;
+  animation: teamStars 190s linear infinite;
+  opacity: .7;
+}
+.team-stars-mid {
+  background-image:
+    radial-gradient(1.4px 1.4px at 60px 20px,  rgba(255,255,255,.75), transparent),
+    radial-gradient(1.2px 1.2px at 180px 130px, rgba(210,220,255,.65), transparent),
+    radial-gradient(1.4px 1.4px at 250px 70px, rgba(255,255,255,.6),  transparent);
+  background-size: 320px 320px;
+  animation: teamStars 120s linear infinite;
+  opacity: .85;
+}
+.team-stars-near {
+  background-image:
+    radial-gradient(2px 2px at 90px 60px,   rgba(255,255,255,.95), transparent),
+    radial-gradient(1.8px 1.8px at 300px 200px, rgba(196,181,253,.9), transparent),
+    radial-gradient(2px 2px at 420px 100px, rgba(153,246,228,.75), transparent);
+  background-size: 520px 520px;
+  animation: teamStars 70s linear infinite, teamTwinkle 6s ease-in-out infinite;
+}
+@keyframes teamStars {
+  from { transform: translate3d(0, 0, 0); }
+  to   { transform: translate3d(-520px, 0, 0); }
+}
+@keyframes teamTwinkle {
+  0%, 100% { opacity: .95; }
+  50%      { opacity: .65; }
+}
+
+/* Падающие звёзды — редкие, чтобы не превратиться в мишуру */
+.team-shoot {
+  position: absolute; top: 0; left: 0;
+  width: 130px; height: 1px;
+  background: linear-gradient(90deg, rgba(255,255,255,.85), transparent);
+  opacity: 0;
+  animation: teamShoot 14s ease-in infinite;
+}
+.team-shoot-1 { top: 14%; left: -12%; animation-delay: 3s; }
+.team-shoot-2 { top: 62%; left: -12%; animation-delay: 9.5s; width: 90px; }
+@keyframes teamShoot {
+  0%       { opacity: 0; transform: translate3d(0,0,0) rotate(14deg); }
+  3%       { opacity: .9; }
+  14%      { opacity: 0; transform: translate3d(70vw, 22vh, 0) rotate(14deg); }
+  100%     { opacity: 0; transform: translate3d(70vw, 22vh, 0) rotate(14deg); }
+}
+
+/* Затемнение к краям — центр остаётся светлее, карточки читаются */
+.team-bg::after {
+  content: "";
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse 78% 62% at 50% 46%, transparent 40%, rgba(2,2,7,.72) 100%);
 }
 .team-particle {
   position: absolute; border-radius: 50%;
@@ -914,6 +990,11 @@ input,textarea,button { font-family:inherit; }
   25%  { opacity: .85; }
   75%  { opacity: .85; }
   100% { opacity: 0;   transform: translateY(-20px) scale(1.4); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .team-nebula, .team-stars, .team-shoot, .team-particle { animation: none; }
+  .team-shoot { display: none; }
 }
 
 /* Карусель */
@@ -955,10 +1036,13 @@ input,textarea,button { font-family:inherit; }
   position: relative;
   border-radius: 24px;
   overflow: hidden;
-  background: rgba(255,255,255,.06);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255,255,255,.12);
+  background:
+    linear-gradient(165deg, rgba(255,255,255,.10), rgba(255,255,255,.03) 46%),
+    rgba(10,10,20,.55);
+  backdrop-filter: blur(22px);
+  -webkit-backdrop-filter: blur(22px);
+  border: 1px solid rgba(255,255,255,.14);
+  box-shadow: 0 18px 44px rgba(0,0,0,.5);
   padding: 0 0 28px;
   transition: border-color .5s, box-shadow .5s;
 }
