@@ -87,17 +87,27 @@ function PhoneGallery({ app, t }) {
     return () => clearInterval(id)
   }, [many, held, go])
 
-  /* Наклон корпуса за курсором — только на десктопе */
+  /* Наклон корпуса за курсором — только на десктопе.
+     Углы и позиция блика идут в CSS-переменные, минуя ререндер React. */
   useEffect(() => {
     const el = tiltRef.current
     if (!el || window.innerWidth < 960) return
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+
     const onMove = (e) => {
       const r  = el.getBoundingClientRect()
-      const cx = ((e.clientX - r.left) / r.width  - 0.5) * 12
-      const cy = ((e.clientY - r.top)  / r.height - 0.5) * 8
-      el.style.transform = `rotateY(${cx}deg) rotateX(${-cy}deg)`
+      const px = (e.clientX - r.left) / r.width  - 0.5
+      const py = (e.clientY - r.top)  / r.height - 0.5
+      el.style.setProperty('--ry', `${(px * 16).toFixed(2)}deg`)
+      el.style.setProperty('--rx', `${(-py * 10).toFixed(2)}deg`)
+      el.style.setProperty('--sx', (px * 2).toFixed(3))
     }
-    const onLeave = () => { el.style.transform = '' }
+    const onLeave = () => {
+      el.style.setProperty('--ry', '0deg')
+      el.style.setProperty('--rx', '0deg')
+      el.style.setProperty('--sx', '0')
+    }
+
     el.addEventListener('mousemove', onMove, { passive: true })
     el.addEventListener('mouseleave', onLeave)
     return () => {
@@ -133,7 +143,33 @@ function PhoneGallery({ app, t }) {
       <span className="mapp-glow" aria-hidden="true" />
 
       <div className="mapp-tilt" ref={tiltRef}>
+        {/* Кнопки на гранях: слева «Действие» и качелька громкости, справа питание */}
+        <span className="mapp-btn mapp-btn-action" aria-hidden="true" />
+        <span className="mapp-btn mapp-btn-volup" aria-hidden="true" />
+        <span className="mapp-btn mapp-btn-voldn" aria-hidden="true" />
+        <span className="mapp-btn mapp-btn-power" aria-hidden="true" />
+
         <div className="mapp-frame">
+          <span className="mapp-sheen" aria-hidden="true" />
+
+          {/* Статус-бар с Dynamic Island — экран приложения начинается под ним */}
+          <div className="mapp-status" aria-hidden="true">
+            <span className="mapp-time">9:41</span>
+            <span className="mapp-island"><i /></span>
+            <span className="mapp-sys">
+              <svg viewBox="0 0 46 14" fill="currentColor">
+                <rect x="0"  y="8"  width="2.6" height="5"  rx="1" />
+                <rect x="4"  y="6"  width="2.6" height="7"  rx="1" />
+                <rect x="8"  y="3.5" width="2.6" height="9.5" rx="1" />
+                <rect x="12" y="1"  width="2.6" height="12" rx="1" />
+                <path d="M19.6 4.6a7.6 7.6 0 0 1 8.8 0l-1.3 1.7a5.5 5.5 0 0 0-6.2 0zM21.6 7.6a4 4 0 0 1 4.8 0L24 10.6z" />
+                <rect x="32" y="2.6" width="11.4" height="8.8" rx="2.6" fill="none" stroke="currentColor" strokeWidth="1.1" opacity=".55" />
+                <rect x="33.6" y="4.2" width="8.2" height="5.6" rx="1.4" />
+                <rect x="44.4" y="5.6" width="1.4" height="2.8" rx=".7" opacity=".55" />
+              </svg>
+            </span>
+          </div>
+
           <div className="mapp-scr">
             {shots.length === 0 ? <AppSkeleton /> : (
               <div
@@ -175,6 +211,8 @@ function PhoneGallery({ app, t }) {
               </div>
             )}
           </div>
+
+          <span className="mapp-home" aria-hidden="true" />
         </div>
       </div>
 

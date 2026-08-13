@@ -3107,302 +3107,124 @@ body.drawer-open .ariel-fab {
   pointer-events: none;
 }
 .pcard:hover .pcard-halo { opacity: .95; }
-
-/* ── Корпус ── */
-.pcard-laptop {
-  position: relative;
-  width: 100%;
-  transform-style: preserve-3d;
-  transform: rotateX(var(--rx)) rotateY(var(--ry));
-  transition: transform .45s cubic-bezier(.22,1,.36,1);
-}
-/* Пока курсор внутри — доводим мгновенно, чтобы корпус не «плавал» за мышью */
-.pcard-stage:hover .pcard-laptop { transition: transform .12s linear; }
-
-/* Крышка вращается вокруг петли: приоткрыта, при наведении распрямляется */
-.pcard-lid {
-  position: relative;
-  padding: 1.5px;
-  border-radius: 12px 12px 3px 3px;
-  background: linear-gradient(170deg, #6e7280 0%, #3a3d47 34%, #202329 100%);
-  transform-origin: bottom center;
-  transform: rotateX(7deg);
-  transform-style: preserve-3d;
-  transition: transform .55s cubic-bezier(.22,1,.36,1), box-shadow .55s ease;
-  box-shadow:
-    0 18px 30px rgba(0,0,0,.42),
-    0 1px 0 rgba(255,255,255,.18) inset;
-}
-.pcard:hover .pcard-lid {
-  transform: rotateX(0deg);
-  box-shadow:
-    0 26px 44px rgba(0,0,0,.5),
-    0 1px 0 rgba(255,255,255,.22) inset;
-}
-/* Блик по верхнему ребру */
-.pcard-lid::before {
-  content: "";
-  position: absolute; top: 0; left: 12%; right: 12%; height: 1px;
-  border-radius: 1px;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,.5), transparent);
-}
-
-/* Чёрная рамка вокруг матрицы */
-.pcard-bezel {
-  position: relative;
-  padding: 7px 7px 9px;
-  border-radius: 11px 11px 2px 2px;
-  background: #08080c;
-  box-shadow: inset 0 0 0 1px rgba(255,255,255,.05);
-}
-.pcard-cam {
-  position: absolute; top: 3px; left: 50%;
-  transform: translateX(-50%);
-  width: 3.5px; height: 3.5px; border-radius: 50%;
-  background: #23252c;
-  box-shadow: inset 0 0 0 .5px rgba(255,255,255,.16);
-}
-
-/* Матрица: 1.95 под реальные снимки, contain — ничего не режется */
-.pcard-screen {
-  position: relative;
-  aspect-ratio: 1.95;
-  border-radius: 2px;
-  overflow: hidden;
-  background: #0a0a11;
-}
-.pcard-screen img {
-  width: 100%; height: 100%;
-  object-fit: contain;
-  display: block;
-}
-
-/* Отражение на стекле — едет вслед за поворотом корпуса */
-.pcard-shine {
-  position: absolute; inset: 0; pointer-events: none;
-  background: linear-gradient(105deg,
-    transparent 34%,
-    rgba(255,255,255,.10) 46%,
-    rgba(255,255,255,.16) 50%,
-    rgba(255,255,255,.10) 54%,
-    transparent 66%);
-  transform: translateX(calc(var(--sx) * 34%));
-  opacity: 0;
-  transition: opacity .4s ease;
-}
-.pcard:hover .pcard-shine { opacity: 1; }
-
-/* Шов между крышкой и основанием — во всю ширину корпуса */
-.pcard-hinge {
-  width: 100%; height: 2px;
-  background: linear-gradient(180deg, #2a2d34, #101216);
-}
-/* ── Дека с клавиатурой ──
-   Плоскость с началом координат у петли, положенная почти горизонтально.
-   Реальная высота 108px из-за перспективы схлопывается примерно до 25px —
-   ровно настолько, чтобы клавиатура читалась, но не спорила с экраном. */
-.pcard-deck {
-  position: absolute;
-  top: 100%; left: -9%;
-  width: 118%; height: 108px;
-  transform-origin: top center;
-  transform: rotateX(76deg);
-  transform-style: preserve-3d;
-  border-radius: 0 0 12px 12px;
-  background: linear-gradient(180deg, #d9dce4 0%, #b9bcc8 34%, #90939f 72%, #6d707c 100%);
-  box-shadow: 0 14px 26px rgba(0,0,0,.42);
-}
-/* Затемнённые боковые торцы — грани корпуса */
-.pcard-deck::before {
-  content: "";
-  position: absolute; inset: 0;
-  border-radius: inherit;
-  background: linear-gradient(90deg,
-    rgba(0,0,0,.34) 0%, transparent 6%, transparent 94%, rgba(0,0,0,.34) 100%);
-}
-/* Передняя кромка с выемкой под палец */
-.pcard-deck::after {
-  content: "";
-  position: absolute; bottom: 0; left: 50%;
-  transform: translateX(-50%);
-  width: 16%; height: 5px;
-  border-radius: 6px 6px 0 0;
-  background: rgba(0,0,0,.2);
-}
-
-/* Клавиатурный блок: колодец и сетка клавиш repeating-градиентами */
-.pcard-keys {
-  position: absolute;
-  left: 9%; right: 9%; top: 11%; height: 46%;
-  border-radius: 4px;
-  background:
-    repeating-linear-gradient(90deg,
-      rgba(255,255,255,.11) 0 5.4%, transparent 5.4% 6.6%),
-    repeating-linear-gradient(180deg,
-      rgba(255,255,255,.09) 0 17%, transparent 17% 21%),
-    #1b1d24;
-  box-shadow: inset 0 1px 3px rgba(0,0,0,.6);
-}
-
-/* Трекпад */
-.pcard-trackpad {
-  position: absolute;
-  left: 50%; bottom: 13%;
-  transform: translateX(-50%);
-  width: 27%; height: 25%;
-  border-radius: 4px;
-  background: linear-gradient(180deg, #c3c6d1, #a4a7b4);
-  box-shadow:
-    inset 0 0 0 1px rgba(0,0,0,.16),
-    inset 0 1px 2px rgba(255,255,255,.5);
-}
-
-/* Тень на «столе» — уезжает в сторону, противоположную наклону */
-.pcard-drop {
-  position: absolute; left: 50%; bottom: -36px;
-  transform: translateX(calc(-50% - var(--sx) * 6%));
-  width: 82%; height: 15px;
-  border-radius: 50%;
-  background: radial-gradient(ellipse at center, rgba(0,0,0,.55), transparent 72%);
-  filter: blur(7px);
-  pointer-events: none;
-}
-
-/* ── Подпись ── */
-.pcard-cap {
-  margin-top: auto;
-  padding: 6px 22px 20px;
-  display: flex; align-items: center; justify-content: space-between; gap: 14px;
-}
-.pcard-title {
-  margin: 0;
-  font-size: 18px; font-weight: 600; line-height: 1.3;
-  letter-spacing: -.015em;          /* плотный трекинг, как у крупного текста SF */
-  color: var(--text);
-}
-.pcard-go {
-  flex-shrink: 0;
-  width: 34px; height: 34px; border-radius: 50%;
-  display: grid; place-items: center;
-  color: var(--text);
-  background: rgba(255,255,255,.07);
-  border: 1px solid rgba(255,255,255,.14);
-  transform: translateX(-2px);
-  opacity: .8;
-  transition: transform .45s cubic-bezier(.22,1,.36,1), opacity .35s ease,
-              background .35s ease, color .35s ease;
-}
-.pcard-go svg { width: 15px; height: 15px; stroke: currentColor; }
-.pcard:hover .pcard-go {
-  transform: translateX(2px);
-  opacity: 1;
-  color: #fff;
-  background: color-mix(in srgb, var(--c) 62%, transparent);
-}
-
-/* ── Заглушка вместо скриншота ── */
-.pcard-mock { position: absolute; inset: 0; background: var(--grad); }
-.pcard-mock-pane, .pcard-mock-bar, .pcard-mock-dot {
-  position: absolute; display: block; border-radius: 6px;
-  background: rgba(255,255,255,.16);
-  border: 1px solid rgba(255,255,255,.14);
-}
-.pcard-mock-bar { height: 6px; border-radius: 3px; background: rgba(255,255,255,.26); border: none; }
-.pcard-mock-dot { width: 22px; height: 22px; border-radius: 50%; background: rgba(255,255,255,.26); border: none; }
-
-@media (max-width: 1024px) { .pcard-grid { grid-template-columns: repeat(2, 1fr); } }
-@media (max-width: 620px) {
-  .pcard-grid { grid-template-columns: 1fr; gap: 18px; }
-  .pcard { border-radius: 20px; }
-  .pcard-stage { padding: 24px 18px 22px; }
-  .pcard-cap { padding: 6px 18px 18px; }
-  .pcard-title { font-size: 17px; }
-}
-
-/* При «меньше движения» корпус стоит ровно: ни поворота за курсором,
-   ни открывающейся крышки, ни бегущего отражения */
-@media (prefers-reduced-motion: reduce) {
-  .pcard, .pcard-laptop, .pcard-lid, .pcard-go, .pcard-shine { transition: none; }
-  .pcard:hover { transform: none; }
-  .pcard-laptop { transform: none; }
-  /* Крышка стоит прямо, дека остаётся наклонённой — это не движение, а форма */
-  .pcard-lid, .pcard:hover .pcard-lid { transform: none; }
-  .pcard-shine { display: none; }
-  .pcard:hover .pcard-go { transform: translateX(-2px); }
-}
-
-/* Счётчик проектов в кнопке «Все проекты» */
-.sec-more-n {
-  font-size: 11.5px; font-family: ui-monospace, monospace;
-  padding: 2px 7px; border-radius: 999px;
-  background: rgba(255,255,255,.1); color: var(--text-dim);
-}
-
-/* ═══════════════════════════════════
-   Мобильные приложения в разработке
-   ═══════════════════════════════════ */
-.mapp-list { display: flex; flex-direction: column; gap: 120px; }
-
-/* Строка: телефон + описание. Чётные — телефон справа. */
-.mapp-row {
-  display: grid;
-  grid-template-columns: minmax(0, 460px) minmax(0, 1fr);
-  gap: clamp(32px, 6vw, 90px);
-  align-items: center;
-}
-/* Чётные строки зеркалим: узкая колонка под телефон уезжает вправо */
-.mapp-row:nth-child(even) {
-  grid-template-columns: minmax(0, 1fr) minmax(0, 460px);
-}
-.mapp-row:nth-child(even) .mapp-stage { order: 2; }
-.mapp-row:nth-child(even) .mapp-info  { order: 1; }
-
-/* ── Сцена с телефоном ── */
-.mapp-stage {
-  position: relative;
-  display: flex; flex-direction: column; align-items: center;
-  perspective: 1400px;
-  padding: 10px 0 44px;
-}
-.mapp-glow {
-  position: absolute; top: 50%; left: 50%;
-  transform: translate(-50%, -50%);
-  width: min(420px, 90%); height: 78%;
-  border-radius: 50%;
-  background: radial-gradient(ellipse at center,
-    color-mix(in srgb, var(--c) 30%, transparent), transparent 68%);
-  filter: blur(52px);
-  pointer-events: none;
-}
+/* ── Корпус iPhone 14 Pro Max ──
+   Слои: стальная рамка → чёрное стекло → статус-бар, экран, home-индикатор.
+   Пропорция корпуса 246×487 ≈ 0.505 — как у настоящего (77.6×160.7 мм). */
 .mapp-tilt {
   position: relative;
   transform-style: preserve-3d;
+  transform: rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
   transition: transform .5s cubic-bezier(.22,1,.36,1);
+  --rx: 0deg; --ry: 0deg; --sx: 0;
 }
+/* Пока курсор внутри — доводим быстро, чтобы корпус не «плавал» за мышью */
+.mapp-tilt:hover { transition: transform .12s linear; }
 
-/* ── Корпус ── */
+/* Полированная сталь по периметру.
+   Высота подобрана так, чтобы под статус-баром осталось ровно 240×427 —
+   пропорция скриншотов 9:16, поэтому они не обрезаются. */
 .mapp-frame {
   position: relative;
-  width: 296px; padding: 12px;
-  border-radius: 52px;
-  background: linear-gradient(145deg, #33334e, #17172a);
-  border: 1px solid rgba(255,255,255,.26);
+  width: 246px; height: 463px;
+  padding: 3px;
+  border-radius: 55px;
+  display: flex; flex-direction: column;
+  overflow: hidden;
+  background:
+    linear-gradient(145deg,
+      #f0f1f5 0%, #9fa3b0 12%, #5c6070 30%,
+      #d8dae2 50%,
+      #5c6070 70%, #9fa3b0 88%, #eceef3 100%);
   box-shadow:
-    0 46px 90px rgba(0,0,0,.62),
-    0 0 0 1px rgba(0,0,0,.5),
-    0 0 70px color-mix(in srgb, var(--c) 22%, transparent),
-    inset 0 1px 0 rgba(255,255,255,.24);
+    0 40px 80px rgba(0,0,0,.62),
+    0 0 60px color-mix(in srgb, var(--c) 20%, transparent),
+    inset 0 0 0 1px rgba(255,255,255,.3);
 }
-/* 272x484 — ровно 9:16 под пропорции скриншотов, ничего не режется.
-   Своих «острова» и home-бара нет: скриншоты сняты с реального экрана
-   и уже содержат статус-бар и навигацию приложения. */
+/* Внутренняя фаска между сталью и стеклом */
+.mapp-frame::before {
+  content: "";
+  position: absolute; inset: 2.5px;
+  border-radius: 52.5px;
+  box-shadow: inset 0 0 0 1px rgba(0,0,0,.85);
+  pointer-events: none; z-index: 3;
+}
+
+/* Блик по стеклу — едет вслед за поворотом */
+.mapp-sheen {
+  position: absolute; inset: 3px;
+  border-radius: 52px;
+  z-index: 4; pointer-events: none;
+  background: linear-gradient(108deg,
+    transparent 30%,
+    rgba(255,255,255,.07) 42%,
+    rgba(255,255,255,.13) 50%,
+    rgba(255,255,255,.07) 58%,
+    transparent 70%);
+  transform: translateX(calc(var(--sx) * 26%));
+}
+
+/* ── Статус-бар ── */
+.mapp-status {
+  position: relative;
+  flex-shrink: 0;
+  height: 30px;
+  padding: 0 22px 0 26px;
+  display: flex; align-items: center; justify-content: space-between;
+  background: #000;
+  border-radius: 52px 52px 0 0;
+  color: #fff;
+  z-index: 2;
+}
+.mapp-time { font-size: 11.5px; font-weight: 700; letter-spacing: -.01em; }
+.mapp-sys svg { width: 42px; height: 13px; display: block; }
+
+/* Dynamic Island с глазком камеры */
+.mapp-island {
+  position: absolute; left: 50%; top: 4px;
+  transform: translateX(-50%);
+  width: 82px; height: 23px;
+  border-radius: 999px;
+  background: #000;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.07);
+  display: flex; align-items: center; justify-content: flex-end;
+  padding-right: 9px;
+}
+.mapp-island i {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: radial-gradient(circle at 32% 30%, #2e3550 0%, #0b0d16 62%);
+  box-shadow: inset 0 0 0 .5px rgba(120,150,255,.22);
+}
+
+/* ── Экран ── */
 .mapp-scr {
   position: relative;
-  width: 272px; height: 484px;
-  border-radius: 42px;
+  flex: 1;
   overflow: hidden;
   background: #06060f;
 }
+
+/* Home-индикатор */
+.mapp-home {
+  position: absolute; left: 50%; bottom: 7px;
+  transform: translateX(-50%);
+  width: 104px; height: 4.5px;
+  border-radius: 999px;
+  background: rgba(255,255,255,.55);
+  z-index: 5; pointer-events: none;
+}
+
+/* ── Кнопки на гранях ── */
+.mapp-btn {
+  position: absolute;
+  border-radius: 2px;
+  background: linear-gradient(180deg, #cfd2db, #7b7f8d 45%, #4a4d59);
+  box-shadow: 0 1px 2px rgba(0,0,0,.5);
+  z-index: 1;
+}
+.mapp-btn-action { left: -2.5px; top: 108px; width: 3px; height: 30px; }
+.mapp-btn-volup  { left: -2.5px; top: 152px; width: 3px; height: 54px; }
+.mapp-btn-voldn  { left: -2.5px; top: 216px; width: 3px; height: 54px; }
+.mapp-btn-power  { right: -2.5px; top: 176px; width: 3px; height: 76px; }
 
 /* ── Свайп-галерея ── */
 .mapp-slider {
@@ -3530,10 +3352,11 @@ body.drawer-open .ariel-fab {
 }
 
 /* ── Адаптив ── */
+/* Корпус масштабируем целиком — так кнопки, рамка и остров
+   сохраняют пропорции друг относительно друга */
 @media (max-width: 1024px) {
-  .mapp-row { grid-template-columns: minmax(0, 400px) minmax(0, 1fr); gap: 40px; }
-  .mapp-frame { width: 262px; padding: 11px; border-radius: 46px; }
-  .mapp-scr   { width: 240px; height: 427px; border-radius: 37px; }
+  .mapp-row { grid-template-columns: minmax(0, 360px) minmax(0, 1fr); gap: 40px; }
+  .mapp-tilt { zoom: .88; }
 }
 @media (max-width: 860px) {
   .mapp-list { gap: 88px; }
@@ -3548,9 +3371,8 @@ body.drawer-open .ariel-fab {
   .mapp-plat { justify-content: center; }
 }
 @media (max-width: 420px) {
-  .mapp-frame { width: 232px; padding: 10px; border-radius: 42px; }
-  .mapp-scr   { width: 212px; height: 377px; border-radius: 33px; }
-  .mapp-skel  { padding: 38px 16px 24px; }
+  .mapp-tilt { zoom: .78; }
+  .mapp-skel { padding: 38px 16px 24px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
