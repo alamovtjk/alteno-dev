@@ -3199,17 +3199,17 @@ body.drawer-open .ariel-fab {
 }
 /* ── Дека с клавиатурой ──
    Плоскость с началом координат у петли, положенная почти горизонтально.
-   Глубина 124px под наклоном 71° даёт на экране около 40px — столько нужно,
-   чтобы клавиатура и трекпад читались как у макбука. */
+   Глубина 116px под наклоном 73.5° даёт на экране около 33px. Металл — тот же
+   графит, что у рамки крышки, иначе дека смотрится отдельным предметом. */
 .pcard-deck {
   position: absolute;
-  top: 100%; left: -6%;
-  width: 112%; height: 124px;
+  top: 100%; left: -4%;
+  width: 108%; height: 116px;
   transform-origin: top center;
-  transform: rotateX(71deg);
+  transform: rotateX(73.5deg);
   transform-style: preserve-3d;
   border-radius: 0 0 12px 12px;
-  background: linear-gradient(180deg, #e3e5ec 0%, #c6c9d3 30%, #9da0ac 68%, #747783 100%);
+  background: linear-gradient(180deg, #7c808d 0%, #5b5f6b 28%, #3d404a 66%, #26282f 100%);
   box-shadow: 0 14px 26px rgba(0,0,0,.42);
 }
 /* Затемнённые боковые торцы — грани корпуса */
@@ -3239,10 +3239,10 @@ body.drawer-open .ariel-fab {
   background:
     /* вертикальные швы между клавишами */
     repeating-linear-gradient(90deg,
-      transparent 0 5.9%, rgba(0,0,0,.6) 5.9% 6.6%),
+      transparent 0 5.9%, rgba(0,0,0,.5) 5.9% 6.6%),
     /* горизонтальные швы между рядами */
     repeating-linear-gradient(180deg,
-      transparent 0 15.5%, rgba(0,0,0,.6) 15.5% 19%),
+      transparent 0 15.5%, rgba(0,0,0,.5) 15.5% 19%),
     /* сами клавиши */
     linear-gradient(180deg, #33363f 0%, #23252c 45%, #16181d 100%);
   box-shadow:
@@ -3258,7 +3258,7 @@ body.drawer-open .ariel-fab {
   transform: translateX(-50%);
   width: 34%; height: 27%;
   border-radius: 3px;
-  background: linear-gradient(180deg, #cdd0da 0%, #aeb1bd 60%, #979aa6 100%);
+  background: linear-gradient(180deg, #969aa6 0%, #7b7f8b 60%, #666a75 100%);
   box-shadow:
     inset 0 0 0 1px rgba(0,0,0,.2),
     inset 0 1px 2px rgba(255,255,255,.55);
@@ -3266,7 +3266,7 @@ body.drawer-open .ariel-fab {
 
 /* Тень на «столе» — уезжает в сторону, противоположную наклону */
 .pcard-drop {
-  position: absolute; left: 50%; bottom: -48px;
+  position: absolute; left: 50%; bottom: -42px;
   transform: translateX(calc(-50% - var(--sx) * 6%));
   width: 82%; height: 15px;
   border-radius: 50%;
