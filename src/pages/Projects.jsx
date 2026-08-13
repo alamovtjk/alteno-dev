@@ -58,7 +58,6 @@ export default function Projects() {
                 row={row}
                 to={`/projects/${rowSlug(row, rows)}`}
                 accent={accentFor(i)}
-                label={t.projects.view}
               />
             ))}
           </div>

@@ -14,39 +14,28 @@ function MockUI() {
   )
 }
 
-export default function ProjectCard({ row, to, accent, label }) {
-  const year = row.created_at ? new Date(row.created_at).getFullYear() : null
-  const tags = (row.tags || []).slice(0, 3)
-
+/* Карточка — обложка и название. Описание, теги, год и ссылка
+   живут на странице проекта, чтобы витрина оставалась картинкой. */
+export default function ProjectCard({ row, to, accent }) {
   return (
     <Link
       to={to}
       className="pcard reveal"
       style={{ '--c': accent.c, '--grad': accent.grad }}
+      aria-label={row.title}
     >
       <div className="pcard-media">
-        <div className="pcard-media-in">
-          {row.image_url
-            ? <img src={row.image_url} alt={row.title} loading="lazy" />
-            : <MockUI />}
-        </div>
-        {year && <span className="pcard-year">{year}</span>}
+        {row.image_url
+          ? <img src={row.image_url} alt="" loading="lazy" />
+          : <MockUI />}
       </div>
 
-      <div className="pcard-body">
+      <span className="pcard-veil" aria-hidden="true" />
+
+      <div className="pcard-cap">
         <h3 className="pcard-title ub">{row.title}</h3>
-        {row.description && <p className="pcard-desc">{row.description}</p>}
-        {tags.length > 0 && (
-          <div className="pcard-tags">
-            {tags.map(tg => <span key={tg} className="pcard-tag">{tg}</span>)}
-          </div>
-        )}
-      </div>
-
-      <div className="pcard-foot">
-        <span className="pcard-cta">{label}</span>
-        <span className="pcard-arrow">
-          <svg viewBox="0 0 24 24" fill="none" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <span className="pcard-go" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
             <path d="M5 12h14M13 5l7 7-7 7" />
           </svg>
         </span>
