@@ -858,8 +858,12 @@ input,textarea,button { font-family:inherit; }
 .reviews-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:24px; }
 .review {
   border-radius:var(--r); padding:28px; position:relative; overflow:hidden;
-  background:var(--lg-bg); backdrop-filter:var(--lg-blur); -webkit-backdrop-filter:var(--lg-blur);
-  border:1px solid var(--lg-border);
+  background:
+    radial-gradient(ellipse 82% 70% at 8% 0%, color-mix(in srgb, var(--c1) 26%, transparent), transparent 66%),
+    radial-gradient(ellipse 68% 60% at 100% 100%, color-mix(in srgb, var(--c2) 18%, transparent), transparent 66%),
+    linear-gradient(150deg, rgba(25,19,48,.78) 0%, rgba(19,26,44,.78) 56%, rgba(13,26,33,.78) 100%);
+  backdrop-filter:var(--lg-blur); -webkit-backdrop-filter:var(--lg-blur);
+  border:1px solid rgba(255,255,255,.11);
   box-shadow:var(--lg-spec),var(--lg-shadow);
   display:flex; flex-direction:column; gap:16px;
 }
@@ -3237,8 +3241,12 @@ a.pd-hero:hover .pd-hero-hint { opacity: 1; transform: translateY(0); }
 .tp-card {
   position: relative; overflow: hidden; text-align: center;
   border-radius: var(--r); padding: 34px 26px;
-  background: var(--lg-bg); backdrop-filter: var(--lg-blur); -webkit-backdrop-filter: var(--lg-blur);
-  border: 1px solid var(--lg-border); box-shadow: var(--lg-spec), var(--lg-shadow);
+  background:
+    radial-gradient(ellipse 84% 72% at 6% 0%, color-mix(in srgb, var(--c) 28%, transparent), transparent 66%),
+    radial-gradient(ellipse 70% 62% at 100% 100%, rgba(37,99,235,.15), transparent 66%),
+    linear-gradient(150deg, rgba(25,19,48,.78) 0%, rgba(19,26,44,.78) 56%, rgba(13,26,33,.78) 100%);
+  backdrop-filter: var(--lg-blur); -webkit-backdrop-filter: var(--lg-blur);
+  border: 1px solid rgba(255,255,255,.11); box-shadow: var(--lg-spec), var(--lg-shadow);
   transition: transform .4s cubic-bezier(.22,1,.36,1), border-color .3s;
 }
 .tp-card:hover { transform: translateY(-6px); border-color: color-mix(in oklab, var(--c) 45%, transparent); }
@@ -3268,8 +3276,13 @@ a.pd-hero:hover .pd-hero-hint { opacity: 1; transform: translateY(0); }
 .tp-cta {
   margin-top: 48px; padding: 44px 32px; text-align: center;
   border-radius: var(--r); position: relative; overflow: hidden;
-  background: var(--lg-bg); backdrop-filter: var(--lg-blur); -webkit-backdrop-filter: var(--lg-blur);
-  border: 1px solid var(--lg-border); box-shadow: var(--lg-spec), var(--lg-shadow);
+  background:
+    radial-gradient(ellipse 74% 82% at 10% 4%,  rgba(139,72,255,.42), transparent 62%),
+    radial-gradient(ellipse 58% 64% at 84% 10%, rgba(37,99,235,.28),  transparent 60%),
+    radial-gradient(ellipse 66% 74% at 90% 96%, rgba(13,148,136,.30), transparent 62%),
+    linear-gradient(150deg, rgba(28,20,54,.78) 0%, rgba(20,27,48,.78) 52%, rgba(14,28,36,.78) 100%);
+  backdrop-filter: var(--lg-blur); -webkit-backdrop-filter: var(--lg-blur);
+  border: 1px solid rgba(255,255,255,.12); box-shadow: var(--lg-spec), var(--lg-shadow);
 }
 .tp-cta h3 { font-size: clamp(20px, 2.6vw, 28px); font-weight: 600; margin-bottom: 12px; }
 .tp-cta p { font-size: 15px; color: var(--text-dim); max-width: 460px; margin: 0 auto 24px; }
