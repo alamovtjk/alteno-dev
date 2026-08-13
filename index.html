@@ -4,6 +4,35 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
+    <script>
+      /* Самолечение кеша. Должно стоять первым в head: Vite вставляет
+         модуль тоже в head, и слушатель обязан быть готов раньше него.
+         Service worker мог сохранить HTML под адресом скрипта — тогда сайт
+         не стартует и сам по себе кеш не чинится. Ловим ошибку загрузки,
+         сносим воркер со всеми кешами и перезагружаемся один раз. */
+      (function () {
+        var KEY = 'sw_selfheal';
+        window.addEventListener('error', function (e) {
+          var el = e.target;
+          if (!el || el.tagName !== 'SCRIPT') return;
+          if (sessionStorage.getItem(KEY)) return;
+          sessionStorage.setItem(KEY, '1');
+          var jobs = [];
+          if ('serviceWorker' in navigator) {
+            jobs.push(navigator.serviceWorker.getRegistrations().then(function (rs) {
+              return Promise.all(rs.map(function (r) { return r.unregister(); }));
+            }));
+          }
+          if (window.caches) {
+            jobs.push(caches.keys().then(function (names) {
+              return Promise.all(names.map(function (n) { return caches.delete(n); }));
+            }));
+          }
+          Promise.all(jobs).catch(function () {}).then(function () { location.reload(); });
+        }, true);
+      })();
+    </script>
+
     <!-- PWA -->
     <meta name="theme-color" content="#ffffff" />
     <meta name="mobile-web-app-capable" content="yes" />
@@ -79,37 +108,6 @@
       })();
     </script>
 
-    <script>
-      /* Самолечение кеша.
-         Service worker мог сохранить HTML-страницу под адресом скрипта — тогда
-         модуль не грузится и сайт не стартует, а сам по себе кеш не починится.
-         Ловим ошибку загрузки скрипта, сносим воркер со всеми кешами и
-         перезагружаемся один раз (флаг в sessionStorage от зацикливания). */
-      (function () {
-        var KEY = 'sw_selfheal';
-        window.addEventListener('error', function (e) {
-          var el = e.target;
-          if (!el || el.tagName !== 'SCRIPT') return;
-          if (sessionStorage.getItem(KEY)) return;
-          sessionStorage.setItem(KEY, '1');
-
-          var jobs = [];
-          if ('serviceWorker' in navigator) {
-            jobs.push(navigator.serviceWorker.getRegistrations().then(function (rs) {
-              return Promise.all(rs.map(function (r) { return r.unregister(); }));
-            }));
-          }
-          if (window.caches) {
-            jobs.push(caches.keys().then(function (names) {
-              return Promise.all(names.map(function (n) { return caches.delete(n); }));
-            }));
-          }
-          Promise.all(jobs).catch(function () {}).then(function () {
-            location.reload();
-          });
-        }, true);
-      })();
-    </script>
 
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
