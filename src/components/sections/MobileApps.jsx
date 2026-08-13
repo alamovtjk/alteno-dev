@@ -152,7 +152,24 @@ function PhoneGallery({ app, t }) {
         <div className="mapp-frame">
           <span className="mapp-sheen" aria-hidden="true" />
 
-          {/* Dynamic Island лежит поверх скриншота — как на настоящем экране */}
+          {/* Статус-бар и остров лежат поверх скриншота, как на настоящем
+              экране, и не сдвигают его — он прижат к нижнему краю */}
+          <div className="mapp-statusbar" aria-hidden="true">
+            <span className="mapp-time">9:41</span>
+            <span className="mapp-sys">
+              <svg viewBox="0 0 46 14" fill="currentColor">
+                <rect x="0"  y="8"   width="2.6" height="5"   rx="1" />
+                <rect x="4"  y="6"   width="2.6" height="7"   rx="1" />
+                <rect x="8"  y="3.5" width="2.6" height="9.5" rx="1" />
+                <rect x="12" y="1"   width="2.6" height="12"  rx="1" />
+                <path d="M19.6 4.6a7.6 7.6 0 0 1 8.8 0l-1.3 1.7a5.5 5.5 0 0 0-6.2 0zM21.6 7.6a4 4 0 0 1 4.8 0L24 10.6z" />
+                <rect x="32" y="2.6" width="11.4" height="8.8" rx="2.6" fill="none" stroke="currentColor" strokeWidth="1.1" opacity=".55" />
+                <rect x="33.6" y="4.2" width="8.2" height="5.6" rx="1.4" />
+                <rect x="44.4" y="5.6" width="1.4" height="2.8" rx=".7" opacity=".55" />
+              </svg>
+            </span>
+          </div>
+
           <span className="mapp-island" aria-hidden="true"><i /></span>
 
           <div className="mapp-scr">
