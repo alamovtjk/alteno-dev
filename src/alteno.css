@@ -894,7 +894,8 @@ input,textarea,button { font-family:inherit; }
   overflow: hidden;
   position: relative;
   background: linear-gradient(180deg,
-    transparent 0%, #05050c 10%, #030308 46%, #04040b 86%, transparent 100%);
+    transparent 0%, rgba(3,3,8,.55) 9%, #020206 26%,
+    #010104 52%, #020207 74%, rgba(3,3,9,.5) 92%, transparent 100%);
 }
 .team-section .sec-sub { max-width: 520px; margin-bottom: 0; }
 /* Отступ до карусели задаёт .team-carousel-wrap — иначе он сложится с sec-head */
@@ -974,11 +975,61 @@ input,textarea,button { font-family:inherit; }
   100%     { opacity: 0; transform: translate3d(70vw, 22vh, 0) rotate(14deg); }
 }
 
-/* Затемнение к краям — центр остаётся светлее, карточки читаются */
+/* ── Орбиты ──
+   Круг, сплющенный по вертикали, читается как эллипс в перспективе.
+   Точка вращается внутри той же сплющенной системы, поэтому идёт
+   ровно по кольцу, а не по окружности поверх него. */
+.team-orbit {
+  position: absolute; left: 50%; top: 50%;
+  border-radius: 50%;
+  pointer-events: none;
+}
+.team-orbit-lg {
+  width: 1080px; height: 1080px;
+  transform: translate(-50%, -50%) scaleY(.34) rotate(-9deg);
+}
+.team-orbit-sm {
+  width: 720px; height: 720px;
+  transform: translate(-50%, -50%) scaleY(.30) rotate(11deg);
+}
+.team-orbit-ring {
+  position: absolute; inset: 0;
+  border-radius: 50%;
+  border: 1px solid rgba(167,139,250,.13);
+}
+.team-orbit-sm .team-orbit-ring { border-color: rgba(45,212,191,.12); }
+
+.team-orbit-spin {
+  position: absolute; inset: 0;
+  animation: teamOrbit 34s linear infinite;
+}
+.team-orbit-sm .team-orbit-spin { animation-duration: 22s; animation-direction: reverse; }
+
+/* Светящееся тело на орбите */
+.team-orbit-spin i {
+  position: absolute; top: -5px; left: 50%;
+  width: 10px; height: 10px; border-radius: 50%;
+  transform: translateX(-50%);
+  background: #c4b5fd;
+  box-shadow: 0 0 14px 5px rgba(167,139,250,.55);
+}
+.team-orbit-sm .team-orbit-spin i {
+  width: 7px; height: 7px; top: -3.5px;
+  background: #99f6e4;
+  box-shadow: 0 0 12px 4px rgba(45,212,191,.5);
+}
+@keyframes teamOrbit {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+/* Затемняем только бока: раньше радиальная виньетка гасила и верх с низом,
+   из-за чего на стыке с соседней секцией появлялась чёткая полоса */
 .team-bg::after {
   content: "";
   position: absolute; inset: 0;
-  background: radial-gradient(ellipse 78% 62% at 50% 46%, transparent 40%, rgba(2,2,7,.72) 100%);
+  background: linear-gradient(90deg,
+    rgba(1,1,5,.72) 0%, transparent 22%, transparent 78%, rgba(1,1,5,.72) 100%);
 }
 .team-particle {
   position: absolute; border-radius: 50%;
@@ -993,7 +1044,7 @@ input,textarea,button { font-family:inherit; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .team-nebula, .team-stars, .team-shoot, .team-particle { animation: none; }
+  .team-nebula, .team-stars, .team-shoot, .team-particle, .team-orbit-spin { animation: none; }
   .team-shoot { display: none; }
 }
 

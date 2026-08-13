@@ -111,6 +111,16 @@ export default function Team() {
         <div className="team-stars team-stars-near" />
         <span className="team-shoot team-shoot-1" />
         <span className="team-shoot team-shoot-2" />
+
+        {/* Орбиты — главный акцент раздела, отсюда и название студии */}
+        <div className="team-orbit team-orbit-lg">
+          <span className="team-orbit-ring" />
+          <span className="team-orbit-spin"><i /></span>
+        </div>
+        <div className="team-orbit team-orbit-sm">
+          <span className="team-orbit-ring" />
+          <span className="team-orbit-spin"><i /></span>
+        </div>
         {PARTICLES.map(p => (
           <div key={p.id} className="team-particle" style={{
             left: `${p.x}%`, top: `${p.y}%`,
