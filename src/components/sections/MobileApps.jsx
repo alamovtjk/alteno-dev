@@ -171,13 +171,25 @@ function PhoneGallery({ app, t }) {
                   style={{ transform: `translate3d(${shift}%,0,0)` }}
                 >
                   {shots.map((src, i) => (
-                    <img
-                      key={src}
-                      src={src}
-                      alt={`${app.name} — ${t.screen} ${i + 1}`}
-                      draggable="false"
-                      loading={i === 0 ? 'eager' : 'lazy'}
-                    />
+                    /* Скриншоты сняты 9:16, а экран Pro Max выше — вместо
+                       чёрных полос кладём размытую копию самого кадра */
+                    <div className="mapp-slide" key={src}>
+                      <img
+                        className="mapp-slide-bg"
+                        src={src}
+                        alt=""
+                        aria-hidden="true"
+                        draggable="false"
+                        loading={i === 0 ? 'eager' : 'lazy'}
+                      />
+                      <img
+                        className="mapp-slide-img"
+                        src={src}
+                        alt={`${app.name} — ${t.screen} ${i + 1}`}
+                        draggable="false"
+                        loading={i === 0 ? 'eager' : 'lazy'}
+                      />
+                    </div>
                   ))}
                 </div>
 

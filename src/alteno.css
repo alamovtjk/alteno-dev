@@ -3377,8 +3377,7 @@ body.drawer-open .ariel-fab {
 
 /* ── Корпус iPhone 14 Pro Max ──
    Слои: стальная рамка → чёрное стекло → статус-бар, экран, home-индикатор.
-   Корпус 246×433: стекло 240×427 — ровно пропорция скриншотов 9:16,
-   поэтому фото занимает экран целиком и ничего не обрезается. */
+   Корпус 246×509 = 0.483 — пропорция настоящего 14 Pro Max (77.6×160.7 мм). */
 .mapp-tilt {
   position: relative;
   transform-style: preserve-3d;
@@ -3394,7 +3393,7 @@ body.drawer-open .ariel-fab {
    пропорция скриншотов 9:16, поэтому они не обрезаются. */
 .mapp-frame {
   position: relative;
-  width: 246px; height: 433px;
+  width: 246px; height: 509px;
   padding: 3px;
   border-radius: 55px;
   display: flex; flex-direction: column;
@@ -3477,10 +3476,11 @@ body.drawer-open .ariel-fab {
   box-shadow: 0 1px 2px rgba(0,0,0,.5);
   z-index: 1;
 }
-.mapp-btn-action { left: -2.5px; top: 108px; width: 3px; height: 30px; }
-.mapp-btn-volup  { left: -2.5px; top: 152px; width: 3px; height: 54px; }
-.mapp-btn-voldn  { left: -2.5px; top: 216px; width: 3px; height: 54px; }
-.mapp-btn-power  { right: -2.5px; top: 176px; width: 3px; height: 76px; }
+/* Позиции в процентах — держатся при любом масштабе корпуса */
+.mapp-btn-action { left: -2.5px;  top: 17%;   width: 3px; height: 4%; }
+.mapp-btn-volup  { left: -2.5px;  top: 23%;   width: 3px; height: 6.5%; }
+.mapp-btn-voldn  { left: -2.5px;  top: 31.5%; width: 3px; height: 6.5%; }
+.mapp-btn-power  { right: -2.5px; top: 25%;   width: 3px; height: 9%; }
 
 /* ── Свайп-галерея ── */
 .mapp-slider {
@@ -3496,10 +3496,26 @@ body.drawer-open .ariel-fab {
   will-change: transform;
 }
 .mapp-track.is-dragging { transition: none; }
-.mapp-track img {
-  width: 100%; height: 100%;
+.mapp-slide {
+  position: relative;
   flex: 0 0 100%;
-  object-fit: cover; object-position: top center;
+  height: 100%;
+  overflow: hidden;
+}
+/* Размытая копия кадра заполняет то, что не закрывает скриншот 9:16 */
+.mapp-slide-bg {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  object-fit: cover;
+  transform: scale(1.18);
+  filter: blur(24px) brightness(.5) saturate(1.15);
+  -webkit-user-drag: none;
+}
+/* Сам скриншот — целиком, без обрезки */
+.mapp-slide-img {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  object-fit: contain;
   display: block; -webkit-user-drag: none;
 }
 
