@@ -741,14 +741,20 @@ input,textarea,button { font-family:inherit; }
 .studio-layout { display:grid; grid-template-columns:1.1fr .9fr; gap:28px; margin-bottom:28px; }
 .manifesto {
   padding:44px 42px; border-radius:var(--r);
-  background:var(--glass-bg); backdrop-filter:blur(20px);
-  border:1px solid var(--glass-b); box-shadow:var(--shadow);
+  background:
+    radial-gradient(ellipse 72% 62% at 8% 2%,   rgba(139,72,255,.44), transparent 62%),
+    radial-gradient(ellipse 58% 56% at 96% 94%, rgba(13,148,136,.30), transparent 62%),
+    radial-gradient(ellipse 50% 48% at 88% 6%,  rgba(37,99,235,.24),  transparent 62%),
+    linear-gradient(150deg, #1c1436 0%, #141b30 54%, #0e1c24 100%);
+  backdrop-filter:blur(20px);
+  border:1px solid rgba(255,255,255,.12); box-shadow:var(--shadow);
   position:relative; overflow:hidden;
   display:flex; flex-direction:column; justify-content:center;
 }
+/* Мягкая засветка сверху — тот же приём, что в баннере контактов */
 .manifesto::before {
-  content:""; position:absolute; top:-40%; right:-20%; width:420px; height:420px;
-  background:radial-gradient(circle,rgba(124,58,237,.4),transparent 65%); filter:blur(40px);
+  content:""; position:absolute; inset:0;
+  background:radial-gradient(ellipse 60% 46% at 22% 0%, rgba(255,255,255,.11), transparent 64%);
   pointer-events:none;
 }
 .quote-mark { font-family:'Unbounded',sans-serif; font-size:64px; line-height:.6; color:var(--violet-l); opacity:.6; margin-bottom:16px; }
@@ -760,8 +766,12 @@ input,textarea,button { font-family:inherit; }
 .values { display:grid; grid-template-columns:1fr 1fr; gap:18px; }
 .val {
   padding:24px 22px; border-radius:18px;
-  background:var(--glass-bg); backdrop-filter:blur(20px);
-  border:1px solid var(--glass-b); box-shadow:var(--shadow);
+  background:
+    radial-gradient(ellipse 84% 76% at 6% 0%, color-mix(in srgb, var(--c) 30%, transparent), transparent 66%),
+    radial-gradient(ellipse 70% 66% at 100% 100%, rgba(37,99,235,.16), transparent 66%),
+    linear-gradient(150deg, #191330 0%, #131a2c 56%, #0d1a21 100%);
+  backdrop-filter:blur(20px);
+  border:1px solid rgba(255,255,255,.11); box-shadow:var(--shadow);
   transition:transform .3s,border-color .3s; cursor:default;
 }
 .val:hover { transform:translateY(-4px); border-color:color-mix(in oklab,var(--c) 45%,transparent); }
