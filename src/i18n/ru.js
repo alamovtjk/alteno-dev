@@ -161,6 +161,7 @@ export default {
     notFoundT: 'Проект не найден',
     notFoundD: 'Возможно, его убрали или ссылка устарела.',
     backToAll: 'Все проекты',
+    backHome: 'На главную',
   },
   reviews: {
     eyebrow: 'Отзывы',

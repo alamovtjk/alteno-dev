@@ -161,6 +161,7 @@ export default {
     notFoundT: 'Project not found',
     notFoundD: 'It may have been removed, or the link is out of date.',
     backToAll: 'All projects',
+    backHome: 'Back home',
   },
   reviews: {
     eyebrow: 'Reviews',

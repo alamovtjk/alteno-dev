@@ -67,6 +67,13 @@ export default function TeamPage() {
   return (
     <section className="section page-section" style={{ position: 'relative', zIndex: 2 }}>
       <div className="shell">
+        <Link to="/" className="pd-back reveal">
+          <svg viewBox="0 0 24 24" fill="none" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M19 12H5M11 19l-7-7 7-7"/>
+          </svg>
+          {t.projects.backHome}
+        </Link>
+
         <div className="sec-head">
           <div className="eyebrow reveal"><span className="line" />{t.team.eyebrow}</div>
           <h2 className="sec-title ub reveal">

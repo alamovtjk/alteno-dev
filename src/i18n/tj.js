@@ -161,6 +161,7 @@ export default {
     notFoundT: 'Лоиҳа ёфт нашуд',
     notFoundD: 'Шояд онро бардоштанд ё истинод кӯҳна шудааст.',
     backToAll: 'Ҳамаи лоиҳаҳо',
+    backHome: 'Ба саҳифаи асосӣ',
   },
   reviews: {
     eyebrow: 'Шарҳҳо',
