@@ -1,7 +1,6 @@
 import {
   Document, Paragraph, TextRun, HeadingLevel,
-  AlignmentType, Packer, BorderStyle, TableRow,
-  TableCell, Table, WidthType, ShadingType,
+  AlignmentType, Packer, BorderStyle,
   convertInchesToTwip,
 } from 'docx'
 import { Resend } from 'resend'

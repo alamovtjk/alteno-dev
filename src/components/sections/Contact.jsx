@@ -2,8 +2,6 @@ import { useState, useEffect } from 'react'
 import { useLanguage } from '../../context/LanguageContext'
 import { useSettings } from '../../context/SettingsContext'
 
-const TG_TOKEN   = import.meta.env.VITE_TG_TOKEN   || ''
-const TG_CHAT_ID = import.meta.env.VITE_TG_CHAT_ID || ''
 const RL_KEY      = 'alteno_rl'
 const MAX_PER_DAY = 2
 
@@ -53,25 +51,13 @@ function recordSubmission() {
 }
 
 async function sendNotifications(form, email) {
-  const now = new Date().toLocaleString('ru-RU', {
-    day: '2-digit', month: '2-digit', year: 'numeric',
-    hour: '2-digit', minute: '2-digit',
-  })
-  const text =
-    `🆕 *Новая заявка — AlTeNo Dev*\n\n` +
-    `👤 *Имя:* ${form.name}\n` +
-    `📞 *Контакт:* ${form.contact}\n` +
-    `📝 *Задача:* ${form.task || '—'}\n\n` +
-    `⏰ ${now}`
-
   await Promise.allSettled([
-    TG_TOKEN && TG_CHAT_ID
-      ? fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendMessage`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ chat_id: TG_CHAT_ID, text, parse_mode: 'Markdown' }),
-        }).catch(() => {})
-      : Promise.resolve(),
+    /* Telegram — через свою функцию: токен бота остаётся на сервере */
+    fetch('/api/contact', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name: form.name, contact: form.contact, task: form.task }),
+    }).catch(() => {}),
 
     fetch(`https://formsubmit.co/ajax/${email}`, {
       method: 'POST',

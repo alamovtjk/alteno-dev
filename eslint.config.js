@@ -18,4 +18,10 @@ export default defineConfig([
       parserOptions: { ecmaFeatures: { jsx: true } },
     },
   },
+  {
+    /* Функции в api/ и сборочные скрипты выполняются в Node, а не в браузере —
+       иначе process, Buffer и console числятся неопределёнными */
+    files: ['api/**/*.js', 'scripts/**/*.{js,mjs}'],
+    languageOptions: { globals: globals.node },
+  },
 ])
