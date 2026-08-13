@@ -3078,12 +3078,19 @@ body.drawer-open .ariel-fab {
     0 0 44px color-mix(in srgb, var(--c) 17%, transparent);
 }
 .pcard:focus-visible { outline: 2px solid var(--c); outline-offset: 3px; }
-
-/* ── Подставка под устройство ── */
+/* ── 3D-сцена ──
+   Настоящая перспектива на CSS: корпус поворачивается за курсором,
+   крышка приоткрыта и распрямляется при наведении. Значения углов
+   приходят из JS в переменных --rx / --ry / --sx. */
 .pcard-stage {
   position: relative;
-  padding: 30px 24px 26px;
+  padding: 34px 26px 30px;
   display: flex; align-items: center; justify-content: center;
+  perspective: 1100px;
+  perspective-origin: 50% 45%;
+  --rx: 0deg;
+  --ry: 0deg;
+  --sx: 0;
 }
 .pcard-halo {
   position: absolute; left: 50%; top: 46%;
@@ -3093,30 +3100,42 @@ body.drawer-open .ariel-fab {
   background: radial-gradient(ellipse at center,
     color-mix(in srgb, var(--c) 26%, transparent), transparent 70%);
   filter: blur(36px);
-  opacity: .6;
+  opacity: .55;
   transition: opacity .5s ease;
   pointer-events: none;
 }
 .pcard:hover .pcard-halo { opacity: .95; }
-/* ── Ноутбук ──
-   Крышка собрана слоями: алюминиевая кромка → чёрная рамка → экран.
-   Ниже петля и торец основания, снизу мягкая тень на «столе». */
+
+/* ── Корпус ── */
 .pcard-laptop {
   position: relative;
   width: 100%;
-  transition: transform .55s cubic-bezier(.22,1,.36,1);
+  transform-style: preserve-3d;
+  transform: rotateX(var(--rx)) rotateY(var(--ry));
+  transition: transform .45s cubic-bezier(.22,1,.36,1);
 }
-.pcard:hover .pcard-laptop { transform: translateY(-4px); }
+/* Пока курсор внутри — доводим мгновенно, чтобы корпус не «плавал» за мышью */
+.pcard-stage:hover .pcard-laptop { transition: transform .12s linear; }
 
-/* Кромка корпуса — тонкий металл по периметру крышки */
+/* Крышка вращается вокруг петли: приоткрыта, при наведении распрямляется */
 .pcard-lid {
   position: relative;
   padding: 1.5px;
   border-radius: 12px 12px 3px 3px;
   background: linear-gradient(170deg, #6e7280 0%, #3a3d47 34%, #202329 100%);
+  transform-origin: bottom center;
+  transform: rotateX(7deg);
+  transform-style: preserve-3d;
+  transition: transform .55s cubic-bezier(.22,1,.36,1), box-shadow .55s ease;
   box-shadow:
     0 18px 30px rgba(0,0,0,.42),
     0 1px 0 rgba(255,255,255,.18) inset;
+}
+.pcard:hover .pcard-lid {
+  transform: rotateX(0deg);
+  box-shadow:
+    0 26px 44px rgba(0,0,0,.5),
+    0 1px 0 rgba(255,255,255,.22) inset;
 }
 /* Блик по верхнему ребру */
 .pcard-lid::before {
@@ -3154,11 +3173,24 @@ body.drawer-open .ariel-fab {
   width: 100%; height: 100%;
   object-fit: contain;
   display: block;
-  transition: transform .7s cubic-bezier(.22,1,.36,1);
 }
-.pcard:hover .pcard-screen img { transform: scale(1.015); }
 
-/* Шов между крышкой и основанием — сплошной, во всю ширину корпуса */
+/* Отражение на стекле — едет вслед за поворотом корпуса */
+.pcard-shine {
+  position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(105deg,
+    transparent 34%,
+    rgba(255,255,255,.10) 46%,
+    rgba(255,255,255,.16) 50%,
+    rgba(255,255,255,.10) 54%,
+    transparent 66%);
+  transform: translateX(calc(var(--sx) * 34%));
+  opacity: 0;
+  transition: opacity .4s ease;
+}
+.pcard:hover .pcard-shine { opacity: 1; }
+
+/* Шов между крышкой и основанием — во всю ширину корпуса */
 .pcard-hinge {
   width: 100%; height: 2px;
   background: linear-gradient(180deg, #2a2d34, #101216);
@@ -3174,7 +3206,6 @@ body.drawer-open .ariel-fab {
     #e8eaf0 0%, #c2c5d0 26%, #9a9dab 56%, #6b6e7c 82%, #4a4d59 100%);
   box-shadow: 0 10px 18px rgba(0,0,0,.4);
 }
-/* Скруглённые торцы по бокам */
 .pcard-base::before {
   content: "";
   position: absolute; inset: 0;
@@ -3182,7 +3213,6 @@ body.drawer-open .ariel-fab {
   background: linear-gradient(90deg,
     rgba(0,0,0,.32) 0%, transparent 5%, transparent 95%, rgba(0,0,0,.32) 100%);
 }
-/* Выемка под палец */
 .pcard-base::after {
   content: "";
   position: absolute; top: 0; left: 50%;
@@ -3192,18 +3222,16 @@ body.drawer-open .ariel-fab {
   background: rgba(0,0,0,.26);
 }
 
-/* Тень на «столе» под устройством */
+/* Тень на «столе» — уезжает в сторону, противоположную наклону */
 .pcard-drop {
-  position: absolute; left: 50%; bottom: -12px;
-  transform: translateX(-50%);
+  position: absolute; left: 50%; bottom: -13px;
+  transform: translateX(calc(-50% - var(--sx) * 6%));
   width: 76%; height: 14px;
   border-radius: 50%;
   background: radial-gradient(ellipse at center, rgba(0,0,0,.55), transparent 72%);
   filter: blur(7px);
   pointer-events: none;
-  transition: opacity .5s ease;
 }
-.pcard:hover .pcard-drop { opacity: .7; }
 
 /* ── Подпись ── */
 .pcard-cap {
@@ -3256,11 +3284,14 @@ body.drawer-open .ariel-fab {
   .pcard-title { font-size: 17px; }
 }
 
+/* При «меньше движения» корпус стоит ровно: ни поворота за курсором,
+   ни открывающейся крышки, ни бегущего отражения */
 @media (prefers-reduced-motion: reduce) {
-  .pcard, .pcard-laptop, .pcard-screen img, .pcard-go { transition: none; }
+  .pcard, .pcard-laptop, .pcard-lid, .pcard-go, .pcard-shine { transition: none; }
   .pcard:hover { transform: none; }
-  .pcard:hover .pcard-laptop { transform: none; }
-  .pcard:hover .pcard-screen img { transform: none; }
+  .pcard-laptop { transform: none; }
+  .pcard-lid, .pcard:hover .pcard-lid { transform: none; }
+  .pcard-shine { display: none; }
   .pcard:hover .pcard-go { transform: translateX(-2px); }
 }
 

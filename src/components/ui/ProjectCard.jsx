@@ -1,3 +1,4 @@
+import { useRef } from 'react'
 import { Link } from 'react-router-dom'
 
 /* Заглушка вместо скриншота — стеклянный мок интерфейса на градиенте акцента */
@@ -14,9 +15,35 @@ function MockUI() {
   )
 }
 
-/* Карточка — скриншот в рамке ноутбука и название. Описание, теги, год
-   и ссылка живут на странице проекта. */
+const MAX_RY = 15   // поворот вокруг вертикали, °
+const MAX_RX = 9    // наклон вперёд-назад, °
+
+/* Карточка — скриншот в 3D-корпусе ноутбука. Описание, теги, год и ссылка
+   живут на странице проекта. */
 export default function ProjectCard({ row, to, accent }) {
+  const sceneRef = useRef(null)
+
+  /* Курсор внутри карточки крутит корпус; значения кладём в CSS-переменные,
+     чтобы React не перерисовывался на каждое движение мыши. */
+  const onMove = (e) => {
+    const el = sceneRef.current
+    if (!el || !window.matchMedia('(hover: hover)').matches) return
+    const r  = el.getBoundingClientRect()
+    const px = (e.clientX - r.left) / r.width  - 0.5
+    const py = (e.clientY - r.top)  / r.height - 0.5
+    el.style.setProperty('--ry', `${(px * MAX_RY).toFixed(2)}deg`)
+    el.style.setProperty('--rx', `${(-py * MAX_RX).toFixed(2)}deg`)
+    el.style.setProperty('--sx', (px * 2).toFixed(3))
+  }
+
+  const onLeave = () => {
+    const el = sceneRef.current
+    if (!el) return
+    el.style.setProperty('--ry', '0deg')
+    el.style.setProperty('--rx', '0deg')
+    el.style.setProperty('--sx', '0')
+  }
+
   return (
     <Link
       to={to}
@@ -24,7 +51,12 @@ export default function ProjectCard({ row, to, accent }) {
       style={{ '--c': accent.c, '--grad': accent.grad }}
       aria-label={row.title}
     >
-      <div className="pcard-stage">
+      <div
+        className="pcard-stage"
+        ref={sceneRef}
+        onMouseMove={onMove}
+        onMouseLeave={onLeave}
+      >
         <span className="pcard-halo" aria-hidden="true" />
 
         <div className="pcard-laptop">
@@ -35,6 +67,7 @@ export default function ProjectCard({ row, to, accent }) {
                 {row.image_url
                   ? <img src={row.image_url} alt="" loading="lazy" />
                   : <MockUI />}
+                <span className="pcard-shine" aria-hidden="true" />
               </div>
             </div>
           </div>
