@@ -3203,8 +3203,8 @@ body.drawer-open .ariel-fab {
    графит, что у рамки крышки, иначе дека смотрится отдельным предметом. */
 .pcard-deck {
   position: absolute;
-  top: 100%; left: -4%;
-  width: 108%; height: 116px;
+  top: 100%; left: -3%;
+  width: 106%; height: 116px;
   transform-origin: top center;
   transform: rotateX(73.5deg);
   transform-style: preserve-3d;
@@ -3234,7 +3234,7 @@ body.drawer-open .ariel-fab {
    Раньше швы были светлыми и весь блок читался решёткой радиатора. */
 .pcard-keys {
   position: absolute;
-  left: 7%; right: 7%; top: 9%; height: 52%;
+  left: 10%; right: 10%; top: 10%; height: 48%;
   border-radius: 3px;
   background:
     /* вертикальные швы между клавишами */
@@ -3256,7 +3256,7 @@ body.drawer-open .ariel-fab {
   position: absolute;
   left: 50%; bottom: 9%;
   transform: translateX(-50%);
-  width: 34%; height: 27%;
+  width: 30%; height: 25%;
   border-radius: 3px;
   background: linear-gradient(180deg, #969aa6 0%, #7b7f8b 60%, #666a75 100%);
   box-shadow:
