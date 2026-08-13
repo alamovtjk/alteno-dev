@@ -3086,7 +3086,7 @@ body.drawer-open .ariel-fab {
    дают на экране примерно 26px, плюс место под тень */
 .pcard-stage {
   position: relative;
-  padding: 34px 26px 46px;
+  padding: 34px 26px 54px;
   display: flex; align-items: center; justify-content: center;
   perspective: 1100px;
   perspective-origin: 50% 42%;
@@ -3199,17 +3199,17 @@ body.drawer-open .ariel-fab {
 }
 /* ── Дека с клавиатурой ──
    Плоскость с началом координат у петли, положенная почти горизонтально.
-   Реальная высота 108px из-за перспективы схлопывается примерно до 25px —
-   ровно настолько, чтобы клавиатура читалась, но не спорила с экраном. */
+   Глубина 124px под наклоном 71° даёт на экране около 40px — столько нужно,
+   чтобы клавиатура и трекпад читались как у макбука. */
 .pcard-deck {
   position: absolute;
   top: 100%; left: -6%;
-  width: 112%; height: 108px;
+  width: 112%; height: 124px;
   transform-origin: top center;
-  transform: rotateX(76deg);
+  transform: rotateX(71deg);
   transform-style: preserve-3d;
   border-radius: 0 0 12px 12px;
-  background: linear-gradient(180deg, #d9dce4 0%, #b9bcc8 34%, #90939f 72%, #6d707c 100%);
+  background: linear-gradient(180deg, #e3e5ec 0%, #c6c9d3 30%, #9da0ac 68%, #747783 100%);
   box-shadow: 0 14px 26px rgba(0,0,0,.42);
 }
 /* Затемнённые боковые торцы — грани корпуса */
@@ -3230,36 +3230,43 @@ body.drawer-open .ariel-fab {
   background: rgba(0,0,0,.2);
 }
 
-/* Клавиатурный блок: колодец и сетка клавиш repeating-градиентами */
+/* Клавиатура: у макбука клавиши чёрные, а швы между ними — ещё темнее.
+   Раньше швы были светлыми и весь блок читался решёткой радиатора. */
 .pcard-keys {
   position: absolute;
-  left: 9%; right: 9%; top: 11%; height: 46%;
-  border-radius: 4px;
+  left: 7%; right: 7%; top: 9%; height: 52%;
+  border-radius: 3px;
   background:
+    /* вертикальные швы между клавишами */
     repeating-linear-gradient(90deg,
-      rgba(255,255,255,.11) 0 5.4%, transparent 5.4% 6.6%),
+      transparent 0 5.9%, rgba(0,0,0,.6) 5.9% 6.6%),
+    /* горизонтальные швы между рядами */
     repeating-linear-gradient(180deg,
-      rgba(255,255,255,.09) 0 17%, transparent 17% 21%),
-    #1b1d24;
-  box-shadow: inset 0 1px 3px rgba(0,0,0,.6);
+      transparent 0 15.5%, rgba(0,0,0,.6) 15.5% 19%),
+    /* сами клавиши */
+    linear-gradient(180deg, #33363f 0%, #23252c 45%, #16181d 100%);
+  box-shadow:
+    inset 0 0 0 1px rgba(0,0,0,.55),
+    inset 0 1px 1px rgba(255,255,255,.09),
+    0 1px 0 rgba(255,255,255,.28);
 }
 
 /* Трекпад */
 .pcard-trackpad {
   position: absolute;
-  left: 50%; bottom: 13%;
+  left: 50%; bottom: 9%;
   transform: translateX(-50%);
-  width: 27%; height: 25%;
-  border-radius: 4px;
-  background: linear-gradient(180deg, #c3c6d1, #a4a7b4);
+  width: 34%; height: 27%;
+  border-radius: 3px;
+  background: linear-gradient(180deg, #cdd0da 0%, #aeb1bd 60%, #979aa6 100%);
   box-shadow:
-    inset 0 0 0 1px rgba(0,0,0,.16),
-    inset 0 1px 2px rgba(255,255,255,.5);
+    inset 0 0 0 1px rgba(0,0,0,.2),
+    inset 0 1px 2px rgba(255,255,255,.55);
 }
 
 /* Тень на «столе» — уезжает в сторону, противоположную наклону */
 .pcard-drop {
-  position: absolute; left: 50%; bottom: -36px;
+  position: absolute; left: 50%; bottom: -48px;
   transform: translateX(calc(-50% - var(--sx) * 6%));
   width: 82%; height: 15px;
   border-radius: 50%;
@@ -3314,7 +3321,7 @@ body.drawer-open .ariel-fab {
 @media (max-width: 620px) {
   .pcard-grid { grid-template-columns: 1fr; gap: 18px; }
   .pcard { border-radius: 20px; }
-  .pcard-stage { padding: 24px 22px 42px; }
+  .pcard-stage { padding: 24px 22px 52px; }
   .pcard-cap { padding: 6px 18px 18px; }
   .pcard-title { font-size: 17px; }
 }
