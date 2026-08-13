@@ -33,7 +33,6 @@ export default function ProjectCard({ row, to, accent }) {
               {row.image_url
                 ? <img src={row.image_url} alt="" loading="lazy" />
                 : <MockUI />}
-              <span className="pcard-glare" aria-hidden="true" />
             </div>
           </div>
           <div className="pcard-base" aria-hidden="true" />

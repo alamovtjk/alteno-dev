@@ -3049,8 +3049,9 @@ body.drawer-open .ariel-fab {
    КОМПАКТНАЯ КАРТОЧКА ПРОЕКТА
    Одна и та же на главной и в каталоге
    ═══════════════════════════════════ */
-/* Скриншот живёт в рамке ноутбука — так виден весь первый экран сайта,
-   а не обрезок. Текст о проекте остаётся на его странице. */
+/* Скриншот в тонком корпусе ноутбука. Экран показывает снимок целиком —
+   object-fit: contain, ничего не обрезается. Пропорция 1.95 подобрана под
+   реальные снимки (1.85–2.04), поля по краям почти незаметны. */
 .pcard-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
 
 .pcard {
@@ -3081,22 +3082,22 @@ body.drawer-open .ariel-fab {
 /* ── Подставка под устройство ── */
 .pcard-stage {
   position: relative;
-  padding: 30px 26px 26px;
+  padding: 30px 24px 26px;
   display: flex; align-items: center; justify-content: center;
 }
 .pcard-halo {
   position: absolute; left: 50%; top: 46%;
   transform: translate(-50%, -50%);
-  width: 84%; height: 78%;
+  width: 80%; height: 70%;
   border-radius: 50%;
   background: radial-gradient(ellipse at center,
-    color-mix(in srgb, var(--c) 34%, transparent), transparent 70%);
-  filter: blur(34px);
-  opacity: .75;
+    color-mix(in srgb, var(--c) 26%, transparent), transparent 70%);
+  filter: blur(36px);
+  opacity: .6;
   transition: opacity .5s ease;
   pointer-events: none;
 }
-.pcard:hover .pcard-halo { opacity: 1; }
+.pcard:hover .pcard-halo { opacity: .95; }
 
 /* ── Ноутбук ── */
 .pcard-laptop {
@@ -3106,68 +3107,59 @@ body.drawer-open .ariel-fab {
 }
 .pcard:hover .pcard-laptop { transform: translateY(-3px); }
 
+/* Тонкая тёмная рамка вокруг экрана — почти вся площадь отдана сайту */
 .pcard-lid {
-  padding: 7px 7px 8px;
-  border-radius: 11px 11px 4px 4px;
-  background: linear-gradient(160deg, #3a3a56, #1b1b2e);
-  border: 1px solid rgba(255,255,255,.16);
+  padding: 5px 5px 6px;
+  border-radius: 9px 9px 2px 2px;
+  background: #16161d;
+  border: 1px solid rgba(255,255,255,.15);
   box-shadow:
-    0 16px 30px rgba(0,0,0,.44),
-    inset 0 1px 0 rgba(255,255,255,.2);
+    0 14px 26px rgba(0,0,0,.4),
+    inset 0 0 0 1px rgba(0,0,0,.55);
 }
-/* 16:9 — снимки браузера чуть шире, подрезается ~5% по краям */
 .pcard-screen {
   position: relative;
-  aspect-ratio: 16 / 9;
-  border-radius: 5px;
+  aspect-ratio: 1.95;
+  border-radius: 3px;
   overflow: hidden;
-  background: #06060f;
+  background: #0a0a11;
 }
 .pcard-screen img {
   width: 100%; height: 100%;
-  object-fit: cover; object-position: top center;
+  object-fit: contain;              /* сайт виден целиком, без обрезки */
   display: block;
   transition: transform .7s cubic-bezier(.22,1,.36,1);
 }
-.pcard:hover .pcard-screen img { transform: scale(1.03); }
+.pcard:hover .pcard-screen img { transform: scale(1.015); }
 
-/* Блик по стеклу — гасит «плоскость» скриншота */
-.pcard-glare {
-  position: absolute; inset: 0; pointer-events: none;
-  background: linear-gradient(114deg,
-    rgba(255,255,255,.13) 0%,
-    rgba(255,255,255,.03) 26%,
-    transparent 46%);
-}
-
-/* Нижняя грань корпуса — шире крышки, с выемкой под палец */
+/* ── Основание: тонкая алюминиевая грань, как у макбука ── */
 .pcard-base {
   position: relative;
-  width: 116%; height: 9px;
-  margin: 0 0 0 -8%;
-  border-radius: 0 0 10px 10px;
-  background: linear-gradient(180deg, #43436a 0%, #2a2a44 42%, #16162a 100%);
-  box-shadow: 0 10px 20px rgba(0,0,0,.45);
+  width: 122%; height: 8px;
+  margin: 0 0 0 -11%;
+  border-radius: 0 0 8px 8px;
+  background: linear-gradient(180deg, #d5d7e0 0%, #9c9fb2 46%, #6c6f82 100%);
+  box-shadow: 0 8px 18px rgba(0,0,0,.42);
 }
 .pcard-base::after {
   content: "";
   position: absolute; top: 0; left: 50%;
   transform: translateX(-50%);
-  width: 15%; height: 3px;
+  width: 14%; height: 3px;
   border-radius: 0 0 4px 4px;
-  background: rgba(0,0,0,.4);
+  background: rgba(0,0,0,.22);
 }
 
 /* ── Подпись ── */
 .pcard-cap {
   margin-top: auto;
-  padding: 4px 22px 20px;
+  padding: 6px 22px 20px;
   display: flex; align-items: center; justify-content: space-between; gap: 14px;
 }
 .pcard-title {
   margin: 0;
   font-size: 18px; font-weight: 600; line-height: 1.3;
-  letter-spacing: -.015em;         /* плотный трекинг, как у крупного текста SF */
+  letter-spacing: -.015em;          /* плотный трекинг, как у крупного текста SF */
   color: var(--text);
 }
 .pcard-go {
@@ -3204,8 +3196,8 @@ body.drawer-open .ariel-fab {
 @media (max-width: 620px) {
   .pcard-grid { grid-template-columns: 1fr; gap: 18px; }
   .pcard { border-radius: 20px; }
-  .pcard-stage { padding: 24px 20px 22px; }
-  .pcard-cap { padding: 4px 18px 18px; }
+  .pcard-stage { padding: 24px 18px 22px; }
+  .pcard-cap { padding: 6px 18px 18px; }
   .pcard-title { font-size: 17px; }
 }
 
