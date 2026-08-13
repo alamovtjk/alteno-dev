@@ -918,6 +918,15 @@ input,textarea,button { font-family:inherit; }
 
 /* Карусель */
 .team-carousel-wrap { margin-top: 64px; }
+
+/* Один-два участника: статичный ряд по центру вместо зацикленной ленты —
+   в карусели человек оказался бы виден рядом с самим собой */
+.team-row {
+  margin-top: 64px;
+  display: flex; justify-content: center; flex-wrap: wrap;
+  gap: 28px; padding: 0 24px 20px;
+}
+.team-row .team-card-outer { transform: none; opacity: 1; }
 .team-track {
   display: flex; gap: 28px;
   overflow-x: auto; scroll-snap-type: x mandatory;

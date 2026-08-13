@@ -26,6 +26,68 @@ function buildRing(blob) {
   return `conic-gradient(from 0deg, ${blob}, #4f46e5, #a78bfa, ${blob})`
 }
 
+/* Карточка участника — одна и та же в карусели и в статичном ряду */
+function TeamCard({ m }) {
+  const blob = m.blob || '#7c3aed'
+  return (
+    <div className="team-card">
+      <div className="tc-blob" style={{ background: blob }} />
+      <div className="team-card-num">{m.num}</div>
+      <div className="team-card-top">
+        <div className="tc-ring-wrap">
+          <div className="tc-ring" style={{ background: buildRing(blob) }} />
+          <div className="tc-ring-gap" />
+          <div className="team-avatar" style={{ background: `linear-gradient(135deg, ${blob} 0%, #0d0d16 130%)` }}>
+            {m.avatar_url
+              ? <img src={m.avatar_url} alt={m.name} />
+              : <span>{m.initials || m.name?.slice(0, 2)}</span>}
+          </div>
+        </div>
+      </div>
+      <div className="team-card-body">
+        <div className="team-name">{m.name}</div>
+        <div className="team-role">{m.role}</div>
+        <div className="team-divider-line" />
+        <div className="team-skills">
+          {(m.skills || []).map(s => <span key={s} className="team-skill">{s}</span>)}
+        </div>
+        <div className="team-icons">
+          {m.email && (
+            <a href={`mailto:${m.email}`} className="tc-icon" aria-label="Email">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
+                <path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            </a>
+          )}
+          {m.portfolio_url && (
+            <a href={m.portfolio_url} target="_blank" rel="noreferrer" className="tc-icon" aria-label="Portfolio">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
+                <path d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            </a>
+          )}
+        </div>
+      </div>
+    </div>
+  )
+}
+
+/* Карусель зацикливается через тройной массив, поэтому при одном-двух
+   участниках человек оказался бы виден рядом с самим собой. */
+const MIN_FOR_CAROUSEL = 3
+
+function TeamRow({ members }) {
+  return (
+    <div className="team-row reveal">
+      {members.map(m => (
+        <div key={m.id} className="team-card-outer active">
+          <TeamCard m={m} />
+        </div>
+      ))}
+    </div>
+  )
+}
+
 export default function Team() {
   const { t } = useLanguage()
   const [members, setMembers] = useState([])
@@ -65,7 +127,9 @@ export default function Team() {
 
       {members.length > 0 ? (
         <>
-          <TeamCarousel members={members} labels={t.team} />
+          {members.length >= MIN_FOR_CAROUSEL
+            ? <TeamCarousel members={members} labels={t.team} />
+            : <TeamRow members={members} />}
           <div className="shell" style={{ position: 'relative', zIndex: 1 }}>
             <div className="sec-more reveal">
               <Link to="/team" className="btn btn-ghost">
@@ -191,49 +255,9 @@ function TeamCarousel({ members, labels }) {
         <div className="team-track" ref={trackRef}>
           {ALL.map((m, i) => {
             const isActive = active === i % N
-            const ring = buildRing(m.blob || '#7c3aed')
             return (
-              <div key={i} className={`team-card-outer${isActive ? ' active' : ''}`}>
-                <div className="team-card">
-                  <div className="tc-blob" style={{ background: m.blob || '#7c3aed' }} />
-                  <div className="team-card-num">{m.num}</div>
-                  <div className="team-card-top">
-                    <div className="tc-ring-wrap">
-                      <div className="tc-ring" style={{ background: ring }} />
-                      <div className="tc-ring-gap" />
-                      <div className="team-avatar" style={{ background: `linear-gradient(135deg, ${m.blob || '#7c3aed'} 0%, #0d0d16 130%)` }}>
-                        {m.avatar_url
-                          ? <img src={m.avatar_url} alt={m.name} />
-                          : <span>{m.initials || m.name?.slice(0,2)}</span>
-                        }
-                      </div>
-                    </div>
-                  </div>
-                  <div className="team-card-body">
-                    <div className="team-name">{m.name}</div>
-                    <div className="team-role">{m.role}</div>
-                    <div className="team-divider-line" />
-                    <div className="team-skills">
-                      {(m.skills || []).map(s => <span key={s} className="team-skill">{s}</span>)}
-                    </div>
-                    <div className="team-icons">
-                      {m.email && (
-                        <a href={`mailto:${m.email}`} className="tc-icon" aria-label="Email">
-                          <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
-                            <path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                          </svg>
-                        </a>
-                      )}
-                      {m.portfolio_url && (
-                        <a href={m.portfolio_url} target="_blank" rel="noreferrer" className="tc-icon" aria-label="Portfolio">
-                          <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
-                            <path d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                          </svg>
-                        </a>
-                      )}
-                    </div>
-                  </div>
-                </div>
+              <div key={i} className={`team-card-outer${isActive ? " active" : ""}`}>
+                <TeamCard m={m} />
               </div>
             )
           })}
