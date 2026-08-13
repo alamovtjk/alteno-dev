@@ -3082,12 +3082,14 @@ body.drawer-open .ariel-fab {
    Настоящая перспектива на CSS: корпус поворачивается за курсором,
    крышка приоткрыта и распрямляется при наведении. Значения углов
    приходят из JS в переменных --rx / --ry / --sx. */
+/* Нижний отступ держит выступающую деку: 108px под наклоном 76°
+   дают на экране примерно 26px, плюс место под тень */
 .pcard-stage {
   position: relative;
-  padding: 34px 26px 30px;
+  padding: 34px 26px 46px;
   display: flex; align-items: center; justify-content: center;
   perspective: 1100px;
-  perspective-origin: 50% 45%;
+  perspective-origin: 50% 42%;
   --rx: 0deg;
   --ry: 0deg;
   --sx: 0;
@@ -3195,38 +3197,71 @@ body.drawer-open .ariel-fab {
   width: 100%; height: 2px;
   background: linear-gradient(180deg, #2a2d34, #101216);
 }
-
-/* Торец основания: шире крышки, к низу темнее, с выемкой под палец */
-.pcard-base {
-  position: relative;
-  width: 118%; height: 10px;
-  margin: 0 0 0 -9%;
-  border-radius: 2px 2px 9px 9px;
-  background: linear-gradient(180deg,
-    #e8eaf0 0%, #c2c5d0 26%, #9a9dab 56%, #6b6e7c 82%, #4a4d59 100%);
-  box-shadow: 0 10px 18px rgba(0,0,0,.4);
+/* ── Дека с клавиатурой ──
+   Плоскость с началом координат у петли, положенная почти горизонтально.
+   Реальная высота 108px из-за перспективы схлопывается примерно до 25px —
+   ровно настолько, чтобы клавиатура читалась, но не спорила с экраном. */
+.pcard-deck {
+  position: absolute;
+  top: 100%; left: -9%;
+  width: 118%; height: 108px;
+  transform-origin: top center;
+  transform: rotateX(76deg);
+  transform-style: preserve-3d;
+  border-radius: 0 0 12px 12px;
+  background: linear-gradient(180deg, #d9dce4 0%, #b9bcc8 34%, #90939f 72%, #6d707c 100%);
+  box-shadow: 0 14px 26px rgba(0,0,0,.42);
 }
-.pcard-base::before {
+/* Затемнённые боковые торцы — грани корпуса */
+.pcard-deck::before {
   content: "";
   position: absolute; inset: 0;
   border-radius: inherit;
   background: linear-gradient(90deg,
-    rgba(0,0,0,.32) 0%, transparent 5%, transparent 95%, rgba(0,0,0,.32) 100%);
+    rgba(0,0,0,.34) 0%, transparent 6%, transparent 94%, rgba(0,0,0,.34) 100%);
 }
-.pcard-base::after {
+/* Передняя кромка с выемкой под палец */
+.pcard-deck::after {
   content: "";
-  position: absolute; top: 0; left: 50%;
+  position: absolute; bottom: 0; left: 50%;
   transform: translateX(-50%);
-  width: 15%; height: 4px;
-  border-radius: 0 0 7px 7px;
-  background: rgba(0,0,0,.26);
+  width: 16%; height: 5px;
+  border-radius: 6px 6px 0 0;
+  background: rgba(0,0,0,.2);
+}
+
+/* Клавиатурный блок: колодец и сетка клавиш repeating-градиентами */
+.pcard-keys {
+  position: absolute;
+  left: 9%; right: 9%; top: 11%; height: 46%;
+  border-radius: 4px;
+  background:
+    repeating-linear-gradient(90deg,
+      rgba(255,255,255,.11) 0 5.4%, transparent 5.4% 6.6%),
+    repeating-linear-gradient(180deg,
+      rgba(255,255,255,.09) 0 17%, transparent 17% 21%),
+    #1b1d24;
+  box-shadow: inset 0 1px 3px rgba(0,0,0,.6);
+}
+
+/* Трекпад */
+.pcard-trackpad {
+  position: absolute;
+  left: 50%; bottom: 13%;
+  transform: translateX(-50%);
+  width: 27%; height: 25%;
+  border-radius: 4px;
+  background: linear-gradient(180deg, #c3c6d1, #a4a7b4);
+  box-shadow:
+    inset 0 0 0 1px rgba(0,0,0,.16),
+    inset 0 1px 2px rgba(255,255,255,.5);
 }
 
 /* Тень на «столе» — уезжает в сторону, противоположную наклону */
 .pcard-drop {
-  position: absolute; left: 50%; bottom: -13px;
+  position: absolute; left: 50%; bottom: -36px;
   transform: translateX(calc(-50% - var(--sx) * 6%));
-  width: 76%; height: 14px;
+  width: 82%; height: 15px;
   border-radius: 50%;
   background: radial-gradient(ellipse at center, rgba(0,0,0,.55), transparent 72%);
   filter: blur(7px);
@@ -3290,6 +3325,7 @@ body.drawer-open .ariel-fab {
   .pcard, .pcard-laptop, .pcard-lid, .pcard-go, .pcard-shine { transition: none; }
   .pcard:hover { transform: none; }
   .pcard-laptop { transform: none; }
+  /* Крышка стоит прямо, дека остаётся наклонённой — это не движение, а форма */
   .pcard-lid, .pcard:hover .pcard-lid { transform: none; }
   .pcard-shine { display: none; }
   .pcard:hover .pcard-go { transform: translateX(-2px); }

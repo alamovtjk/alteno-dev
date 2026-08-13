@@ -72,7 +72,14 @@ export default function ProjectCard({ row, to, accent }) {
             </div>
           </div>
           <div className="pcard-hinge" aria-hidden="true" />
-          <div className="pcard-base" aria-hidden="true" />
+
+          {/* Дека лежит почти горизонтально — из-за перспективы от неё
+              видна лишь узкая полоска с клавиатурой и трекпадом */}
+          <div className="pcard-deck" aria-hidden="true">
+            <span className="pcard-keys" />
+            <span className="pcard-trackpad" />
+          </div>
+
           <span className="pcard-drop" aria-hidden="true" />
         </div>
       </div>
