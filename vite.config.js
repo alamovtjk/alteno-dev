@@ -50,6 +50,9 @@ export default defineConfig({
         /* webp тоже в прекеш; m4a намеренно снаружи — 2 МБ не должны
            уезжать в кеш к тем, кто музыку так и не включил */
         globPatterns: ['**/*.{js,css,html,ico,png,svg,webp}'],
+        /* Воркер не должен подменять статику страницей: именно так HTML
+           однажды осел в кеше под адресом скрипта и сайт перестал стартовать */
+        navigateFallbackDenylist: [/^\/api\//, /^\/assets\//, /^\/apps\//, /^\/music\//, /^\/splash\//],
         runtimeCaching: [
           {
             urlPattern: /^https:\/\/fonts\.(googleapis|gstatic)\.com\/.*/i,

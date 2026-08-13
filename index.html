@@ -79,6 +79,38 @@
       })();
     </script>
 
+    <script>
+      /* Самолечение кеша.
+         Service worker мог сохранить HTML-страницу под адресом скрипта — тогда
+         модуль не грузится и сайт не стартует, а сам по себе кеш не починится.
+         Ловим ошибку загрузки скрипта, сносим воркер со всеми кешами и
+         перезагружаемся один раз (флаг в sessionStorage от зацикливания). */
+      (function () {
+        var KEY = 'sw_selfheal';
+        window.addEventListener('error', function (e) {
+          var el = e.target;
+          if (!el || el.tagName !== 'SCRIPT') return;
+          if (sessionStorage.getItem(KEY)) return;
+          sessionStorage.setItem(KEY, '1');
+
+          var jobs = [];
+          if ('serviceWorker' in navigator) {
+            jobs.push(navigator.serviceWorker.getRegistrations().then(function (rs) {
+              return Promise.all(rs.map(function (r) { return r.unregister(); }));
+            }));
+          }
+          if (window.caches) {
+            jobs.push(caches.keys().then(function (names) {
+              return Promise.all(names.map(function (n) { return caches.delete(n); }));
+            }));
+          }
+          Promise.all(jobs).catch(function () {}).then(function () {
+            location.reload();
+          });
+        }, true);
+      })();
+    </script>
+
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>
