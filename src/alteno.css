@@ -3054,29 +3054,17 @@ body.drawer-open .ariel-fab {
    реальные снимки (1.85–2.04), поля по краям почти незаметны. */
 .pcard-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
 
+/* Без рамки и подложки — ноутбук стоит прямо на фоне секции.
+   overflow оставляем видимым, иначе срежет вылет деки и тень. */
 .pcard {
   position: relative;
   display: flex; flex-direction: column;
-  border-radius: 24px;
-  overflow: hidden;
+  overflow: visible;
   cursor: pointer;
   text-decoration: none; color: inherit;
-  background: var(--lg-bg);
-  backdrop-filter: var(--lg-blur); -webkit-backdrop-filter: var(--lg-blur);
-  border: 1px solid var(--lg-border);
-  box-shadow: 0 10px 30px rgba(0,0,0,.3);
-  transition:
-    transform .55s cubic-bezier(.22,1,.36,1),
-    box-shadow .55s cubic-bezier(.22,1,.36,1),
-    border-color .4s ease;
+  transition: transform .55s cubic-bezier(.22,1,.36,1);
 }
-.pcard:hover {
-  transform: translateY(-7px);
-  border-color: color-mix(in srgb, var(--c) 42%, transparent);
-  box-shadow:
-    0 24px 56px rgba(0,0,0,.48),
-    0 0 44px color-mix(in srgb, var(--c) 17%, transparent);
-}
+.pcard:hover { transform: translateY(-7px); }
 .pcard:focus-visible { outline: 2px solid var(--c); outline-offset: 3px; }
 /* ── 3D-сцена ──
    Настоящая перспектива на CSS: корпус поворачивается за курсором,
@@ -3320,7 +3308,6 @@ body.drawer-open .ariel-fab {
 @media (max-width: 1024px) { .pcard-grid { grid-template-columns: repeat(2, 1fr); } }
 @media (max-width: 620px) {
   .pcard-grid { grid-template-columns: 1fr; gap: 18px; }
-  .pcard { border-radius: 20px; }
   .pcard-stage { padding: 24px 22px 52px; }
   .pcard-cap { padding: 6px 18px 18px; }
   .pcard-title { font-size: 17px; }
