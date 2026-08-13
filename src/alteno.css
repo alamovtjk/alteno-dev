@@ -774,7 +774,20 @@ input,textarea,button { font-family:inherit; }
 /* ═══════════════════════════════════
    REVIEWS / NUMBERS
    ═══════════════════════════════════ */
-.num-band { display:grid; grid-template-columns:repeat(4,1fr); border-radius:var(--r); overflow:hidden; background:var(--lg-bg); backdrop-filter:var(--lg-blur); -webkit-backdrop-filter:var(--lg-blur); border:1px solid var(--lg-border); box-shadow:var(--lg-spec),var(--lg-shadow); margin-bottom:36px; }
+.num-band {
+  display:grid; grid-template-columns:repeat(4,1fr);
+  border-radius:var(--r); overflow:hidden;
+  background:
+    radial-gradient(ellipse 60% 130% at 6% 0%,   rgba(139,72,255,.42), transparent 62%),
+    radial-gradient(ellipse 46% 120% at 38% 100%, rgba(13,148,136,.30), transparent 62%),
+    radial-gradient(ellipse 46% 120% at 68% 0%,  rgba(37,99,235,.28),  transparent 62%),
+    radial-gradient(ellipse 52% 130% at 100% 100%, rgba(192,38,211,.30), transparent 64%),
+    linear-gradient(150deg, #1c1436 0%, #141b30 52%, #0e1c24 100%);
+  backdrop-filter:var(--lg-blur); -webkit-backdrop-filter:var(--lg-blur);
+  border:1px solid rgba(255,255,255,.12);
+  box-shadow:var(--lg-spec),var(--lg-shadow);
+  margin-bottom:36px;
+}
 .numcard { padding:32px 28px; position:relative; text-align:center; display:flex; flex-direction:column; align-items:center; gap:14px; }
 .numcard+.numcard::before { content:""; position:absolute; left:0; top:22%; bottom:22%; width:1px; background:var(--glass-b); }
 .numcard .ni { width:44px; height:44px; border-radius:14px; display:grid; place-items:center; background:color-mix(in oklab,var(--c) 16%,transparent); border:1px solid color-mix(in oklab,var(--c) 30%,transparent); }
@@ -2677,8 +2690,12 @@ body.drawer-open .ariel-fab {
   display: flex; flex-direction: column; align-items: center;
   text-align: center; padding: 72px 40px;
   border-radius: 24px;
-  background: rgba(255,255,255,.04);
-  border: 1px solid rgba(255,255,255,.08);
+  background:
+    radial-gradient(ellipse 70% 90% at 12% 4%,  rgba(139,72,255,.30), transparent 62%),
+    radial-gradient(ellipse 60% 80% at 92% 96%, rgba(13,148,136,.24), transparent 62%),
+    radial-gradient(ellipse 50% 70% at 78% 6%,  rgba(37,99,235,.20),  transparent 62%),
+    linear-gradient(150deg, #1a1332 0%, #131a2d 55%, #0d1a22 100%);
+  border: 1px solid rgba(255,255,255,.11);
   backdrop-filter: blur(12px);
   gap: 16px;
 }
