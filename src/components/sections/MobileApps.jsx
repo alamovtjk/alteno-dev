@@ -15,10 +15,10 @@ const APPS = [
     accent: '#7c3aed',
     accent2: '#4f46e5',
     shots: [
-      '/apps/rneft/01.webp',
-      '/apps/rneft/02.webp',
-      '/apps/rneft/03.webp',
-      '/apps/rneft/04.webp',
+      '/apps/rneft/screen-1.webp',
+      '/apps/rneft/screen-2.webp',
+      '/apps/rneft/screen-3.webp',
+      '/apps/rneft/screen-4.webp',
     ],
   },
 ]
@@ -187,41 +187,20 @@ function PhoneGallery({ app, t }) {
                   className={`mapp-track${drag ? ' is-dragging' : ''}`}
                   style={{ transform: `translate3d(${shift}%,0,0)` }}
                 >
+                  {/* Кадры заранее достроены сверху под пропорцию экрана
+                      (scripts/pad-app-screens.mjs) — заполняют его без полей */}
                   {shots.map((src, i) => (
-                    /* Скриншоты сняты 9:16, а экран Pro Max выше — вместо
-                       чёрных полос кладём размытую копию самого кадра */
-                    <div className="mapp-slide" key={src}>
-                      <img
-                        className="mapp-slide-bg"
-                        src={src}
-                        alt=""
-                        aria-hidden="true"
-                        draggable="false"
-                        loading={i === 0 ? 'eager' : 'lazy'}
-                      />
-                      <img
-                        className="mapp-slide-img"
-                        src={src}
-                        alt={`${app.name} — ${t.screen} ${i + 1}`}
-                        draggable="false"
-                        loading={i === 0 ? 'eager' : 'lazy'}
-                      />
-                    </div>
+                    <img
+                      key={src}
+                      className="mapp-slide-img"
+                      src={src}
+                      alt={`${app.name} — ${t.screen} ${i + 1}`}
+                      draggable="false"
+                      loading={i === 0 ? 'eager' : 'lazy'}
+                    />
                   ))}
                 </div>
 
-                {many && (
-                  <>
-                    <button type="button" className="mapp-arrow mapp-arrow-l"
-                      onClick={() => go(i => i - 1)} aria-label={t.prev}>
-                      <Chevron d="M15 5l-7 7 7 7" />
-                    </button>
-                    <button type="button" className="mapp-arrow mapp-arrow-r"
-                      onClick={() => go(i => i + 1)} aria-label={t.next}>
-                      <Chevron d="M9 5l7 7-7 7" />
-                    </button>
-                  </>
-                )}
               </div>
             )}
           </div>
@@ -229,6 +208,20 @@ function PhoneGallery({ app, t }) {
           <span className="mapp-home" aria-hidden="true" />
         </div>
       </div>
+
+      {/* Стрелки вне корпуса — внутри экрана их обрезала рамка */}
+      {many && (
+        <>
+          <button type="button" className="mapp-arrow mapp-arrow-l"
+            onClick={() => go(i => i - 1)} aria-label={t.prev}>
+            <Chevron d="M15 5l-7 7 7 7" />
+          </button>
+          <button type="button" className="mapp-arrow mapp-arrow-r"
+            onClick={() => go(i => i + 1)} aria-label={t.next}>
+            <Chevron d="M9 5l7 7-7 7" />
+          </button>
+        </>
+      )}
 
       {many && (
         <div className="mapp-dots">
