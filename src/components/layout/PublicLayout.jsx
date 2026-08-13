@@ -7,16 +7,47 @@ import Cursor from '../ui/Cursor'
 import MusicPlayer from '../ui/MusicPlayer'
 import ArielFloat from '../ui/ArielFloat'
 
+/* Шаг повторения звёздных плиток — тот же, что в CSS.
+   Смещение сворачиваем по модулю шага: узор бесшовный, поэтому сдвиг
+   никогда не выходит за одну плитку, и слои не нужно делать огромными. */
+const SKY_LAYERS = [
+  { varName: '--sky-far',  tile: 240, speed: 0.05 },
+  { varName: '--sky-mid',  tile: 320, speed: 0.12 },
+  { varName: '--sky-near', tile: 520, speed: 0.24 },
+]
+
+const wrap = (v, m) => ((v % m) + m) % m
+
 function useLenis() {
   useEffect(() => {
     const lenis = new Lenis({
       duration: 1.2,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
     })
+
+    /* Параллакс звёзд: пишем смещения в CSS-переменные прямо из обработчика
+       прокрутки — React при этом не перерисовывается ни разу. */
+    const root = document.documentElement
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    const wide    = window.matchMedia('(min-width: 768px)').matches
+
+    const onScroll = ({ scroll }) => {
+      for (const { varName, tile, speed } of SKY_LAYERS) {
+        root.style.setProperty(varName, `${-wrap(scroll * speed, tile).toFixed(2)}px`)
+      }
+      root.style.setProperty('--sky-depth', String(Math.min(scroll / 2400, 1).toFixed(3)))
+    }
+
+    if (!reduced && wide) lenis.on('scroll', onScroll)
+
     let rafId
     const raf = (time) => { lenis.raf(time); rafId = requestAnimationFrame(raf) }
     rafId = requestAnimationFrame(raf)
-    return () => { cancelAnimationFrame(rafId); lenis.destroy() }
+    return () => {
+      lenis.off('scroll', onScroll)
+      cancelAnimationFrame(rafId)
+      lenis.destroy()
+    }
   }, [])
 }
 
@@ -77,10 +108,15 @@ export default function PublicLayout() {
     <div style={{ minHeight: '100vh' }}>
       <Cursor />
       {/* Анимированный фон — фиксированный за всем */}
+      {/* Космос за всей страницей: туманности + три слоя звёзд,
+          которые уезжают с разной скоростью при прокрутке */}
       <div className="bg-stage" aria-hidden="true">
         <div className="blob v" />
         <div className="blob t" />
         <div className="blob b" />
+        <div className="sky sky-far" />
+        <div className="sky sky-mid" />
+        <div className="sky sky-near" />
       </div>
 
       <Header />

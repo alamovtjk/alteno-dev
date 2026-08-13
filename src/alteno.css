@@ -64,6 +64,55 @@ input,textarea,button { font-family:inherit; }
   position:absolute; border-radius:50%;
   filter:blur(130px); will-change:transform; pointer-events:none;
 }
+
+/* ── Звёздное небо за всей страницей ──
+   Плитки градиентов повторяются бесконечно, а JS сдвигает их по модулю
+   шага плитки: слои движутся с разной скоростью и дают глубину, при этом
+   сдвиг никогда не превышает одной плитки. Значения приходят из Lenis. */
+.sky {
+  position: absolute; inset: -260px -40px;
+  pointer-events: none;
+  will-change: transform;
+  transform: translate3d(0, var(--shift, 0px), 0);
+}
+.sky-far {
+  --shift: var(--sky-far, 0px);
+  background-image:
+    radial-gradient(1px 1px at 30px 40px,   rgba(255,255,255,.45), transparent),
+    radial-gradient(1px 1px at 130px 90px,  rgba(255,255,255,.32), transparent),
+    radial-gradient(1px 1px at 200px 30px,  rgba(190,200,255,.38), transparent),
+    radial-gradient(1px 1px at 80px 180px,  rgba(255,255,255,.28), transparent);
+  background-size: 240px 240px;
+  opacity: .55;
+}
+.sky-mid {
+  --shift: var(--sky-mid, 0px);
+  background-image:
+    radial-gradient(1.3px 1.3px at 60px 20px,   rgba(255,255,255,.6),  transparent),
+    radial-gradient(1.2px 1.2px at 190px 140px, rgba(210,220,255,.5),  transparent),
+    radial-gradient(1.3px 1.3px at 260px 70px,  rgba(255,255,255,.45), transparent);
+  background-size: 320px 320px;
+  opacity: .65;
+}
+.sky-near {
+  --shift: var(--sky-near, 0px);
+  background-image:
+    radial-gradient(1.9px 1.9px at 90px 60px,    rgba(255,255,255,.85), transparent),
+    radial-gradient(1.7px 1.7px at 320px 210px,  rgba(196,181,253,.75), transparent),
+    radial-gradient(1.9px 1.9px at 430px 110px,  rgba(153,246,228,.6),  transparent);
+  background-size: 520px 520px;
+  opacity: .75;
+}
+
+@media (max-width: 767px) {
+  /* На узких экранах параллакс почти не читается, а батарею ест — оставляем
+     только дальний слой, статично */
+  .sky-mid, .sky-near { display: none; }
+  .sky-far { opacity: .4; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sky { transform: none; }
+}
 .blob.v {
   width:900px; height:900px; opacity:.38;
   background:radial-gradient(circle at 40% 40%, #7c3aed, transparent 65%);
