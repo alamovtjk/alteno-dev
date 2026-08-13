@@ -806,14 +806,21 @@ input,textarea,button { font-family:inherit; }
 .banner {
   position:relative; width:100%; border-radius:32px; overflow:hidden;
   border:1px solid var(--glass-b); box-shadow:var(--shadow);
-  background:linear-gradient(135deg,rgba(124,58,237,.22),rgba(13,148,136,.18) 60%,rgba(37,99,235,.16));
+  background:
+    radial-gradient(ellipse 74% 82% at 10% 4%,   rgba(139,72,255,.60), transparent 62%),
+    radial-gradient(ellipse 58% 64% at 84% 10%,  rgba(37,99,235,.42),  transparent 60%),
+    radial-gradient(ellipse 66% 74% at 90% 96%,  rgba(13,148,136,.46), transparent 62%),
+    radial-gradient(ellipse 50% 56% at 32% 104%, rgba(192,38,211,.32), transparent 64%),
+    linear-gradient(150deg, #1c1436 0%, #141b30 52%, #0e1c24 100%);
   backdrop-filter:blur(20px);
 }
+/* Раньше здесь была сетка 48px. Теперь — мягкая засветка сверху слева:
+   даёт объём, не добавляя рисунка поверх фона. */
 .banner::before {
   content:""; position:absolute; inset:0;
-  background-image:linear-gradient(rgba(255,255,255,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.04) 1px,transparent 1px);
-  background-size:48px 48px;
-  mask-image:radial-gradient(ellipse 80% 90% at 30% 20%,#000 20%,transparent 75%);
+  background:
+    radial-gradient(ellipse 62% 52% at 20% 0%, rgba(255,255,255,.13), transparent 64%),
+    radial-gradient(ellipse 90% 70% at 50% 100%, rgba(0,0,0,.22), transparent 70%);
   pointer-events:none;
 }
 .banner-inner { position:relative; display:grid; grid-template-columns:1fr 1fr; gap:56px; padding:56px; }
@@ -824,16 +831,16 @@ input,textarea,button { font-family:inherit; }
 .check .tick { flex:none; width:26px; height:26px; border-radius:50%; background:color-mix(in oklab,var(--teal) 22%,transparent); border:1px solid color-mix(in oklab,var(--teal) 50%,transparent); display:grid; place-items:center; }
 .check .tick svg { width:14px; height:14px; stroke:var(--teal-l); }
 .contacts-row { display:flex; flex-wrap:wrap; gap:12px; }
-.clink { display:inline-flex; align-items:center; gap:9px; text-decoration:none; padding:11px 16px; border-radius:12px; background:rgba(255,255,255,.05); border:1px solid var(--glass-b); color:var(--text); font-size:14px; font-weight:600; transition:all .25s; }
+.clink { display:inline-flex; align-items:center; gap:9px; text-decoration:none; padding:11px 16px; border-radius:12px; background:rgba(10,10,22,.3); border:1px solid rgba(255,255,255,.13); color:var(--text); font-size:14px; font-weight:600; transition:all .25s; }
 .clink:hover { background:rgba(255,255,255,.09); border-color:var(--glass-bs); transform:translateY(-2px); }
 .clink svg { width:17px; height:17px; stroke:var(--violet-l); }
 
-.form-card { position:relative; padding:32px; border-radius:22px; background:rgba(255,255,255,.06); backdrop-filter:var(--lg-blur); -webkit-backdrop-filter:var(--lg-blur); border:1px solid var(--lg-border); box-shadow:var(--lg-spec),var(--lg-shadow); }
+.form-card { position:relative; padding:32px; border-radius:22px; background:rgba(10,10,22,.34); backdrop-filter:var(--lg-blur); -webkit-backdrop-filter:var(--lg-blur); border:1px solid rgba(255,255,255,.14); box-shadow:var(--lg-spec),var(--lg-shadow); }
 .field { margin-bottom:18px; }
 .field label { display:block; font-size:13px; font-weight:600; color:var(--text-dim); margin-bottom:8px; }
 .field input,.field textarea {
   width:100%; font-family:'Manrope',sans-serif; font-size:15px; color:var(--text);
-  background:rgba(255,255,255,.05); border:1px solid var(--glass-b);
+  background:rgba(0,0,0,.22); border:1px solid rgba(255,255,255,.13);
   border-radius:13px; padding:14px 16px; outline:none;
   transition:border-color .25s,box-shadow .25s,background .25s;
 }
