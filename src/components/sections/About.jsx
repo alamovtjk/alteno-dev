@@ -1,7 +1,7 @@
 import { useRef } from 'react'
 import { useLanguage } from '../../context/LanguageContext'
 
-import myPhoto from '../../assets/photo.jpg'
+import myPhoto from '../../assets/photo.webp'
 const MY_PHOTO = myPhoto
 
 export default function About() {

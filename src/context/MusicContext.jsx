@@ -4,7 +4,7 @@ import { supabase } from '../lib/supabase'
 const MusicContext = createContext(null)
 
 /* Локальный трек — пока не загружен активный из админки */
-const FALLBACK = { title: 'Hand Covers Bruise', artist: 'Trent Reznor & Atticus Ross', file_url: '/music/track.mp3' }
+const FALLBACK = { title: 'Hand Covers Bruise', artist: 'Trent Reznor & Atticus Ross', file_url: '/music/track.m4a' }
 
 export function MusicProvider({ children }) {
   const audioRef = useRef(null)
@@ -68,7 +68,8 @@ export function MusicProvider({ children }) {
 
   return (
     <MusicContext.Provider value={{ playing, toggle, track }}>
-      <audio ref={audioRef} src={track.file_url} loop />
+      {/* preload="none" — трек весит мегабайты и не нужен, пока музыку не включили */}
+      <audio ref={audioRef} src={track.file_url} loop preload="none" />
       {children}
     </MusicContext.Provider>
   )

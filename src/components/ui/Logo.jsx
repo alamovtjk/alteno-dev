@@ -1,4 +1,4 @@
-import logoImg from '../../assets/logo.png'
+import logoImg from '../../assets/logo.webp'
 
 // ── Логотип в шапке ──────────────────────────────────────
 export function LogoMark() {

@@ -8,3 +8,8 @@ createRoot(document.getElementById('root')).render(
     <App />
   </StrictMode>,
 )
+
+/* Первый кадр после монтирования — убираем сплэш из index.html */
+requestAnimationFrame(() => {
+  requestAnimationFrame(() => window.__hideSplash?.())
+})

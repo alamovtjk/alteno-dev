@@ -4,12 +4,31 @@ import tailwindcss from '@tailwindcss/vite'
 import { VitePWA } from 'vite-plugin-pwa'
 
 export default defineConfig({
+  build: {
+    /* Библиотеки живут в отдельных чанках: правки по сайту не сбрасывают
+       их кеш у вернувшихся посетителей — перекачивается только код сайта. */
+    rollupOptions: {
+      output: {
+        /* Rolldown принимает manualChunks только функцией */
+        manualChunks(id) {
+          if (!id.includes('node_modules')) return
+          if (/[\\/]node_modules[\\/](react|react-dom|react-router|react-router-dom|scheduler)[\\/]/.test(id)) {
+            return 'vendor-react'
+          }
+          if (/[\\/]node_modules[\\/](framer-motion|motion-dom|motion-utils)[\\/]/.test(id)) {
+            return 'vendor-motion'
+          }
+          if (id.includes('@supabase')) return 'vendor-supabase'
+        },
+      },
+    },
+  },
   plugins: [
     react(),
     tailwindcss(),
     VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: ['favicon.svg', 'logo.png', 'icon-192.png', 'apple-touch-icon.png', 'splash/*.png'],
+      includeAssets: ['favicon.svg', 'logo.png', 'icon-192.png', 'apple-touch-icon.png', 'splash/*.webp'],
       manifest: {
         name: 'AlTeNo Dev — AI Веб-студия',
         short_name: 'AlTeNo Dev',
@@ -28,7 +47,9 @@ export default defineConfig({
         ],
       },
       workbox: {
-        globPatterns: ['**/*.{js,css,html,ico,png,svg}'],
+        /* webp тоже в прекеш; m4a намеренно снаружи — 2 МБ не должны
+           уезжать в кеш к тем, кто музыку так и не включил */
+        globPatterns: ['**/*.{js,css,html,ico,png,svg,webp}'],
         runtimeCaching: [
           {
             urlPattern: /^https:\/\/fonts\.(googleapis|gstatic)\.com\/.*/i,

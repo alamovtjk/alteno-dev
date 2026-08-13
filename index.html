@@ -47,11 +47,11 @@
     <style>
       #splash {
         position: fixed; inset: 0; z-index: 99999;
-        background: #fff url('/splash/splash-mobile.png') center/cover no-repeat;
-        transition: opacity .5s ease;
+        background: #fff url('/splash/splash-mobile.webp') center/cover no-repeat;
+        transition: opacity .45s ease;
       }
       @media (min-width: 601px) {
-        #splash { background-image: url('/splash/splash-desktop.png'); }
+        #splash { background-image: url('/splash/splash-desktop.webp'); }
       }
       #splash.sp-out { opacity: 0; pointer-events: none; }
     </style>
@@ -59,12 +59,24 @@
     <div id="splash"></div>
 
     <script>
-      setTimeout(function() {
-        var s = document.getElementById('splash');
-        if (!s) return;
-        s.classList.add('sp-out');
-        setTimeout(function() { if (s) s.remove(); }, 500);
-      }, 2000);
+      /* Сплэш уходит, как только приложение отрисовалось (main.jsx зовёт
+         __hideSplash), а не по фиксированному таймеру. MIN — чтобы на быстрой
+         сети он не мигнул, MAX — страховка, если скрипт приложения не выполнится. */
+      (function () {
+        var START = Date.now(), MIN = 550, MAX = 4000, done = false;
+        function hide() {
+          if (done) return;
+          done = true;
+          setTimeout(function () {
+            var s = document.getElementById('splash');
+            if (!s) return;
+            s.classList.add('sp-out');
+            setTimeout(function () { s.remove(); }, 450);
+          }, Math.max(0, MIN - (Date.now() - START)));
+        }
+        window.__hideSplash = hide;
+        setTimeout(hide, MAX);
+      })();
     </script>
 
     <div id="root"></div>
