@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import logoImg from '../../assets/logo.webp'
 import { login } from '../../lib/adminAuth'
 
 export default function AdminLogin() {
@@ -25,8 +26,11 @@ export default function AdminLogin() {
     <div className="adm-login-wrap">
       <div className="adm-login-card">
         <div className="adm-login-logo">
-          <span className="adm-logo-brand">AlTeNo</span>
-          <span className="adm-logo-tag">Admin</span>
+          <img className="adm-logo-img" src={logoImg} alt="AlTeNo Dev" />
+          <div>
+            <span className="adm-logo-brand">AlTeNo</span>
+            <span className="adm-logo-tag">Admin</span>
+          </div>
         </div>
         <p className="adm-login-hint">Панель управления сайтом</p>
 

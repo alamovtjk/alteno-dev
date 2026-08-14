@@ -1,8 +1,11 @@
 import { useMusic } from '../../context/MusicContext'
 
 export default function MusicPlayer() {
-  const { playing, toggle, track } = useMusic()
+  const { playing, toggle, track, enabled } = useMusic()
   const label = playing ? 'Выключить музыку' : 'Включить музыку'
+
+  /* Музыку выключили в админке — самой кнопки быть не должно, а не серой/неактивной */
+  if (!enabled) return null
 
   return (
     <button

@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import logoImg from '../../assets/logo.webp'
 import TeamTab         from './tabs/TeamTab'
 import PortfolioTab    from './tabs/PortfolioTab'
 import TestimonialsTab from './tabs/TestimonialsTab'
@@ -34,8 +35,11 @@ export default function AdminLayout({ onLogout }) {
     <div className="adm-layout">
       <aside className="adm-sidebar">
         <div className="adm-sb-brand">
-          <span className="adm-sb-logo">AlTeNo</span>
-          <span className="adm-sb-tag">Admin</span>
+          <img className="adm-sb-logo-img" src={logoImg} alt="AlTeNo Dev" />
+          <div className="adm-sb-brand-txt">
+            <span className="adm-sb-logo">AlTeNo</span>
+            <span className="adm-sb-tag">Admin</span>
+          </div>
         </div>
 
         <nav className="adm-nav">

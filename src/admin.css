@@ -43,10 +43,18 @@ body { background: var(--adm-bg); color: var(--adm-text); font-family: 'Manrope'
 
 .adm-login-logo {
   display: flex;
-  align-items: baseline;
-  gap: 8px;
+  align-items: center;
+  gap: 12px;
   margin-bottom: 6px;
 }
+.adm-logo-img {
+  width: 44px; height: 44px;
+  border-radius: 12px;
+  object-fit: cover;
+  flex-shrink: 0;
+  box-shadow: 0 0 0 1px var(--adm-border2), 0 6px 18px rgba(124,58,237,.35);
+}
+.adm-login-logo > div { display: flex; align-items: baseline; gap: 8px; }
 .adm-logo-brand {
   font-family: 'Unbounded', sans-serif;
   font-size: 22px;
@@ -91,11 +99,19 @@ body { background: var(--adm-bg); color: var(--adm-text); font-family: 'Manrope'
 
 .adm-sb-brand {
   display: flex;
-  align-items: baseline;
-  gap: 8px;
-  padding: 24px 20px 20px;
+  align-items: center;
+  gap: 10px;
+  padding: 20px 20px;
   border-bottom: 1px solid var(--adm-border);
 }
+.adm-sb-logo-img {
+  width: 32px; height: 32px;
+  border-radius: 8px;
+  object-fit: cover;
+  flex-shrink: 0;
+  box-shadow: 0 0 0 1px var(--adm-border2), 0 4px 12px rgba(124,58,237,.3);
+}
+.adm-sb-brand-txt { display: flex; flex-direction: column; gap: 1px; min-width: 0; }
 .adm-sb-logo {
   font-family: 'Unbounded', sans-serif;
   font-size: 16px;
@@ -230,6 +246,7 @@ body { background: var(--adm-bg); color: var(--adm-text); font-family: 'Manrope'
 .adm-btn-full   { width: 100%; }
 
 .adm-btn-ghost {
+  display: inline-flex; align-items: center; gap: 8px;
   padding: 10px 20px;
   border-radius: 10px;
   background: transparent;
@@ -417,6 +434,99 @@ body { background: var(--adm-bg); color: var(--adm-text); font-family: 'Manrope'
 .adm-review-avatar img { width: 100%; height: 100%; object-fit: cover; }
 .adm-review-body { flex: 1; display: flex; flex-direction: column; gap: 5px; }
 .adm-review-text { font-size: 13px; color: var(--adm-dim); font-style: italic; }
+
+/* ── SOUND CONTROL ─────────────────────────────────────── */
+.adm-sound-card {
+  background: var(--adm-card);
+  border: 1px solid var(--adm-border);
+  border-radius: var(--adm-radius);
+  padding: 22px 24px;
+  margin-bottom: 20px;
+  display: flex; flex-direction: column; gap: 16px;
+}
+.adm-sound-hd { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; }
+.adm-sound-title { font-size: 15px; font-weight: 700; margin-bottom: 3px; }
+
+/* Переключатель — вкл/выкл музыки на сайте */
+.adm-switch { position: relative; flex-shrink: 0; cursor: pointer; }
+.adm-switch input {
+  position: absolute; inset: 0; opacity: 0; margin: 0; cursor: pointer;
+}
+.adm-switch-track {
+  display: block; width: 46px; height: 26px; border-radius: 999px;
+  background: rgba(255,255,255,.1);
+  border: 1px solid var(--adm-border2);
+  transition: background .25s, border-color .25s;
+}
+.adm-switch-thumb {
+  display: block; width: 18px; height: 18px; margin: 3px;
+  border-radius: 50%;
+  background: var(--adm-dim);
+  box-shadow: 0 2px 6px rgba(0,0,0,.4);
+  transition: transform .25s cubic-bezier(.34,1.56,.64,1), background .25s;
+}
+.adm-switch input:checked ~ .adm-switch-track {
+  background: linear-gradient(135deg, #7c3aed, #4f46e5);
+  border-color: transparent;
+}
+.adm-switch input:checked ~ .adm-switch-track .adm-switch-thumb {
+  transform: translateX(20px);
+  background: #fff;
+}
+.adm-switch input:focus-visible ~ .adm-switch-track {
+  box-shadow: 0 0 0 3px rgba(124,58,237,.35);
+}
+
+/* Громкость */
+.adm-volume-row {
+  display: flex; align-items: center; gap: 14px;
+  transition: opacity .25s;
+}
+.adm-volume-row.is-off { opacity: .4; }
+.adm-volume-icon {
+  display: flex; flex-shrink: 0; color: var(--adm-dim);
+  width: 30px; height: 30px; align-items: center; justify-content: center;
+  border-radius: 8px; background: rgba(255,255,255,.05);
+}
+.adm-volume-num {
+  flex-shrink: 0; width: 40px; text-align: right;
+  font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--adm-dim);
+}
+.adm-slider {
+  flex: 1; height: 20px;
+  -webkit-appearance: none; appearance: none;
+  background: transparent; cursor: pointer;
+}
+.adm-slider:disabled { cursor: not-allowed; }
+/* Трек: залитая часть слева от --fill градиентом, справа — тускло */
+.adm-slider::-webkit-slider-runnable-track {
+  height: 6px; border-radius: 999px;
+  background: linear-gradient(90deg, #7c3aed, #4f46e5) 0 / var(--fill, 40%) 100% no-repeat,
+              rgba(255,255,255,.1);
+}
+.adm-slider::-moz-range-track { height: 6px; border-radius: 999px; background: rgba(255,255,255,.1); }
+.adm-slider::-moz-range-progress { height: 6px; border-radius: 999px; background: linear-gradient(90deg, #7c3aed, #4f46e5); }
+.adm-slider::-webkit-slider-thumb {
+  -webkit-appearance: none; appearance: none;
+  width: 18px; height: 18px; margin-top: -6px;
+  border-radius: 50%; background: #fff;
+  box-shadow: 0 2px 8px rgba(0,0,0,.5), 0 0 0 3px rgba(124,58,237,.4);
+  cursor: pointer;
+}
+.adm-slider::-moz-range-thumb {
+  width: 18px; height: 18px; border: none;
+  border-radius: 50%; background: #fff;
+  box-shadow: 0 2px 8px rgba(0,0,0,.5), 0 0 0 3px rgba(124,58,237,.4);
+  cursor: pointer;
+}
+
+.adm-sound-preview {
+  display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+  padding-top: 4px;
+}
+.adm-sound-preview .adm-audio { flex: 1; min-width: 220px; margin-top: 0; }
+
+.adm-btn-icon { display: flex; align-items: center; }
 
 /* ── MUSIC ─────────────────────────────────────────── */
 .adm-music-card {
