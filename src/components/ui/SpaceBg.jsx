@@ -48,6 +48,48 @@ function Galaxy({ g }) {
   )
 }
 
+/* Две тарелки. Летят по своим траекториям и большую часть цикла невидимы —
+   так появление остаётся редким и не превращается в мельтешение. */
+const SHIPS = [
+  { id: 's1', cls: 'ship-a', hue: '#c4b5fd', glow: 'rgba(167,139,250,.85)' },
+  { id: 's2', cls: 'ship-b', hue: '#99f6e4', glow: 'rgba(45,212,191,.8)' },
+]
+
+function Ship({ s }) {
+  return (
+    <span className={`ship ${s.cls}`} aria-hidden="true">
+      <svg viewBox="0 0 64 34" width="100%" height="100%">
+        <defs>
+          <radialGradient id={`${s.id}-beam`} cx="50%" cy="0%" r="70%">
+            <stop offset="0%"   stopColor={s.glow} stopOpacity=".55" />
+            <stop offset="100%" stopColor={s.glow} stopOpacity="0" />
+          </radialGradient>
+          <linearGradient id={`${s.id}-hull`} x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%"   stopColor={s.hue}  stopOpacity=".9" />
+            <stop offset="100%" stopColor="#0d0d18" stopOpacity=".95" />
+          </linearGradient>
+        </defs>
+
+        {/* луч под днищем */}
+        <path d="M22 22 L42 22 L52 34 L12 34 Z" fill={`url(#${s.id}-beam)`} />
+
+        {/* купол */}
+        <path d="M22 15 A10 9 0 0 1 42 15 Z" fill={s.hue} opacity=".55" />
+        <path d="M22 15 A10 9 0 0 1 42 15" fill="none" stroke={s.hue} strokeWidth="1.1" opacity=".9" />
+
+        {/* корпус */}
+        <ellipse cx="32" cy="17" rx="30" ry="6.5" fill={`url(#${s.id}-hull)`} />
+        <ellipse cx="32" cy="17" rx="30" ry="6.5" fill="none" stroke={s.hue} strokeWidth="1" opacity=".75" />
+
+        {/* огни по ободу */}
+        <circle cx="14" cy="18.5" r="1.5" fill={s.hue} className="ship-lamp" />
+        <circle cx="32" cy="19.4" r="1.5" fill={s.hue} className="ship-lamp" style={{ animationDelay: '.5s' }} />
+        <circle cx="50" cy="18.5" r="1.5" fill={s.hue} className="ship-lamp" style={{ animationDelay: '1s' }} />
+      </svg>
+    </span>
+  )
+}
+
 export default function SpaceBg() {
   return (
     <>
@@ -95,6 +137,8 @@ export default function SpaceBg() {
       <div className="gx-field" aria-hidden="true">
         {GALAXIES.map(g => <Galaxy key={g.src} g={g} />)}
       </div>
+
+      {SHIPS.map(s => <Ship key={s.id} s={s} />)}
     </>
   )
 }
