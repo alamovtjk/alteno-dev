@@ -3932,24 +3932,21 @@ a.pd-hero:hover .pd-hero-hint { opacity: 1; transform: translateY(0); }
   to   { transform: translate3d(-1.2%, 1.1%, 0) scale(1.01); }
 }
 
-/* Галактики — редкие, как на ночном небе, и очень медленно вращаются */
+/* Галактики — снимки NASA, редкие, как на ночном небе.
+   screen убирает чёрный фон кадра, маска — квадратные края. */
 .gx-field { position: absolute; inset: 0; pointer-events: none; }
 .gx {
   position: absolute;
-  width: 240px; height: 240px;
-  margin: -120px 0 0 -120px;
-  opacity: .5;
-  transform: scale(var(--gx-scale, 1)) rotate(var(--gx-rot, 0deg));
-}
-/* Позицию задаёт SVG-атрибут внешней группы, здесь только наклон и вращение:
-   сначала поворот, потом сплющивание — диск читается под углом */
-.gx-disk {
-  transform-origin: 0 0;
+  display: block;
+  object-fit: cover;
+  mix-blend-mode: screen;
+  -webkit-mask-image: radial-gradient(circle at 50% 50%, #000 38%, transparent 70%);
+  mask-image: radial-gradient(circle at 50% 50%, #000 38%, transparent 70%);
   animation: gxSpin var(--gx-dur, 300s) linear infinite;
 }
 @keyframes gxSpin {
-  from { transform: scale(1, .42) rotate(0deg); }
-  to   { transform: scale(1, .42) rotate(360deg); }
+  from { transform: rotate(var(--gx-rot, 0deg)); }
+  to   { transform: rotate(calc(var(--gx-rot, 0deg) + 360deg)); }
 }
 
 @media (max-width: 767px) {
@@ -3958,5 +3955,5 @@ a.pd-hero:hover .pd-hero-hint { opacity: 1; transform: translateY(0); }
   .gx  { opacity: .38; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .neb-teal, .neb-violet, .gx-disk { animation: none; transform: scale(1, .42); }
+  .neb-teal, .neb-violet, .gx { animation: none; }
 }

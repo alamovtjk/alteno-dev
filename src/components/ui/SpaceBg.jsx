@@ -4,59 +4,36 @@
    turbulence во весь виден. Сам шум не анимируем — это дорого; вместо
    этого медленно ведём готовые слои. */
 
+/* Снимки NASA (общественное достояние), подготовлены scripts/fetch-galaxies.mjs.
+   Выводятся с mix-blend-mode: screen — чёрный фон кадра исчезает сам,
+   а радиальная маска убирает квадратные края. */
 const GALAXIES = [
-  { id: 'g1', x: 12, y: 18, s: 1.15, rot: -18, hue: '#cdbcff', dur: 240 },
-  { id: 'g2', x: 78, y: 12, s: 0.8,  rot: 24,  hue: '#bfe9ff', dur: 300 },
-  { id: 'g3', x: 88, y: 62, s: 1.0,  rot: -8,  hue: '#a8f0dd', dur: 270 },
-  { id: 'g4', x: 22, y: 76, s: 0.7,  rot: 34,  hue: '#e2d1ff', dur: 330 },
-  { id: 'g5', x: 55, y: 40, s: 0.5,  rot: -30, hue: '#cfe4ff', dur: 360 },
+  { src: '/space/galaxy-1.webp', x: 13, y: 17, size: 190, rot: -14, op: .55, dur: 260 },
+  { src: '/space/galaxy-2.webp', x: 79, y: 11, size: 140, rot: 22,  op: .45, dur: 320 },
+  { src: '/space/galaxy-3.webp', x: 87, y: 63, size: 165, rot: -6,  op: .5,  dur: 290 },
+  { src: '/space/galaxy-4.webp', x: 21, y: 78, size: 120, rot: 30,  op: .38, dur: 350 },
 ]
 
 function Galaxy({ g }) {
   return (
-    <svg
+    <img
       className="gx"
-      style={{
-        left: `${g.x}%`, top: `${g.y}%`,
-        '--gx-scale': g.s,
-        '--gx-rot': `${g.rot}deg`,
-        '--gx-dur': `${g.dur}s`,
-      }}
-      viewBox="0 0 120 120"
+      src={g.src}
+      alt=""
       aria-hidden="true"
-    >
-      <defs>
-        <radialGradient id={`${g.id}-core`}>
-          <stop offset="0%"   stopColor="#fff"    stopOpacity=".95" />
-          <stop offset="35%"  stopColor={g.hue}   stopOpacity=".7" />
-          <stop offset="100%" stopColor={g.hue}   stopOpacity="0" />
-        </radialGradient>
-        <radialGradient id={`${g.id}-halo`}>
-          <stop offset="0%"   stopColor={g.hue} stopOpacity=".38" />
-          <stop offset="70%"  stopColor={g.hue} stopOpacity=".08" />
-          <stop offset="100%" stopColor={g.hue} stopOpacity="0" />
-        </radialGradient>
-        <filter id={`${g.id}-soft`} x="-40%" y="-40%" width="180%" height="180%">
-          <feGaussianBlur stdDeviation="1.6" />
-        </filter>
-      </defs>
-
-      {/* Внешняя группа только ставит галактику в центр холста, внутренняя
-          крутится. Разделено потому, что CSS-трансформация анимации
-          перекрывает атрибут transform целиком. */}
-      <g transform="translate(60 60)">
-        <g className="gx-disk">
-          <circle r="52" fill={`url(#${g.id}-halo)`} />
-          <g filter={`url(#${g.id}-soft)`} fill="none" stroke={g.hue} strokeLinecap="round">
-            <path d="M0 0 C 18 -6, 36 -2, 46 14"  strokeWidth="3.2" opacity=".55" />
-            <path d="M0 0 C -18 6, -36 2, -46 -14" strokeWidth="3.2" opacity=".55" />
-            <path d="M0 0 C 14 10, 30 14, 40 6"   strokeWidth="2.2" opacity=".35" />
-            <path d="M0 0 C -14 -10, -30 -14, -40 -6" strokeWidth="2.2" opacity=".35" />
-          </g>
-          <circle r="13" fill={`url(#${g.id}-core)`} />
-        </g>
-      </g>
-    </svg>
+      loading="lazy"
+      draggable="false"
+      style={{
+        left: `${g.x}%`,
+        top: `${g.y}%`,
+        width: `${g.size}px`,
+        height: `${g.size}px`,
+        margin: `${-g.size / 2}px 0 0 ${-g.size / 2}px`,
+        opacity: g.op,
+        ['--gx-rot']: `${g.rot}deg`,
+        ['--gx-dur']: `${g.dur}s`,
+      }}
+    />
   )
 }
 
@@ -105,7 +82,7 @@ export default function SpaceBg() {
       </svg>
 
       <div className="gx-field" aria-hidden="true">
-        {GALAXIES.map(g => <Galaxy key={g.id} g={g} />)}
+        {GALAXIES.map(g => <Galaxy key={g.src} g={g} />)}
       </div>
     </>
   )
