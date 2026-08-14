@@ -33,12 +33,9 @@ function TeamCard({ m }) {
     <div className="team-card">
       <div className="tc-blob" style={{ background: blob }} />
 
-      {/* Голограммный слой: бегущие строки развёртки и метки по углам */}
+      {/* Голограммный слой: бегущие строки развёртки; периметр карточки
+          обходит световая рамка через .team-card::before в CSS */}
       <span className="tc-scan" aria-hidden="true" />
-      <span className="tc-corner tc-corner-tl" aria-hidden="true" />
-      <span className="tc-corner tc-corner-tr" aria-hidden="true" />
-      <span className="tc-corner tc-corner-bl" aria-hidden="true" />
-      <span className="tc-corner tc-corner-br" aria-hidden="true" />
       <span className="tc-edge" aria-hidden="true" />
 
       <div className="team-card-num">{m.num}</div>

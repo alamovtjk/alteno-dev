@@ -4129,16 +4129,44 @@ a.pd-hero:hover .pd-hero-hint { opacity: 1; transform: translateY(0); }
   to   { background-position: 0 40px; }
 }
 
-/* Технические метки по углам — от них карточка читается как прибор */
-.tc-corner {
-  position: absolute; width: 16px; height: 16px;
-  pointer-events: none; z-index: 3;
-  border: 1px solid rgba(255,255,255,.30);
+/* Бегущая по периметру световая рамка — тонкий градиентный отрезок медленно
+   обходит контур карточки. Пришло на смену угловым скобкам: те читались
+   как старый sci-fi HUD, это ближе к современным AI-интерфейсам. */
+.team-card::before {
+  content: "";
+  position: absolute; inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: conic-gradient(
+    from var(--beam-a, 0deg),
+    transparent 0%,
+    transparent 78%,
+    rgba(196,181,253,.9) 87%,
+    rgba(255,255,255,.95) 90%,
+    rgba(153,246,228,.9) 93%,
+    transparent 100%
+  );
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 3;
+  animation: tcBeamSpin 6s linear infinite;
+  transition: opacity .6s ease;
 }
-.tc-corner-tl { top: 12px; left: 12px;  border-right: 0; border-bottom: 0; border-radius: 5px 0 0 0; }
-.tc-corner-tr { top: 12px; right: 12px; border-left: 0;  border-bottom: 0; border-radius: 0 5px 0 0; }
-.tc-corner-bl { bottom: 12px; left: 12px;  border-right: 0; border-top: 0; border-radius: 0 0 0 5px; }
-.tc-corner-br { bottom: 12px; right: 12px; border-left: 0;  border-top: 0; border-radius: 0 0 5px 0; }
+.team-card-outer.active .team-card::before { opacity: 1; }
+@property --beam-a {
+  syntax: '<angle>';
+  inherits: false;
+  initial-value: 0deg;
+}
+@keyframes tcBeamSpin {
+  from { --beam-a: 0deg; }
+  to   { --beam-a: 360deg; }
+}
 
 /* Свечение по нижнему ребру — место, куда бьёт луч проектора */
 .tc-edge {
@@ -4185,4 +4213,5 @@ a.pd-hero:hover .pd-hero-hint { opacity: 1; transform: translateY(0); }
 
 @media (prefers-reduced-motion: reduce) {
   .tc-scan { animation: none; }
+  .team-card::before { animation: none; opacity: .55; }
 }
