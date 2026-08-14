@@ -56,10 +56,16 @@ function TeamCard({ m }) {
       <div className="team-card-body">
         <div className="team-name">{m.name}</div>
         <div className="team-role">{m.role}</div>
-        <div className="team-divider-line" />
-        <div className="team-skills">
-          {(m.skills || []).map(s => <span key={s} className="team-skill">{s}</span>)}
-        </div>
+        {/* Линия только если под ней что-то есть — иначе у участника без
+            навыков и ссылок она висела в пустоте */}
+        {(m.skills?.length > 0 || m.email || m.portfolio_url) && <div className="team-divider-line" />}
+
+        {m.skills?.length > 0 && (
+          <div className="team-skills">
+            {m.skills.map(s => <span key={s} className="team-skill">{s}</span>)}
+          </div>
+        )}
+
         <div className="team-icons">
           {m.email && (
             <a href={`mailto:${m.email}`} className="tc-icon" aria-label="Email">

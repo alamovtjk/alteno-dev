@@ -1077,10 +1077,14 @@ input,textarea,button { font-family:inherit; }
    в карусели человек оказался бы виден рядом с самим собой */
 .team-row {
   margin-top: 64px;
-  display: flex; justify-content: center; flex-wrap: wrap;
-  gap: 28px; padding: 0 24px 20px;
+  display: flex; justify-content: center; align-items: stretch; flex-wrap: wrap;
+  gap: 28px; padding: 0 24px;
 }
-.team-row .team-card-outer { transform: none; opacity: 1; }
+.team-row .team-card-outer { transform: none; opacity: 1; display: flex; }
+/* Тянем карточку и её тело на всю высоту ряда */
+.team-row .team-card { flex: 1; display: flex; flex-direction: column; }
+.team-row .team-card-body { flex: 1; display: flex; flex-direction: column; }
+.team-row .team-icons { margin-top: auto; padding-top: 16px; }
 .team-track {
   display: flex; gap: 28px;
   overflow-x: auto; scroll-snap-type: x mandatory;
@@ -4025,7 +4029,7 @@ a.pd-hero:hover .pd-hero-hint { opacity: 1; transform: translateY(0); }
    в перспективе. Луч уходит вверх, к карточкам, и там растворяется. */
 .holo {
   position: relative;
-  margin-top: 56px;
+  margin-top: 18px;
   display: flex; align-items: center; justify-content: center;
   min-height: 132px;
 }
@@ -4033,9 +4037,9 @@ a.pd-hero:hover .pd-hero-hint { opacity: 1; transform: translateY(0); }
 /* Конус света от площадки вверх */
 .holo-beam {
   position: absolute; bottom: 46px; left: 50%;
-  width: 340px; height: 300px;
+  width: min(720px, 82%); height: 250px;
   transform: translateX(-50%);
-  clip-path: polygon(38% 100%, 62% 100%, 100% 0, 0 0);
+  clip-path: polygon(45% 100%, 55% 100%, 100% 0, 0 0);
   background: linear-gradient(0deg,
     rgba(167,139,250,.20) 0%,
     rgba(167,139,250,.08) 34%,
