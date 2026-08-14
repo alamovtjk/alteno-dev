@@ -145,9 +145,16 @@ export default function Team() {
           {members.length >= MIN_FOR_CAROUSEL
             ? <TeamCarousel members={members} labels={t.team} />
             : <TeamRow members={members} />}
+          {/* Проектор: карточки выше выглядят спроецированными с этой площадки */}
           <div className="shell" style={{ position: 'relative', zIndex: 1 }}>
-            <div className="sec-more reveal">
-              <Link to="/team" className="btn btn-ghost">
+            <div className="holo reveal">
+              <span className="holo-beam" aria-hidden="true" />
+              <span className="holo-ring holo-ring-3" aria-hidden="true" />
+              <span className="holo-ring holo-ring-2" aria-hidden="true" />
+              <span className="holo-ring holo-ring-1" aria-hidden="true" />
+              <span className="holo-core" aria-hidden="true" />
+
+              <Link to="/team" className="btn btn-ghost holo-btn">
                 {t.team.seeAll}
                 <svg viewBox="0 0 24 24" fill="none" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M5 12h14M13 5l7 7-7 7"/>

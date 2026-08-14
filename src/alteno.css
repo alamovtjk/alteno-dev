@@ -4016,3 +4016,89 @@ a.pd-hero:hover .pd-hero-hint { opacity: 1; transform: translateY(0); }
 @media (prefers-reduced-motion: reduce) {
   .ship { display: none; }
 }
+
+/* ── Голографический проектор под карточками команды ──
+   Кольца — круги, сплющенные по вертикали: читаются как площадка
+   в перспективе. Луч уходит вверх, к карточкам, и там растворяется. */
+.holo {
+  position: relative;
+  margin-top: 56px;
+  display: flex; align-items: center; justify-content: center;
+  min-height: 132px;
+}
+
+/* Конус света от площадки вверх */
+.holo-beam {
+  position: absolute; bottom: 46px; left: 50%;
+  width: 340px; height: 300px;
+  transform: translateX(-50%);
+  clip-path: polygon(38% 100%, 62% 100%, 100% 0, 0 0);
+  background: linear-gradient(0deg,
+    rgba(167,139,250,.20) 0%,
+    rgba(167,139,250,.08) 34%,
+    transparent 78%);
+  filter: blur(6px);
+  pointer-events: none;
+  animation: holoBeam 5.5s ease-in-out infinite;
+}
+@keyframes holoBeam {
+  0%, 100% { opacity: .75; }
+  50%      { opacity: 1; }
+}
+
+/* Кольца площадки */
+.holo-ring {
+  position: absolute; left: 50%; bottom: 30px;
+  transform: translateX(-50%);
+  border-radius: 50%;
+  border: 1px solid;
+  pointer-events: none;
+}
+.holo-ring-1 {
+  width: 250px; height: 52px;
+  border-color: rgba(196,181,253,.55);
+  box-shadow: 0 0 22px rgba(167,139,250,.35), inset 0 0 18px rgba(167,139,250,.22);
+  animation: holoPulse 4s ease-in-out infinite;
+}
+.holo-ring-2 {
+  width: 330px; height: 70px; bottom: 22px;
+  border-color: rgba(45,212,191,.30);
+  animation: holoPulse 4s ease-in-out infinite .8s;
+}
+.holo-ring-3 {
+  width: 420px; height: 90px; bottom: 12px;
+  border-color: rgba(255,255,255,.12);
+  animation: holoPulse 4s ease-in-out infinite 1.6s;
+}
+@keyframes holoPulse {
+  0%, 100% { opacity: .55; transform: translateX(-50%) scale(1); }
+  50%      { opacity: 1;   transform: translateX(-50%) scale(1.035); }
+}
+
+/* Светящееся ядро площадки */
+.holo-core {
+  position: absolute; left: 50%; bottom: 44px;
+  width: 190px; height: 26px;
+  transform: translateX(-50%);
+  border-radius: 50%;
+  background: radial-gradient(ellipse at center,
+    rgba(214,204,255,.55), rgba(167,139,250,.18) 55%, transparent 75%);
+  filter: blur(5px);
+  pointer-events: none;
+}
+
+/* Кнопка стоит на площадке */
+.holo-btn { position: relative; z-index: 2; }
+
+@media (max-width: 620px) {
+  .holo { min-height: 112px; margin-top: 44px; }
+  .holo-ring-1 { width: 190px; height: 40px; }
+  .holo-ring-2 { width: 250px; height: 54px; }
+  .holo-ring-3 { width: 310px; height: 68px; }
+  .holo-beam   { width: 250px; height: 220px; }
+  .holo-core   { width: 140px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .holo-ring, .holo-beam { animation: none; }
+}
