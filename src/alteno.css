@@ -1126,9 +1126,13 @@ input,textarea,button { font-family:inherit; }
   padding: 0 0 28px;
   transition: border-color .5s, box-shadow .5s, transform .5s cubic-bezier(.22,1,.36,1);
 }
+/* Свечение активной карточки — не белое, а в личном цвете человека */
 .team-card-outer.active .team-card {
-  border-color: rgba(255,255,255,.22);
-  box-shadow: 0 32px 80px rgba(0,0,0,.55), 0 0 0 1px rgba(255,255,255,.08);
+  border-color: color-mix(in srgb, var(--c) 45%, rgba(255,255,255,.22));
+  box-shadow:
+    0 32px 80px rgba(0,0,0,.55),
+    0 0 0 1px color-mix(in srgb, var(--c) 22%, rgba(255,255,255,.08)),
+    0 0 56px color-mix(in srgb, var(--c) 20%, transparent);
 }
 
 /* Blob-градиент в фоне карточки */
@@ -1197,25 +1201,29 @@ input,textarea,button { font-family:inherit; }
   font-size: 13px; color: rgba(255,255,255,.55);
   margin-bottom: 20px; letter-spacing: .02em;
 }
+/* Тонкая линия окрашена в цвет человека — раньше была одинаково-белой
+   на всех карточках */
 .team-divider-line {
   height: 1px;
-  background: linear-gradient(to right, transparent, rgba(255,255,255,.15), transparent);
+  background: linear-gradient(to right,
+    transparent, color-mix(in srgb, var(--c) 55%, transparent), transparent);
   margin-bottom: 18px;
 }
 .team-skills {
   display: flex; flex-wrap: wrap; gap: 7px; justify-content: center; margin-bottom: 22px;
 }
+/* Чипы навыков — стеклянные ключи в тон человеку, тот же язык, что у tc-icon */
 .team-skill {
   font-size: 11px; font-weight: 600; padding: 5px 12px;
   border-radius: 999px; letter-spacing: .03em;
-  background: rgba(255,255,255,.08);
-  border: 1px solid rgba(255,255,255,.14);
-  color: rgba(255,255,255,.8);
+  background: color-mix(in srgb, var(--c) 14%, rgba(255,255,255,.05));
+  border: 1px solid color-mix(in srgb, var(--c) 28%, rgba(255,255,255,.12));
+  color: rgba(255,255,255,.85);
   transition: background .25s, border-color .25s;
 }
 .team-card-outer.active .team-skill {
-  background: rgba(255,255,255,.12);
-  border-color: rgba(255,255,255,.22);
+  background: color-mix(in srgb, var(--c) 20%, rgba(255,255,255,.06));
+  border-color: color-mix(in srgb, var(--c) 40%, rgba(255,255,255,.18));
 }
 .team-icons { display: flex; gap: 10px; justify-content: center; }
 .tc-icon {
@@ -4111,91 +4119,65 @@ a.pd-hero:hover .pd-hero-hint { opacity: 1; transform: translateY(0); }
 }
 
 /* ── Голограммные детали карточки ──
-   Развёртка идёт медленно и на низком контрасте: должна читаться боковым
-   зрением как мерцание проекции, а не как рябь поверх лица. */
-.tc-scan {
-  position: absolute; inset: 0;
-  pointer-events: none; z-index: 3;
-  background: repeating-linear-gradient(
-    180deg,
-    rgba(255,255,255,.055) 0 1px,
-    transparent 1px 4px
-  );
-  opacity: .5;
-  animation: tcScan 9s linear infinite;
-}
-@keyframes tcScan {
-  from { background-position: 0 0; }
-  to   { background-position: 0 40px; }
-}
+   Раньше рамка была бегущим конусом одного фиксированного цвета для всех —
+   не связанным с самой карточкой. Теперь всё до одной детали читает --c,
+   личный акцент человека, заданный на .team-card: тот же принцип, что уже
+   держит кейсы и карточки-ценности на сайте. */
 
-/* Бегущая по периметру световая рамка — тонкий градиентный отрезок медленно
-   обходит контур карточки. Пришло на смену угловым скобкам: те читались
-   как старый sci-fi HUD, это ближе к современным AI-интерфейсам. */
-.team-card::before {
-  content: "";
-  position: absolute; inset: 0;
-  border-radius: inherit;
-  padding: 1px;
-  background: conic-gradient(
-    from var(--beam-a, 0deg),
-    transparent 0%,
-    transparent 78%,
-    rgba(196,181,253,.9) 87%,
-    rgba(255,255,255,.95) 90%,
-    rgba(153,246,228,.9) 93%,
-    transparent 100%
-  );
-  -webkit-mask:
-    linear-gradient(#000 0 0) content-box,
-    linear-gradient(#000 0 0);
-  -webkit-mask-composite: xor;
-  mask-composite: exclude;
-  opacity: 0;
+/* Статус-бейдж — позиционирует .mapp-badge/.mapp-pulse поверх карточки,
+   их собственный вид уже в тон --c и один в один как в разделе приложений */
+.tc-status {
+  position: absolute; top: 16px; left: 16px; z-index: 3;
   pointer-events: none;
-  z-index: 3;
-  animation: tcBeamSpin 6s linear infinite;
-  transition: opacity .6s ease;
-}
-.team-card-outer.active .team-card::before { opacity: 1; }
-@property --beam-a {
-  syntax: '<angle>';
-  inherits: false;
-  initial-value: 0deg;
-}
-@keyframes tcBeamSpin {
-  from { --beam-a: 0deg; }
-  to   { --beam-a: 360deg; }
 }
 
-/* Свечение по нижнему ребру — место, куда бьёт луч проектора */
+/* Индикатор присутствия на кольце — как онлайн-статус, но это личный цвет */
+.tc-presence {
+  position: absolute; z-index: 3;
+  right: 2px; bottom: 2px;
+  width: 15px; height: 15px; border-radius: 50%;
+  background: var(--c);
+  border: 3px solid #0b0b16;
+  animation: tcPresence 2.6s ease-out infinite;
+}
+@keyframes tcPresence {
+  0%   { box-shadow: 0 0 0 0 color-mix(in srgb, var(--c) 55%, transparent); }
+  70%  { box-shadow: 0 0 0 8px transparent; }
+  100% { box-shadow: 0 0 0 0 transparent; }
+}
+
+/* Свечение по нижнему ребру — место, куда бьёт луч проектора снизу,
+   в цвете человека, а не общим фиолетовым */
 .tc-edge {
   position: absolute; left: 12%; right: 12%; bottom: 0; height: 2px;
   pointer-events: none; z-index: 3;
   background: linear-gradient(90deg,
-    transparent, rgba(196,181,253,.75), transparent);
+    transparent, color-mix(in srgb, var(--c) 85%, #fff 15%), transparent);
   filter: blur(1px);
   opacity: .5;
   transition: opacity .5s;
 }
 .team-card-outer.active .tc-edge { opacity: 1; }
 
-/* Номер крупнее и с фаской, как выгравированный в стекле */
+/* Номер крупнее, с фаской и лёгким тоном личного цвета — раньше был
+   плоским белым независимо от того, чья это карточка */
 .team-card-num {
   font-size: 62px;
+  color: color-mix(in srgb, var(--c) 40%, #fff);
   text-shadow: 0 1px 0 rgba(255,255,255,.12);
 }
 
-/* Кольцо вокруг фото видно всегда, у активной карточки — сильнее */
+/* Кольцо вокруг фото видно всегда, у активной карточки — сильнее.
+   Внешний волосок и свечение аватара тоже в цвете человека. */
 .tc-ring { opacity: .45; }
 .tc-ring-wrap::after {
   content: "";
   position: absolute; inset: -9px;
   border-radius: 50%;
-  border: 1px solid rgba(255,255,255,.12);
+  border: 1px solid color-mix(in srgb, var(--c) 32%, transparent);
   pointer-events: none;
 }
-.team-avatar { box-shadow: 0 0 26px rgba(167,139,250,.28); }
+.team-avatar { box-shadow: 0 0 26px color-mix(in srgb, var(--c) 40%, transparent); }
 
 /* Кнопки-иконки как стеклянные клавиши */
 .tc-icon {
@@ -4207,11 +4189,10 @@ a.pd-hero:hover .pd-hero-hint { opacity: 1; transform: translateY(0); }
 }
 .tc-icon:hover {
   transform: translateY(-2px);
-  border-color: rgba(196,181,253,.5);
-  box-shadow: inset 0 1px 0 rgba(255,255,255,.3), 0 6px 18px rgba(124,58,237,.3);
+  border-color: color-mix(in srgb, var(--c) 55%, transparent);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.3), 0 6px 18px color-mix(in srgb, var(--c) 35%, transparent);
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .tc-scan { animation: none; }
-  .team-card::before { animation: none; opacity: .55; }
+  .tc-presence { animation: none; }
 }

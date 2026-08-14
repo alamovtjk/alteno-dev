@@ -26,17 +26,24 @@ function buildRing(blob) {
   return `conic-gradient(from 0deg, ${blob}, #4f46e5, #a78bfa, ${blob})`
 }
 
-/* Карточка участника — одна и та же в карусели и в статичном ряду */
-function TeamCard({ m }) {
+/* Карточка участника — одна и та же в карусели и в статичном ряду.
+   --c задаёт личный акцент человека один раз на карточке: от него красится
+   и рамка, и номер, и свечение — тот же принцип, что у карточек кейсов
+   и ценностей, только раньше рамка карточки его игнорировала. */
+function TeamCard({ m, labels }) {
   const blob = m.blob || '#7c3aed'
   return (
-    <div className="team-card">
+    <div className="team-card" style={{ '--c': blob }}>
       <div className="tc-blob" style={{ background: blob }} />
-
-      {/* Голограммный слой: бегущие строки развёртки; периметр карточки
-          обходит световая рамка через .team-card::before в CSS */}
-      <span className="tc-scan" aria-hidden="true" />
       <span className="tc-edge" aria-hidden="true" />
+
+      {/* Тот же бейдж-паттерн, что у «Идёт разработка» в разделе приложений */}
+      {labels?.inTeam && (
+        <span className="tc-status mapp-badge">
+          <span className="mapp-pulse" />
+          {labels.inTeam}
+        </span>
+      )}
 
       <div className="team-card-num">{m.num}</div>
       <div className="team-card-top">
@@ -48,6 +55,7 @@ function TeamCard({ m }) {
               ? <img src={m.avatar_url} alt={m.name} />
               : <span>{m.initials || m.name?.slice(0, 2)}</span>}
           </div>
+          <span className="tc-presence" aria-hidden="true" />
         </div>
       </div>
       <div className="team-card-body">
@@ -88,12 +96,12 @@ function TeamCard({ m }) {
    участниках человек оказался бы виден рядом с самим собой. */
 const MIN_FOR_CAROUSEL = 3
 
-function TeamRow({ members }) {
+function TeamRow({ members, labels }) {
   return (
     <div className="team-row reveal">
       {members.map(m => (
         <div key={m.id} className="team-card-outer active">
-          <TeamCard m={m} />
+          <TeamCard m={m} labels={labels} />
         </div>
       ))}
     </div>
@@ -156,7 +164,7 @@ export default function Team() {
         <>
           {members.length >= MIN_FOR_CAROUSEL
             ? <TeamCarousel members={members} labels={t.team} />
-            : <TeamRow members={members} />}
+            : <TeamRow members={members} labels={t.team} />}
           {/* Проектор: карточки выше выглядят спроецированными с этой площадки */}
           <div className="shell" style={{ position: 'relative', zIndex: 1 }}>
             <div className="holo reveal">
@@ -291,7 +299,7 @@ function TeamCarousel({ members, labels }) {
             const isActive = active === i % N
             return (
               <div key={i} className={`team-card-outer${isActive ? " active" : ""}`}>
-                <TeamCard m={m} />
+                <TeamCard m={m} labels={labels} />
               </div>
             )
           })}

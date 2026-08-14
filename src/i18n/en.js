@@ -139,6 +139,7 @@ export default {
     next: 'Next',
     card: 'Card',
     seeAll: 'Full team',
+    inTeam: 'On the team',
     joinT: 'Want to join the team?',
     joinD: 'We\'re always open to strong specialists — designers, developers, marketers.',
     joinBtn: 'Get in touch',
