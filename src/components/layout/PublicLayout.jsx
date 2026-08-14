@@ -6,6 +6,7 @@ import Footer from './Footer'
 import Cursor from '../ui/Cursor'
 import MusicPlayer from '../ui/MusicPlayer'
 import ArielFloat from '../ui/ArielFloat'
+import SpaceBg from '../ui/SpaceBg'
 
 /* Шаг повторения звёздных плиток — тот же, что в CSS.
    Смещение сворачиваем по модулю шага: узор бесшовный, поэтому сдвиг
@@ -111,6 +112,7 @@ export default function PublicLayout() {
       {/* Космос за всей страницей: туманности + три слоя звёзд,
           которые уезжают с разной скоростью при прокрутке */}
       <div className="bg-stage" aria-hidden="true">
+        <SpaceBg />
         <div className="blob v" />
         <div className="blob t" />
         <div className="blob b" />

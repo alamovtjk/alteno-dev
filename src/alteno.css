@@ -3906,3 +3906,57 @@ a.pd-hero:hover .pd-hero-hint { opacity: 1; transform: translateY(0); }
   .mapp-sk, .mapp-pulse { animation: none; }
   .mapp-tilt, .mapp-track { transition: none; }
 }
+
+/* ═══════════════════════════════════
+   Космический фон: дым и галактики
+   ═══════════════════════════════════ */
+
+/* Дым. Фильтр считается на холсте 600×400 и растягивается — так turbulence
+   не пересчитывается на миллионы пикселей. Сам шум статичен: анимировать
+   feTurbulence дорого, вместо этого медленно ведём готовые слои. */
+.neb {
+  position: absolute; inset: -8%;
+  width: 116%; height: 116%;
+  pointer-events: none;
+  mix-blend-mode: screen;
+  opacity: .5;
+}
+.neb-teal   { animation: nebDriftA 70s ease-in-out infinite alternate; transform-origin: 70% 35%; }
+.neb-violet { animation: nebDriftB 88s ease-in-out infinite alternate; transform-origin: 20% 28%; }
+@keyframes nebDriftA {
+  from { transform: translate3d(-1.2%, 0.8%, 0) scale(1.02); }
+  to   { transform: translate3d(1.6%, -1.2%, 0) scale(1.09); }
+}
+@keyframes nebDriftB {
+  from { transform: translate3d(1.4%, -0.6%, 0) scale(1.06); }
+  to   { transform: translate3d(-1.2%, 1.1%, 0) scale(1.01); }
+}
+
+/* Галактики — редкие, как на ночном небе, и очень медленно вращаются */
+.gx-field { position: absolute; inset: 0; pointer-events: none; }
+.gx {
+  position: absolute;
+  width: 240px; height: 240px;
+  margin: -120px 0 0 -120px;
+  opacity: .5;
+  transform: scale(var(--gx-scale, 1)) rotate(var(--gx-rot, 0deg));
+}
+/* Позицию задаёт SVG-атрибут внешней группы, здесь только наклон и вращение:
+   сначала поворот, потом сплющивание — диск читается под углом */
+.gx-disk {
+  transform-origin: 0 0;
+  animation: gxSpin var(--gx-dur, 300s) linear infinite;
+}
+@keyframes gxSpin {
+  from { transform: scale(1, .42) rotate(0deg); }
+  to   { transform: scale(1, .42) rotate(360deg); }
+}
+
+@media (max-width: 767px) {
+  /* На телефоне фильтр шума заметно греет — оставляем только галактики */
+  .neb { display: none; }
+  .gx  { opacity: .38; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .neb-teal, .neb-violet, .gx-disk { animation: none; transform: scale(1, .42); }
+}
