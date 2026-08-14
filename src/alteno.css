@@ -3936,8 +3936,19 @@ a.pd-hero:hover .pd-hero-hint { opacity: 1; transform: translateY(0); }
 /* Галактики — снимки NASA, редкие, как на ночном небе.
    screen убирает чёрный фон кадра, маска — квадратные края. */
 .gx-field { position: absolute; inset: 0; pointer-events: none; }
-.gx {
+/* Смещение от прокрутки: --sky-prog идёт 0→1 за всю страницу, поэтому
+   галактика уезжает на ограниченное расстояние и не улетает с экрана */
+.gx-holder {
   position: absolute;
+  will-change: transform;
+  transform: translate3d(
+    0,
+    calc((var(--sky-prog, .5) - .5) * var(--gx-depth, 1) * -260px),
+    0
+  );
+}
+.gx {
+  width: 100%; height: 100%;
   display: block;
   object-fit: cover;
   mix-blend-mode: screen;

@@ -32,11 +32,15 @@ function useLenis() {
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
     const wide    = window.matchMedia('(min-width: 768px)').matches
 
-    const onScroll = ({ scroll }) => {
+    const onScroll = ({ scroll, progress }) => {
       for (const { varName, tile, speed } of SKY_LAYERS) {
         root.style.setProperty(varName, `${-wrap(scroll * speed, tile).toFixed(2)}px`)
       }
       root.style.setProperty('--sky-depth', String(Math.min(scroll / 2400, 1).toFixed(3)))
+      /* Галактики — объекты, а не бесшовный узор: их нельзя сворачивать по
+         модулю, иначе будут выпрыгивать. Ведём их по прогрессу страницы,
+         поэтому за весь скролл они смещаются на ограниченное расстояние. */
+      root.style.setProperty('--sky-prog', String((progress || 0).toFixed(4)))
     }
 
     if (!reduced && wide) lenis.on('scroll', onScroll)

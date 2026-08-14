@@ -7,33 +7,44 @@
 /* Снимки NASA (общественное достояние), подготовлены scripts/fetch-galaxies.mjs.
    Выводятся с mix-blend-mode: screen — чёрный фон кадра исчезает сам,
    а радиальная маска убирает квадратные края. */
+/* depth — насколько галактика уезжает при прокрутке. Крупные ближе,
+   поэтому идут быстрее; мелкие едва движутся, как далёкие. */
 const GALAXIES = [
-  { src: '/space/galaxy-1.webp', x: 13, y: 17, size: 190, rot: -14, op: .55, dur: 260 },
-  { src: '/space/galaxy-2.webp', x: 79, y: 11, size: 140, rot: 22,  op: .45, dur: 320 },
-  { src: '/space/galaxy-3.webp', x: 87, y: 63, size: 165, rot: -6,  op: .5,  dur: 290 },
-  { src: '/space/galaxy-4.webp', x: 21, y: 78, size: 120, rot: 30,  op: .38, dur: 350 },
+  { src: '/space/galaxy-1.webp', x: 13, y: 17, size: 190, rot: -14, op: .55, dur: 260, depth: 1.0 },
+  { src: '/space/galaxy-2.webp', x: 79, y: 11, size: 140, rot: 22,  op: .45, dur: 320, depth: 0.6 },
+  { src: '/space/galaxy-3.webp', x: 87, y: 63, size: 165, rot: -6,  op: .5,  dur: 290, depth: 0.85 },
+  { src: '/space/galaxy-4.webp', x: 21, y: 78, size: 120, rot: 30,  op: .38, dur: 350, depth: 0.45 },
 ]
 
+/* Обёртка отвечает за место и смещение от прокрутки, картинка — за вращение.
+   Порознь потому, что одна трансформация перезаписала бы другую. */
 function Galaxy({ g }) {
   return (
-    <img
-      className="gx"
-      src={g.src}
-      alt=""
-      aria-hidden="true"
-      loading="lazy"
-      draggable="false"
+    <span
+      className="gx-holder"
       style={{
         left: `${g.x}%`,
         top: `${g.y}%`,
         width: `${g.size}px`,
         height: `${g.size}px`,
         margin: `${-g.size / 2}px 0 0 ${-g.size / 2}px`,
-        opacity: g.op,
-        ['--gx-rot']: `${g.rot}deg`,
-        ['--gx-dur']: `${g.dur}s`,
+        ['--gx-depth']: g.depth,
       }}
-    />
+    >
+      <img
+        className="gx"
+        src={g.src}
+        alt=""
+        aria-hidden="true"
+        loading="lazy"
+        draggable="false"
+        style={{
+          opacity: g.op,
+          ['--gx-rot']: `${g.rot}deg`,
+          ['--gx-dur']: `${g.dur}s`,
+        }}
+      />
+    </span>
   )
 }
 
