@@ -3919,7 +3919,8 @@ a.pd-hero:hover .pd-hero-hint { opacity: 1; transform: translateY(0); }
   width: 116%; height: 116%;
   pointer-events: none;
   mix-blend-mode: screen;
-  opacity: .5;
+  /* яркость убавлена на 70%: было .5 */
+  opacity: .15;
 }
 .neb-teal   { animation: nebDriftA 70s ease-in-out infinite alternate; transform-origin: 70% 35%; }
 .neb-violet { animation: nebDriftB 88s ease-in-out infinite alternate; transform-origin: 20% 28%; }
