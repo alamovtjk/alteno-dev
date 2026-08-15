@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
-import { supabase } from '../../../lib/supabase'
+import { supabase, invalidateTable } from '../../../lib/supabase'
 
 const EMPTY = { title: '', description: '', tags: '', image_url: '', link: '' }
 
@@ -65,6 +65,7 @@ export default function PortfolioTab() {
     } else {
       await supabase.from('portfolio').update(payload).eq('id', editing.id)
     }
+    invalidateTable('portfolio')
     await load()
     setSaving(false)
     setEditing(null)
@@ -73,6 +74,7 @@ export default function PortfolioTab() {
   const del = async (id) => {
     if (!confirm('Удалить проект?')) return
     await supabase.from('portfolio').delete().eq('id', id)
+    invalidateTable('portfolio')
     setRows(r => r.filter(x => x.id !== id))
   }
 

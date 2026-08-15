@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react'
-import { supabase } from '../../../lib/supabase'
+import { supabase, invalidateTable } from '../../../lib/supabase'
 
 const EMPTY = { name: '', company: '', text: '', avatar_url: '' }
 
@@ -37,6 +37,7 @@ export default function TestimonialsTab() {
     } else {
       await supabase.from('testimonials').update(payload).eq('id', editing.id)
     }
+    invalidateTable('testimonials')
     await load()
     setSaving(false)
     setEditing(null)
@@ -45,6 +46,7 @@ export default function TestimonialsTab() {
   const del = async (id) => {
     if (!confirm('Удалить отзыв?')) return
     await supabase.from('testimonials').delete().eq('id', id)
+    invalidateTable('testimonials')
     setRows(r => r.filter(x => x.id !== id))
   }
 

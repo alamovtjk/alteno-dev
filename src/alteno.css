@@ -62,7 +62,8 @@ input,textarea,button { font-family:inherit; }
 }
 .blob {
   position:absolute; border-radius:50%;
-  filter:blur(130px); will-change:transform; pointer-events:none;
+  /* было blur(130px) — размер пятна тот же, просто дешевле для GPU на каждый кадр */
+  filter:blur(100px); will-change:transform; pointer-events:none;
 }
 
 /* ── Звёздное небо за всей страницей ──
@@ -214,6 +215,22 @@ input,textarea,button { font-family:inherit; }
 
 /* ── Section spacing ── */
 .section { padding:100px 0; }
+
+/* ── Рендер вне экрана пропускаем ──
+   content-visibility:auto не даёт браузеру считать layout/paint для секций
+   далеко за пределами экрана — он включает их обратно чуть заранее, сам,
+   без участия JS. contain-intrinsic-size — плейсхолдер высоты до первого
+   реального рендера (auto запоминает настоящую высоту после него, так что
+   повторные проходы уже точные). #hero не трогаем — она видна сразу. */
+#about    { content-visibility:auto; contain-intrinsic-size:auto 700px; }
+#services { content-visibility:auto; contain-intrinsic-size:auto 900px; }
+#cases    { content-visibility:auto; contain-intrinsic-size:auto 1400px; }
+#apps     { content-visibility:auto; contain-intrinsic-size:auto 1300px; }
+#process  { content-visibility:auto; contain-intrinsic-size:auto 800px; }
+#studio   { content-visibility:auto; contain-intrinsic-size:auto 700px; }
+#team     { content-visibility:auto; contain-intrinsic-size:auto 1600px; }
+#reviews  { content-visibility:auto; contain-intrinsic-size:auto 700px; }
+#contact  { content-visibility:auto; contain-intrinsic-size:auto 800px; }
 
 /* ── Reveal animation ── */
 /* Elements are visible by default — .in triggers the entrance animation */

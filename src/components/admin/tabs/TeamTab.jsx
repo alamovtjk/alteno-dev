@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
-import { supabase } from '../../../lib/supabase'
+import { supabase, invalidateTable } from '../../../lib/supabase'
 
 const EMPTY = {
   name: '', role: '', initials: '', blob: '#7c3aed',
@@ -99,6 +99,7 @@ export default function TeamTab() {
     } else {
       await supabase.from('team').update(payload).eq('id', editing.id)
     }
+    invalidateTable('team')
     await load()
     setSaving(false)
     setEditing(null)
@@ -107,6 +108,7 @@ export default function TeamTab() {
   const del = async (id) => {
     if (!confirm('Удалить участника?')) return
     await supabase.from('team').delete().eq('id', id)
+    invalidateTable('team')
     setRows(r => r.filter(x => x.id !== id))
   }
 
