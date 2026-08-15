@@ -399,6 +399,82 @@ body { background: var(--adm-bg); color: var(--adm-text); font-family: 'Manrope'
 .adm-review-body { flex: 1; display: flex; flex-direction: column; gap: 5px; }
 .adm-review-text { font-size: 13px; color: var(--adm-dim); font-style: italic; }
 
+/* ── ANALYTICS ─────────────────────────────────────── */
+.adm-tab-wide { max-width: 1080px; }
+
+.adm-live-card {
+  display: flex; align-items: center; gap: 16px;
+  background: linear-gradient(135deg, rgba(124,58,237,.14), rgba(16,185,129,.08));
+  border: 1px solid var(--adm-border2);
+  border-radius: var(--adm-radius);
+  padding: 20px 24px;
+  margin-bottom: 20px;
+}
+.adm-live-dot {
+  flex-shrink: 0; width: 12px; height: 12px; border-radius: 50%;
+  background: #22c55e;
+  box-shadow: 0 0 0 4px rgba(34,197,94,.18);
+  animation: admLivePulse 1.8s ease-in-out infinite;
+}
+@keyframes admLivePulse {
+  0%, 100% { box-shadow: 0 0 0 4px rgba(34,197,94,.18); }
+  50%      { box-shadow: 0 0 0 8px rgba(34,197,94,.06); }
+}
+.adm-live-num   { font-size: 26px; font-weight: 800; line-height: 1.1; }
+.adm-live-label { font-size: 13px; color: var(--adm-dim); margin-top: 2px; }
+
+.adm-stat-grid {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px;
+  margin-bottom: 20px;
+}
+.adm-stat-card {
+  background: var(--adm-card);
+  border: 1px solid var(--adm-border);
+  border-radius: var(--adm-radius);
+  padding: 18px 20px;
+}
+.adm-stat-num   { font-size: 24px; font-weight: 800; }
+.adm-stat-label { font-size: 12px; color: var(--adm-dim); margin-top: 4px; }
+
+.adm-chart-card {
+  background: var(--adm-card);
+  border: 1px solid var(--adm-border);
+  border-radius: var(--adm-radius);
+  padding: 22px 24px;
+  margin-bottom: 20px;
+}
+.adm-chart-card .adm-sound-title { margin-bottom: 16px; }
+.adm-chart-svg { width: 100%; height: 140px; display: block; }
+.adm-chart-labels {
+  display: flex; justify-content: space-between;
+  font-size: 11px; color: var(--adm-faint); margin-top: 8px;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.adm-top-pages { display: flex; flex-direction: column; gap: 10px; }
+.adm-top-row { display: flex; align-items: center; gap: 12px; }
+.adm-top-path {
+  flex-shrink: 0; width: 180px;
+  font-family: 'JetBrains Mono', monospace; font-size: 12px;
+  color: var(--adm-text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.adm-top-bar-track {
+  flex: 1; height: 8px; border-radius: 999px; background: rgba(255,255,255,.06); overflow: hidden;
+}
+.adm-top-bar-fill {
+  height: 100%; border-radius: 999px;
+  background: linear-gradient(90deg, #4f46e5, #a78bfa);
+}
+.adm-top-count {
+  flex-shrink: 0; width: 36px; text-align: right;
+  font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--adm-dim);
+}
+
+@media (max-width: 760px) {
+  .adm-stat-grid { grid-template-columns: repeat(2, 1fr); }
+  .adm-top-path  { width: 110px; }
+}
+
 /* ── SOUND CONTROL ─────────────────────────────────────── */
 .adm-sound-card {
   background: var(--adm-card);

@@ -7,6 +7,7 @@ import Cursor from '../ui/Cursor'
 import MusicPlayer from '../ui/MusicPlayer'
 import ArielFloat from '../ui/ArielFloat'
 import SpaceBg from '../ui/SpaceBg'
+import { trackPageView, joinPresence } from '../../lib/analytics'
 
 /* Шаг повторения звёздных плиток — тот же, что в CSS.
    Смещение сворачиваем по модулю шага: узор бесшовный, поэтому сдвиг
@@ -104,10 +105,18 @@ function useScrollTopOnNavigate() {
   }, [pathname, state])
 }
 
+/* Одна запись на переход между страницами + отметка "на сайте" на время вкладки */
+function useAnalytics() {
+  const { pathname } = useLocation()
+  useEffect(() => { trackPageView(pathname) }, [pathname])
+  useEffect(() => joinPresence(), [])
+}
+
 export default function PublicLayout() {
   useRevealObserver()
   useLenis()
   useScrollTopOnNavigate()
+  useAnalytics()
 
   return (
     <div style={{ minHeight: '100vh' }}>
