@@ -1095,12 +1095,12 @@ input,textarea,button { font-family:inherit; }
 .team-track.drag { cursor: grabbing; }
 .team-track::before, .team-track::after {
   content: ''; flex: none; flex-shrink: 0;
-  width: calc(50vw - 170px);
+  width: calc(50vw - 180px);
 }
 
 /* Карточка-обёртка */
 .team-card-outer {
-  flex: none; width: 340px;
+  flex: none; width: 360px;
   scroll-snap-align: center;
   position: relative;
   transform: scale(.86); opacity: .35;
@@ -1162,9 +1162,9 @@ input,textarea,button { font-family:inherit; }
 /* Аватар с вращающимся кольцом */
 .team-card-top {
   display: flex; justify-content: center;
-  padding-top: 36px; margin-bottom: 22px;
+  padding-top: 30px; margin-bottom: 18px;
 }
-.tc-ring-wrap { position: relative; width: 100px; height: 100px; }
+.tc-ring-wrap { position: relative; width: 152px; height: 152px; }
 
 .tc-ring {
   position: absolute; inset: -3px; border-radius: 50%;
@@ -1187,7 +1187,7 @@ input,textarea,button { font-family:inherit; }
 .team-avatar img  { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
 .team-avatar span {
   font-family: 'Unbounded', sans-serif;
-  font-weight: 700; font-size: 26px; color: #fff;
+  font-weight: 700; font-size: 40px; color: #fff;
 }
 
 /* Контент */
@@ -1262,11 +1262,11 @@ input,textarea,button { font-family:inherit; }
 .team-dot.on { background: #fff; width: 22px; }
 
 @media (max-width: 600px) {
-  .team-card-outer { width: min(300px, 84vw); }
+  .team-card-outer { width: min(320px, 86vw); }
   .team-track::before, .team-track::after { width: calc(50vw - min(150px, 42vw)); }
   .team-card-body { padding: 0 20px; }
-  .tc-ring-wrap { width: 86px; height: 86px; }
-  .team-avatar span { font-size: 22px; }
+  .tc-ring-wrap { width: 118px; height: 118px; }
+  .team-avatar span { font-size: 32px; }
   .team-name { font-size: 15px; }
   .team-card-num { font-size: 40px; }
 }
@@ -4134,10 +4134,10 @@ a.pd-hero:hover .pd-hero-hint { opacity: 1; transform: translateY(0); }
 /* Индикатор присутствия на кольце — как онлайн-статус, но это личный цвет */
 .tc-presence {
   position: absolute; z-index: 3;
-  right: 2px; bottom: 2px;
-  width: 15px; height: 15px; border-radius: 50%;
+  right: 6px; bottom: 6px;
+  width: 20px; height: 20px; border-radius: 50%;
   background: var(--c);
-  border: 3px solid #0b0b16;
+  border: 3.5px solid #0b0b16;
   animation: tcPresence 2.6s ease-out infinite;
 }
 @keyframes tcPresence {
@@ -4162,7 +4162,7 @@ a.pd-hero:hover .pd-hero-hint { opacity: 1; transform: translateY(0); }
 /* Номер крупнее, с фаской и лёгким тоном личного цвета — раньше был
    плоским белым независимо от того, чья это карточка */
 .team-card-num {
-  font-size: 62px;
+  font-size: 52px;
   color: color-mix(in srgb, var(--c) 40%, #fff);
   text-shadow: 0 1px 0 rgba(255,255,255,.12);
 }
