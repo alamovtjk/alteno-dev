@@ -26,7 +26,7 @@ html { scrollbar-gutter: stable; }
   --shadow: 0 20px 60px rgba(0,0,0,.45);
   /* iOS 26 Liquid Glass */
   --lg-bg: rgba(255,255,255,.07);
-  --lg-blur: blur(52px) saturate(200%) brightness(1.08);
+  --lg-blur: blur(20px) saturate(160%) brightness(1.05);
   --lg-border: rgba(255,255,255,.18);
   --lg-spec: inset 0 1.5px 0 rgba(255,255,255,.32), inset 0 -1px 0 rgba(0,0,0,.08), inset 1px 0 0 rgba(255,255,255,.1), inset -1px 0 0 rgba(255,255,255,.06);
   --lg-shadow: 0 8px 40px rgba(0,0,0,.22), 0 2px 8px rgba(0,0,0,.12);
@@ -289,11 +289,12 @@ input,textarea,button { font-family:inherit; }
 .brand i { font-style:normal; background:linear-gradient(90deg,var(--violet-l),var(--teal-l)); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; }
 
 .nav-links {
+  /* .header уже блюрит фон под собой — второй backdrop-filter здесь был
+     бы бессмысленным двойным размытием одного и того же контента, дорогим
+     на каждый кадр. Пилюля читается за счёт своей заливки и обводки. */
   display:flex; align-items:center; gap:4px;
   padding:6px; border-radius:999px;
-  background: rgba(255,255,255,.08);
-  backdrop-filter: var(--lg-blur);
-  -webkit-backdrop-filter: var(--lg-blur);
+  background: rgba(255,255,255,.13);
   border: 1px solid var(--lg-border);
   box-shadow: var(--lg-spec), 0 4px 20px rgba(0,0,0,.18);
 }
@@ -308,10 +309,9 @@ input,textarea,button { font-family:inherit; }
 
 /* language switcher */
 .lang {
+  /* см. .nav-links — тот же fixed .header уже размыт, второй backdrop-filter не нужен */
   position:relative; display:flex; padding:5px; border-radius:999px;
-  background: rgba(255,255,255,.08);
-  backdrop-filter: var(--lg-blur);
-  -webkit-backdrop-filter: var(--lg-blur);
+  background: rgba(255,255,255,.13);
   border: 1px solid var(--lg-border);
   box-shadow: var(--lg-spec), 0 4px 16px rgba(0,0,0,.15);
 }
@@ -3937,8 +3937,8 @@ a.pd-hero:hover .pd-hero-hint { opacity: 1; transform: translateY(0); }
   /* яркость убавлена на 70%: было .5 */
   opacity: .15;
 }
-.neb-teal   { animation: nebDriftA 70s ease-in-out infinite alternate; transform-origin: 70% 35%; }
-.neb-violet { animation: nebDriftB 88s ease-in-out infinite alternate; transform-origin: 20% 28%; }
+.neb-teal   { animation: nebDriftA 70s ease-in-out infinite alternate; transform-origin: 70% 35%; will-change: transform; }
+.neb-violet { animation: nebDriftB 88s ease-in-out infinite alternate; transform-origin: 20% 28%; will-change: transform; }
 @keyframes nebDriftA {
   from { transform: translate3d(-1.2%, 0.8%, 0) scale(1.02); }
   to   { transform: translate3d(1.6%, -1.2%, 0) scale(1.09); }
