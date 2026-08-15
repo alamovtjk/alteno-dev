@@ -95,6 +95,17 @@ function useRevealObserver() {
   }, [])
 }
 
+/* index.html один на все маршруты (SPA), поэтому canonical в нём статичный
+   (на главную). Поисковики читают DOM после рендера — подправляем тег под
+   реальный путь, чтобы /projects и /team не считались дублями главной. */
+function useCanonical() {
+  const { pathname } = useLocation()
+  useEffect(() => {
+    const link = document.querySelector('link[rel="canonical"]')
+    if (link) link.href = window.location.origin + pathname
+  }, [pathname])
+}
+
 /* Переход на другую страницу должен начинаться сверху, а не с середины.
    Исключение — возврат на главную к конкретной секции (Header кладёт её в state). */
 function useScrollTopOnNavigate() {
@@ -116,6 +127,7 @@ export default function PublicLayout() {
   useRevealObserver()
   useLenis()
   useScrollTopOnNavigate()
+  useCanonical()
   useAnalytics()
 
   return (

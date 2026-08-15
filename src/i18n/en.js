@@ -243,4 +243,10 @@ export default {
     l_about: 'About studio',
     loc: 'Dushanbe / Moscow',
   },
+
+  notFound: {
+    title: 'Page not found',
+    sub: "This page doesn't exist — the link might be outdated or mistyped.",
+    cta: 'Back home',
+  },
 }
