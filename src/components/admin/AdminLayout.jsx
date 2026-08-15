@@ -36,10 +36,6 @@ export default function AdminLayout({ onLogout }) {
       <aside className="adm-sidebar">
         <div className="adm-sb-brand">
           <img className="adm-sb-logo-img" src={logoImg} alt="AlTeNo Dev" />
-          <div className="adm-sb-brand-txt">
-            <span className="adm-sb-logo">AlTeNo</span>
-            <span className="adm-sb-tag">Admin</span>
-          </div>
         </div>
 
         <nav className="adm-nav">
