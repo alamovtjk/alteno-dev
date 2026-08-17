@@ -1,6 +1,5 @@
 import { useEffect } from 'react'
 import { Outlet, useLocation } from 'react-router-dom'
-import Lenis from 'lenis'
 import Header from './Header'
 import Footer from './Footer'
 import Cursor from '../ui/Cursor'
@@ -20,20 +19,22 @@ const SKY_LAYERS = [
 
 const wrap = (v, m) => ((v % m) + m) % m
 
-function useLenis() {
+/* Параллакс звёзд на нативном скролле — без сглаживающей библиотеки,
+   чтобы прокрутка отвечала на ввод сразу, без задержки. */
+function useSkyParallax() {
   useEffect(() => {
-    const lenis = new Lenis({
-      duration: 1.2,
-      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-    })
-
-    /* Параллакс звёзд: пишем смещения в CSS-переменные прямо из обработчика
-       прокрутки — React при этом не перерисовывается ни разу. */
     const root = document.documentElement
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
     const wide    = window.matchMedia('(min-width: 768px)').matches
+    if (reduced || !wide) return
 
-    const onScroll = ({ scroll, progress }) => {
+    let ticking = false
+    const apply = () => {
+      ticking = false
+      const scroll = window.scrollY
+      const max = document.documentElement.scrollHeight - window.innerHeight
+      const progress = max > 0 ? scroll / max : 0
+
       for (const { varName, tile, speed } of SKY_LAYERS) {
         root.style.setProperty(varName, `${-wrap(scroll * speed, tile).toFixed(2)}px`)
       }
@@ -41,19 +42,18 @@ function useLenis() {
       /* Галактики — объекты, а не бесшовный узор: их нельзя сворачивать по
          модулю, иначе будут выпрыгивать. Ведём их по прогрессу страницы,
          поэтому за весь скролл они смещаются на ограниченное расстояние. */
-      root.style.setProperty('--sky-prog', String((progress || 0).toFixed(4)))
+      root.style.setProperty('--sky-prog', String(progress.toFixed(4)))
     }
 
-    if (!reduced && wide) lenis.on('scroll', onScroll)
-
-    let rafId
-    const raf = (time) => { lenis.raf(time); rafId = requestAnimationFrame(raf) }
-    rafId = requestAnimationFrame(raf)
-    return () => {
-      lenis.off('scroll', onScroll)
-      cancelAnimationFrame(rafId)
-      lenis.destroy()
+    const onScroll = () => {
+      if (ticking) return
+      ticking = true
+      requestAnimationFrame(apply)
     }
+
+    apply()
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => window.removeEventListener('scroll', onScroll)
   }, [])
 }
 
@@ -125,7 +125,7 @@ function useAnalytics() {
 
 export default function PublicLayout() {
   useRevealObserver()
-  useLenis()
+  useSkyParallax()
   useScrollTopOnNavigate()
   useCanonical()
   useAnalytics()
