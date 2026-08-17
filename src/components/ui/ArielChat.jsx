@@ -1,5 +1,10 @@
 import { useState, useRef } from 'react'
 
+// Тяжёлые запросы (AI-чат, генерация .docx + отправка почты) обслуживает
+// свой Node-сервер на VPS, а не Vercel Functions — так нет лимита по времени
+// выполнения и сайт не подвисает на долгих ответах DeepSeek.
+const API_BASE = import.meta.env.VITE_API_BASE || 'https://167-233-112-60.nip.io'
+
 const CHIPS = ['Тип проекта', 'Функции', 'Дизайн', 'Интеграции', 'Бюджет', 'Контакт']
 
 // Варианты ответов по порядку вопросов (индекс = номер вопроса)
@@ -152,7 +157,7 @@ export default function ArielChat() {
       : []
 
   const callApi = async (msgs) => {
-    const res = await fetch('/api/ariel', {
+    const res = await fetch(`${API_BASE}/api/ariel`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ messages: msgs }),
@@ -166,7 +171,7 @@ export default function ArielChat() {
     if (tzSentRef.current) return
     tzSentRef.current = true
     try {
-      const res = await fetch('/api/send-tz', {
+      const res = await fetch(`${API_BASE}/api/send-tz`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ tz: tzData }),
@@ -182,7 +187,7 @@ export default function ArielChat() {
     if (!tz || downloading) return
     setDownloading(true)
     try {
-      const res = await fetch('/api/send-tz', {
+      const res = await fetch(`${API_BASE}/api/send-tz`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ tz }),
