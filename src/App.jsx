@@ -12,6 +12,8 @@ import NotFound from './pages/NotFound'
    Остальное подгружается по переходу: админка с пятью вкладками
    и docx-выгрузкой посетителю не нужна вообще. */
 const Admin         = lazy(() => import('./pages/Admin'))
+const Login         = lazy(() => import('./pages/Login'))
+const Account       = lazy(() => import('./pages/Account'))
 const Projects      = lazy(() => import('./pages/Projects'))
 const ProjectDetail = lazy(() => import('./pages/ProjectDetail'))
 const TeamPage      = lazy(() => import('./pages/TeamPage'))
@@ -23,6 +25,8 @@ export default function App() {
         <Suspense fallback={null}>
           <Routes>
             <Route path="/admin/*" element={<Admin />} />
+            <Route path="/login"   element={<Login />} />
+            <Route path="/account" element={<Account />} />
             <Route path="*" element={
               <LanguageProvider>
                 <SettingsProvider>

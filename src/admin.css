@@ -376,6 +376,13 @@ body { background: var(--adm-bg); color: var(--adm-text); font-family: 'Manrope'
 .adm-tag   { font-size: 10px; font-weight: 600; padding: 3px 8px; border-radius: 4px; background: rgba(124,58,237,.12); border: 1px solid rgba(124,58,237,.22); color: #c4b5fd; letter-spacing: .04em; }
 .adm-project-actions { display: flex; gap: 6px; padding: 12px 14px; border-top: 1px solid var(--adm-border); }
 
+/* ── SUBSCRIBERS ─────────────────────────────────────────── */
+.adm-badge { font-size: 10px; font-weight: 600; padding: 3px 8px; border-radius: 999px; letter-spacing: .04em; margin-left: 6px; }
+.adm-badge-pending   { background: rgba(234,179,8,.12);  border: 1px solid rgba(234,179,8,.25);  color: #fde68a; }
+.adm-badge-active    { background: rgba(16,185,129,.12); border: 1px solid rgba(16,185,129,.25); color: #6ee7b7; }
+.adm-badge-expired   { background: rgba(148,163,184,.12);border: 1px solid rgba(148,163,184,.25);color: var(--adm-dim); }
+.adm-badge-cancelled { background: rgba(239,68,68,.12);  border: 1px solid rgba(239,68,68,.25);  color: #fca5a5; }
+
 /* ── TESTIMONIALS ─────────────────────────────────────────── */
 .adm-list { display: flex; flex-direction: column; gap: 10px; }
 .adm-review-card {

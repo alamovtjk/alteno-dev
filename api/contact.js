@@ -23,7 +23,9 @@ export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method Not Allowed' })
 
   const token  = process.env.TG_TOKEN
-  const chatId = process.env.TG_CHAT_ID
+  // Заявки уходят в группу для заказов; пока она не создана — падаем
+  // обратно на личный чат, чтобы уведомления не пропадали.
+  const chatId = process.env.TG_ORDERS_CHAT_ID || process.env.TG_CHAT_ID
   if (!token || !chatId) {
     console.error('contact: не заданы TG_TOKEN / TG_CHAT_ID')
     return res.status(500).json({ error: 'Notifications are not configured' })

@@ -12,6 +12,8 @@ const DEFAULTS = {
   instagram: 'alamovtjk',
   github: 'alamovtjk',
   whatsapp: '',
+  sub_price: '',
+  sub_requisites: '',
 }
 
 export default function SettingsTab() {
@@ -126,6 +128,25 @@ export default function SettingsTab() {
               <span className="adm-input-prefix">github.com/</span>
               <input value={form.github} onChange={f('github')} placeholder="username" className="adm-input-prefixed" />
             </div>
+          </div>
+        </div>
+
+        {/* Подписка на видео-уроки */}
+        <div className="adm-settings-block">
+          <div className="adm-settings-block-title">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+            Подписка
+          </div>
+          <p className="adm-field-hint" style={{ marginBottom: 8 }}>
+            Показывает бот студенту перед оплатой — правится тут, без обращения ко мне.
+          </p>
+          <div className="adm-field">
+            <label>Цена подписки (1 месяц)</label>
+            <input value={form.sub_price} onChange={f('sub_price')} placeholder="напр. 50 сомони" />
+          </div>
+          <div className="adm-field">
+            <label>Реквизиты для оплаты</label>
+            <textarea value={form.sub_requisites} onChange={f('sub_requisites')} placeholder="Карта: 0000 0000 0000 0000, Алиф Банк, получатель — Самир А." rows={3} />
           </div>
         </div>
 

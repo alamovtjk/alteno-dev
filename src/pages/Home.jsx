@@ -7,6 +7,7 @@ import Portfolio from '../components/sections/Portfolio'
 import MobileApps from '../components/sections/MobileApps'
 import Process from '../components/sections/Process'
 import Studio from '../components/sections/Studio'
+import Courses from '../components/sections/Courses'
 import Team from '../components/sections/Team'
 import Testimonials from '../components/sections/Testimonials'
 import Contact from '../components/sections/Contact'
@@ -55,6 +56,7 @@ export default function Home() {
       <MobileApps />
       <Process />
       <Studio />
+      <Courses />
       <Team />
       <Testimonials />
       <Contact />

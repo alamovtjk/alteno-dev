@@ -4,6 +4,7 @@ import AnalyticsTab     from './tabs/AnalyticsTab'
 import TeamTab          from './tabs/TeamTab'
 import PortfolioTab     from './tabs/PortfolioTab'
 import TestimonialsTab  from './tabs/TestimonialsTab'
+import SubscribersTab   from './tabs/SubscribersTab'
 import MusicTab         from './tabs/MusicTab'
 import SettingsTab      from './tabs/SettingsTab'
 
@@ -23,6 +24,10 @@ const NAV = [
   {
     id: 'testimonials', label: 'Отзывы',
     icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+  },
+  {
+    id: 'subscribers', label: 'Подписчики',
+    icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/><path d="M17 11l2 2 4-4"/></svg>
   },
   {
     id: 'music', label: 'Музыка',
@@ -82,6 +87,7 @@ export default function AdminLayout({ onLogout }) {
         {tab === 'team'         && <TeamTab />}
         {tab === 'portfolio'    && <PortfolioTab />}
         {tab === 'testimonials' && <TestimonialsTab />}
+        {tab === 'subscribers'  && <SubscribersTab />}
         {tab === 'music'        && <MusicTab />}
         {tab === 'settings'     && <SettingsTab />}
       </main>
