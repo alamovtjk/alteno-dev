@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { supabase } from '../../../lib/supabase'
 
 /* Совпадает с DEFAULT_SETTINGS в SettingsContext — админка показывает то,
@@ -14,13 +14,18 @@ const DEFAULTS = {
   whatsapp: '',
   sub_price: '',
   sub_requisites: '',
+  ad_enabled: 'false',
+  ad_image_url: '',
+  ad_link: '',
 }
 
 export default function SettingsTab() {
-  const [form,    setForm]    = useState(DEFAULTS)
-  const [loading, setLoading] = useState(true)
-  const [saving,  setSaving]  = useState(false)
-  const [msg,     setMsg]     = useState('')
+  const [form,      setForm]      = useState(DEFAULTS)
+  const [loading,   setLoading]   = useState(true)
+  const [saving,    setSaving]    = useState(false)
+  const [msg,       setMsg]       = useState('')
+  const [uploading, setUploading] = useState(false)
+  const fileRef = useRef(null)
 
   useEffect(() => {
     const load = async () => {
@@ -36,6 +41,22 @@ export default function SettingsTab() {
   }, [])
 
   const f = (field) => (e) => setForm(p => ({ ...p, [field]: e.target.value }))
+  const set = (field, val) => setForm(p => ({ ...p, [field]: val }))
+
+  const uploadAdImage = async (e) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+    setUploading(true)
+    const ext  = file.name.split('.').pop()
+    const path = `ads/banner_${Date.now()}.${ext}`
+    const { error } = await supabase.storage.from('media').upload(path, file, { upsert: true })
+    if (!error) {
+      const { data } = supabase.storage.from('media').getPublicUrl(path)
+      set('ad_image_url', data.publicUrl)
+    }
+    setUploading(false)
+    e.target.value = ''
+  }
 
   const save = async () => {
     setSaving(true)
@@ -147,6 +168,40 @@ export default function SettingsTab() {
           <div className="adm-field">
             <label>Реквизиты для оплаты</label>
             <textarea value={form.sub_requisites} onChange={f('sub_requisites')} placeholder="Карта: 0000 0000 0000 0000, Алиф Банк, получатель — Самир А." rows={3} />
+          </div>
+        </div>
+
+        {/* Рекламный баннер */}
+        <div className="adm-settings-block">
+          <div className="adm-settings-block-title" style={{ justifyContent: 'space-between', display: 'flex', alignItems: 'center' }}>
+            <span style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+              Реклама
+            </span>
+            <label className="adm-switch" aria-label="Показывать баннер на сайте">
+              <input type="checkbox" checked={form.ad_enabled === 'true'} onChange={e => set('ad_enabled', e.target.checked ? 'true' : 'false')} />
+              <span className="adm-switch-track"><span className="adm-switch-thumb" /></span>
+            </label>
+          </div>
+          <p className="adm-field-hint" style={{ marginBottom: 8 }}>
+            Показывается на главной между «Портфолио» и разделом про приложения.
+            Картинка — 1200×300px (пропорция 4:1), чтобы не растягивалась.
+          </p>
+          <div className="adm-field">
+            <label>Баннер</label>
+            <input type="file" accept="image/*" ref={fileRef} style={{ display: 'none' }} onChange={uploadAdImage} />
+            {form.ad_image_url && (
+              <div className="adm-project-img" style={{ marginBottom: 10, aspectRatio: '4 / 1' }}>
+                <img src={form.ad_image_url} alt="" onError={e => { e.target.style.display = 'none' }} />
+              </div>
+            )}
+            <button className="adm-btn-ghost" onClick={() => fileRef.current?.click()} disabled={uploading}>
+              {uploading ? 'Загрузка...' : '📷 Загрузить баннер'}
+            </button>
+          </div>
+          <div className="adm-field">
+            <label>Ссылка при клике</label>
+            <input value={form.ad_link} onChange={f('ad_link')} placeholder="https://..." />
           </div>
         </div>
 
