@@ -26,7 +26,10 @@ html { scrollbar-gutter: stable; }
   --shadow: 0 20px 60px rgba(0,0,0,.45);
   /* iOS 26 Liquid Glass */
   --lg-bg: rgba(255,255,255,.07);
-  --lg-blur: blur(20px) saturate(160%) brightness(1.05);
+  /* Было blur(20px) saturate(160%) brightness(1.05) — три фильтра разом на
+     ~10 стеклянных карточек/кнопок, пересчитываются на каждый кадр под ними.
+     Визуально почти неотличимо, а дешевле в разы. */
+  --lg-blur: blur(7px);
   --lg-border: rgba(255,255,255,.18);
   --lg-spec: inset 0 1.5px 0 rgba(255,255,255,.32), inset 0 -1px 0 rgba(0,0,0,.08), inset 1px 0 0 rgba(255,255,255,.1), inset -1px 0 0 rgba(255,255,255,.06);
   --lg-shadow: 0 8px 40px rgba(0,0,0,.22), 0 2px 8px rgba(0,0,0,.12);
@@ -62,8 +65,11 @@ input,textarea,button { font-family:inherit; }
 }
 .blob {
   position:absolute; border-radius:50%;
-  /* было blur(130px) — размер пятна тот же, просто дешевле для GPU на каждый кадр */
-  filter:blur(100px); will-change:transform; pointer-events:none;
+  /* Раньше крутились бесконечно (28-36s drift-анимация) даже когда никто
+     не скроллит — три таких пятна разом жаловались тестировщики даже на
+     мощных ПК, не только на телефонах. Пятно осталось, движение убрано —
+     визуально почти не теряем, а GPU больше не грузится вечно вхолостую. */
+  filter:blur(60px); pointer-events:none;
 }
 
 /* ── Звёздное небо за всей страницей ──
@@ -110,45 +116,26 @@ input,textarea,button { font-family:inherit; }
      только дальний слой, статично */
   .sky-mid, .sky-near { display: none; }
   .sky-far { opacity: .4; }
-  /* Три блюрённых пятна 900px крутятся бесконечно даже когда страница не
-     скроллится — на слабом телефоне это постоянная нагрузка на GPU без
-     всякой пользы (пятна и так почти не видны за контентом). Гасим анимацию
-     и режем блюр в разы дешевле. */
-  .blob { animation: none; filter: blur(50px); }
-  /* .header зафиксирован и блюрит всё под собой на каждом кадре скролла —
-     самый частый и самый дорогой эффект на странице. blur(40-48px) +
-     saturate + brightness на телефоне ощущается как подтормаживание при
-     любом скролле. Оставляем полупрозрачную заливку без блюра. */
-  .header, .header.scrolled {
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-  }
-  /* Стеклянные карточки/кнопки (10 мест через переменную) — тот же блюр,
-     но втрое дешевле и без saturate/brightness поверх. */
-  :root { --lg-blur: blur(7px); }
 }
 @media (prefers-reduced-motion: reduce) {
   .sky { transform: none; }
-  .blob { animation: none; }
 }
+
 .blob.v {
   width:900px; height:900px; opacity:.38;
   background:radial-gradient(circle at 40% 40%, #7c3aed, transparent 65%);
-  top:-300px; left:-200px; animation:drift1 28s ease-in-out infinite;
+  top:-300px; left:-200px;
 }
 .blob.t {
   width:860px; height:860px; opacity:.32;
   background:radial-gradient(circle at 55% 55%, #0d9488, transparent 65%);
-  bottom:-300px; right:-200px; animation:drift2 32s ease-in-out infinite;
+  bottom:-300px; right:-200px;
 }
 .blob.b {
   width:700px; height:700px; opacity:.28;
   background:radial-gradient(circle at 50% 50%, #4f46e5, transparent 68%);
-  top:35%; left:40%; animation:drift3 36s ease-in-out infinite;
+  top:35%; left:40%;
 }
-@keyframes drift1 { 0%,100%{transform:translate(0,0) scale(1)} 50%{transform:translate(100px,80px) scale(1.1)} }
-@keyframes drift2 { 0%,100%{transform:translate(0,0) scale(1)} 50%{transform:translate(-90px,-60px) scale(1.08)} }
-@keyframes drift3 { 0%,100%{transform:translate(-50%,0) scale(1)} 50%{transform:translate(-42%,-50px) scale(1.15)} }
 
 /* ── Shell ── */
 .shell {
@@ -304,16 +291,20 @@ a.ad-banner:hover { border-color:rgba(255,255,255,.2); transform:translateY(-2px
 .header {
   position:fixed; top:0; left:0; right:0; z-index:50;
   background: linear-gradient(to right, rgba(255,255,255,1) 0%, rgba(255,255,255,.85) 14%, rgba(255,255,255,.20) 35%, rgba(12,8,32,.40) 58%, rgba(12,8,32,.52) 100%);
-  backdrop-filter: blur(40px) saturate(180%) brightness(1.18);
-  -webkit-backdrop-filter: blur(40px) saturate(180%) brightness(1.18);
+  /* Было blur(40px) saturate(180%) brightness(1.18) — фиксированная шапка
+     пересчитывает это на КАЖДЫЙ кадр скролла для всего, что под ней,
+     самый частый и дорогой эффект на странице. Жалобы шли даже с мощных
+     ноутбуков. Один простой blur — визуально почти то же самое. */
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   border-bottom: 1px solid rgba(255,255,255,.10);
   box-shadow: inset 0 1.5px 0 rgba(255,255,255,.14), 0 8px 40px rgba(0,0,0,.18);
   transition: background .3s, box-shadow .3s;
 }
 .header.scrolled {
   background: linear-gradient(to right, rgba(255,255,255,1) 0%, rgba(255,255,255,.85) 14%, rgba(255,255,255,.10) 35%, rgba(8,5,24,.60) 58%, rgba(8,5,24,.72) 100%);
-  backdrop-filter: blur(48px) saturate(200%) brightness(1.10);
-  -webkit-backdrop-filter: blur(48px) saturate(200%) brightness(1.10);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
   box-shadow: inset 0 1.5px 0 rgba(255,255,255,.10), 0 12px 50px rgba(0,0,0,.30);
 }
 .nav {
