@@ -110,9 +110,26 @@ input,textarea,button { font-family:inherit; }
      только дальний слой, статично */
   .sky-mid, .sky-near { display: none; }
   .sky-far { opacity: .4; }
+  /* Три блюрённых пятна 900px крутятся бесконечно даже когда страница не
+     скроллится — на слабом телефоне это постоянная нагрузка на GPU без
+     всякой пользы (пятна и так почти не видны за контентом). Гасим анимацию
+     и режем блюр в разы дешевле. */
+  .blob { animation: none; filter: blur(50px); }
+  /* .header зафиксирован и блюрит всё под собой на каждом кадре скролла —
+     самый частый и самый дорогой эффект на странице. blur(40-48px) +
+     saturate + brightness на телефоне ощущается как подтормаживание при
+     любом скролле. Оставляем полупрозрачную заливку без блюра. */
+  .header, .header.scrolled {
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  }
+  /* Стеклянные карточки/кнопки (10 мест через переменную) — тот же блюр,
+     но втрое дешевле и без saturate/brightness поверх. */
+  :root { --lg-blur: blur(7px); }
 }
 @media (prefers-reduced-motion: reduce) {
   .sky { transform: none; }
+  .blob { animation: none; }
 }
 .blob.v {
   width:900px; height:900px; opacity:.38;

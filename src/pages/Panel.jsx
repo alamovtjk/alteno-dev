@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback, useRef } from 'react'
 import '../admin.css'
 import { getSession, onAuthChange, logout } from '../lib/adminAuth'
 import { supabase, invalidateTable } from '../lib/supabase'
+import { toWebp } from '../lib/image'
 
 const PRESET_COLORS = [
   '#7c3aed','#4f46e5','#0d9488','#10b981',
@@ -41,9 +42,10 @@ function MyCard({ row, onSaved }) {
     const file = e.target.files?.[0]
     if (!file) return
     setUploading(true)
-    const ext  = file.name.split('.').pop()
+    const upload = await toWebp(file, { maxWidth: 500, quality: 0.85 }).catch(() => file)
+    const ext  = upload.name.split('.').pop()
     const path = `team/avatar_${Date.now()}.${ext}`
-    const { error } = await supabase.storage.from('media').upload(path, file, { upsert: true })
+    const { error } = await supabase.storage.from('media').upload(path, upload, { upsert: true })
     if (!error) {
       const { data } = supabase.storage.from('media').getPublicUrl(path)
       set('avatar_url', data.publicUrl)
@@ -197,9 +199,10 @@ function MyProjects({ userId }) {
     const file = e.target.files?.[0]
     if (!file) return
     setUploading(true)
-    const ext  = file.name.split('.').pop()
+    const upload = await toWebp(file, { maxWidth: 1400, quality: 0.85 }).catch(() => file)
+    const ext  = upload.name.split('.').pop()
     const path = `portfolio/case_${Date.now()}.${ext}`
-    const { error } = await supabase.storage.from('media').upload(path, file, { upsert: true })
+    const { error } = await supabase.storage.from('media').upload(path, upload, { upsert: true })
     if (!error) {
       const { data } = supabase.storage.from('media').getPublicUrl(path)
       setForm(p => ({ ...p, image_url: data.publicUrl }))

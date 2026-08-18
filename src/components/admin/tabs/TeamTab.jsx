@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { supabase, invalidateTable } from '../../../lib/supabase'
+import { toWebp } from '../../../lib/image'
 
 const EMPTY = {
   name: '', role: '', initials: '', blob: '#7c3aed',
@@ -71,9 +72,11 @@ export default function TeamTab() {
     const file = e.target.files?.[0]
     if (!file) return
     setUploading(true)
-    const ext  = file.name.split('.').pop()
+    // Круглая аватарка на карточке — крупный исходник с телефона тут не нужен.
+    const upload = await toWebp(file, { maxWidth: 500, quality: 0.85 }).catch(() => file)
+    const ext  = upload.name.split('.').pop()
     const path = `team/avatar_${Date.now()}.${ext}`
-    const { error } = await supabase.storage.from('media').upload(path, file, { upsert: true })
+    const { error } = await supabase.storage.from('media').upload(path, upload, { upsert: true })
     if (!error) {
       const { data } = supabase.storage.from('media').getPublicUrl(path)
       set('avatar_url', data.publicUrl)

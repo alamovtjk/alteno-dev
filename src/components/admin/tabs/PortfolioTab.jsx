@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { supabase, invalidateTable } from '../../../lib/supabase'
+import { toWebp } from '../../../lib/image'
 
 const EMPTY = { title: '', description: '', tags: '', image_url: '', link: '' }
 
@@ -38,9 +39,10 @@ export default function PortfolioTab() {
     if (!file) return
     setUploading(true)
     setUpErr('')
-    const ext  = file.name.split('.').pop()
+    const upload = await toWebp(file, { maxWidth: 1400, quality: 0.85 }).catch(() => file)
+    const ext  = upload.name.split('.').pop()
     const path = `portfolio/case_${Date.now()}.${ext}`
-    const { error } = await supabase.storage.from('media').upload(path, file, { upsert: true })
+    const { error } = await supabase.storage.from('media').upload(path, upload, { upsert: true })
     if (error) {
       setUpErr('Ошибка загрузки: ' + error.message)
     } else {
