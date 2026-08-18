@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { supabase } from '../../../lib/supabase'
+import { toWebp } from '../../../lib/image'
 
 /* Совпадает с DEFAULT_SETTINGS в SettingsContext — админка показывает то,
    что реально отрисовано на сайте, пока настройки не сохранены */
@@ -47,9 +48,12 @@ export default function SettingsTab() {
     const file = e.target.files?.[0]
     if (!file) return
     setUploading(true)
-    const ext  = file.name.split('.').pop()
+    // Баннер под 4:1 (~1200×300) — 1600px по ширине с запасом на retina;
+    // если браузер вдруг не умеет сжать (canvas недоступен) — грузим как есть.
+    const upload = await toWebp(file, { maxWidth: 1600, quality: 0.85 }).catch(() => file)
+    const ext  = upload.name.split('.').pop()
     const path = `ads/banner_${Date.now()}.${ext}`
-    const { error } = await supabase.storage.from('media').upload(path, file, { upsert: true })
+    const { error } = await supabase.storage.from('media').upload(path, upload, { upsert: true })
     if (!error) {
       const { data } = supabase.storage.from('media').getPublicUrl(path)
       set('ad_image_url', data.publicUrl)
