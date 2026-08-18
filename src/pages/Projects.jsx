@@ -4,6 +4,7 @@ import { useLanguage } from '../context/LanguageContext'
 import { fetchTable } from '../lib/supabase'
 import { rowSlug } from '../lib/slug'
 import { accentFor } from '../lib/accents'
+import { useSeo } from '../lib/useSeo'
 import ProjectCard from '../components/ui/ProjectCard'
 
 export default function Projects() {
@@ -11,6 +12,8 @@ export default function Projects() {
   const [rows,    setRows]    = useState([])
   const [loading, setLoading] = useState(true)
   const [tag,     setTag]     = useState(null)
+
+  useSeo({ title: `${t.projects.t1} ${t.projects.t2}`, description: t.projects.sub })
 
   useEffect(() => {
     fetchTable('portfolio').then(data => {
@@ -38,9 +41,9 @@ export default function Projects() {
 
         <div className="sec-head">
           <div className="eyebrow reveal"><span className="line" />{t.projects.eyebrow}</div>
-          <h2 className="sec-title ub reveal">
+          <h1 className="sec-title ub reveal">
             {t.projects.t1} <span className="grad">{t.projects.t2}</span>
-          </h2>
+          </h1>
           <p className="sec-sub reveal">{t.projects.sub}</p>
         </div>
 

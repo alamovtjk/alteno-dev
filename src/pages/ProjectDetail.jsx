@@ -3,6 +3,13 @@ import { Link, useParams } from 'react-router-dom'
 import { useLanguage } from '../context/LanguageContext'
 import { fetchTable } from '../lib/supabase'
 import { findBySlug, rowSlug } from '../lib/slug'
+import { useSeo } from '../lib/useSeo'
+
+/* Мета-описание короче полного текста в карточке — так рекомендует Google */
+const toMetaDesc = (text) => {
+  const clean = (text || '').replace(/\s+/g, ' ').trim()
+  return clean.length > 155 ? clean.slice(0, 154).trimEnd() + '…' : clean
+}
 
 export default function ProjectDetail() {
   const { slug } = useParams()
@@ -18,6 +25,12 @@ export default function ProjectDetail() {
   }, [])
 
   const project = findBySlug(rows, slug)
+
+  useSeo(project ? {
+    title: project.title,
+    description: toMetaDesc(project.description) || undefined,
+    image: project.image_url || undefined,
+  } : {})
 
   if (loading) {
     return <section className="section page-section"><div className="shell" /></section>

@@ -65,7 +65,7 @@ export default function ProjectCard({ row, to, accent }) {
               <span className="pcard-cam" aria-hidden="true" />
               <div className="pcard-screen">
                 {row.image_url
-                  ? <img src={row.image_url} alt="" loading="lazy" />
+                  ? <img src={row.image_url} alt={`Скриншот проекта «${row.title}»`} loading="lazy" />
                   : <MockUI />}
                 <span className="pcard-shine" aria-hidden="true" />
               </div>

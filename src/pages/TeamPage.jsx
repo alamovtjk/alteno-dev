@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useLanguage } from '../context/LanguageContext'
 import { fetchTable } from '../lib/supabase'
+import { useSeo } from '../lib/useSeo'
 
 function initials(m) {
   if (m.initials) return m.initials
@@ -57,6 +58,8 @@ export default function TeamPage() {
   const [members, setMembers] = useState([])
   const [loading, setLoading] = useState(true)
 
+  useSeo({ title: `${t.team.t1} ${t.team.t2}`, description: t.team.sub })
+
   useEffect(() => {
     fetchTable('team').then(data => {
       setMembers(data)
@@ -76,9 +79,9 @@ export default function TeamPage() {
 
         <div className="sec-head">
           <div className="eyebrow reveal"><span className="line" />{t.team.eyebrow}</div>
-          <h2 className="sec-title ub reveal">
+          <h1 className="sec-title ub reveal">
             {t.team.t1} <span className="grad">{t.team.t2}</span>
-          </h2>
+          </h1>
           <p className="sec-sub reveal">{t.team.sub}</p>
         </div>
 
