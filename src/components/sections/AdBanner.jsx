@@ -11,7 +11,7 @@ export default function AdBanner() {
       const map = {}
       for (const { key, value } of rows) map[key] = value
       if (map.ad_enabled === 'true' && map.ad_image_url) {
-        setAd({ image: map.ad_image_url, link: map.ad_link || null })
+        setAd({ image: map.ad_image_url, mobileImage: map.ad_image_mobile_url || null, link: map.ad_link || null })
       }
     })
   }, [])
@@ -25,7 +25,10 @@ export default function AdBanner() {
     <section className="ad-banner-section" style={{ position: 'relative', zIndex: 2 }}>
       <div className="shell">
         <Tag className="ad-banner" {...linkProps}>
-          <img src={ad.image} alt="Реклама" loading="lazy" />
+          <picture>
+            {ad.mobileImage && <source media="(max-width: 600px)" srcSet={ad.mobileImage} />}
+            <img src={ad.image} alt="Реклама" loading="lazy" />
+          </picture>
           <span className="ad-banner-label">Реклама</span>
         </Tag>
       </div>

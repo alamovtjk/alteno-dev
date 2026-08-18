@@ -17,6 +17,7 @@ const DEFAULTS = {
   sub_requisites: '',
   ad_enabled: 'false',
   ad_image_url: '',
+  ad_image_mobile_url: '',
   ad_link: '',
 }
 
@@ -25,8 +26,9 @@ export default function SettingsTab() {
   const [loading,   setLoading]   = useState(true)
   const [saving,    setSaving]    = useState(false)
   const [msg,       setMsg]       = useState('')
-  const [uploading, setUploading] = useState(false)
-  const fileRef = useRef(null)
+  const [uploading, setUploading] = useState('') // '' | 'desktop' | 'mobile'
+  const fileRef       = useRef(null)
+  const fileMobileRef = useRef(null)
 
   useEffect(() => {
     const load = async () => {
@@ -44,21 +46,24 @@ export default function SettingsTab() {
   const f = (field) => (e) => setForm(p => ({ ...p, [field]: e.target.value }))
   const set = (field, val) => setForm(p => ({ ...p, [field]: val }))
 
-  const uploadAdImage = async (e) => {
+  /* Десктоп 1200×300 (4:1) — 1600px по ширине с запасом на retina.
+     Мобильный 800×400 (2:1) — обрезка та же пропорция, что на телефоне
+     реально показывается (см. .ad-banner в alteno.css), просто меньше
+     разрешение, раз и так занимает четверть экрана. */
+  const uploadAdImage = (field, maxWidth) => async (e) => {
     const file = e.target.files?.[0]
     if (!file) return
-    setUploading(true)
-    // Баннер под 4:1 (~1200×300) — 1600px по ширине с запасом на retina;
-    // если браузер вдруг не умеет сжать (canvas недоступен) — грузим как есть.
-    const upload = await toWebp(file, { maxWidth: 1600, quality: 0.85 }).catch(() => file)
+    const kind = field === 'ad_image_url' ? 'desktop' : 'mobile'
+    setUploading(kind)
+    const upload = await toWebp(file, { maxWidth, quality: 0.85 }).catch(() => file)
     const ext  = upload.name.split('.').pop()
-    const path = `ads/banner_${Date.now()}.${ext}`
+    const path = `ads/banner_${kind}_${Date.now()}.${ext}`
     const { error } = await supabase.storage.from('media').upload(path, upload, { upsert: true })
     if (!error) {
       const { data } = supabase.storage.from('media').getPublicUrl(path)
-      set('ad_image_url', data.publicUrl)
+      set(field, data.publicUrl)
     }
-    setUploading(false)
+    setUploading('')
     e.target.value = ''
   }
 
@@ -189,20 +194,36 @@ export default function SettingsTab() {
           </div>
           <p className="adm-field-hint" style={{ marginBottom: 8 }}>
             Показывается на главной между «Портфолио» и разделом про приложения.
-            Картинка — 1200×300px (пропорция 4:1), чтобы не растягивалась.
+            Два отдельных баннера — сайт сам покажет нужный по ширине экрана.
           </p>
+
           <div className="adm-field">
-            <label>Баннер</label>
-            <input type="file" accept="image/*" ref={fileRef} style={{ display: 'none' }} onChange={uploadAdImage} />
+            <label>Баннер для десктопа <span className="adm-field-hint">(1200×300px, пропорция 4:1)</span></label>
+            <input type="file" accept="image/*" ref={fileRef} style={{ display: 'none' }} onChange={uploadAdImage('ad_image_url', 1600)} />
             {form.ad_image_url && (
               <div className="adm-project-img" style={{ marginBottom: 10, aspectRatio: '4 / 1' }}>
                 <img src={form.ad_image_url} alt="" onError={e => { e.target.style.display = 'none' }} />
               </div>
             )}
-            <button className="adm-btn-ghost" onClick={() => fileRef.current?.click()} disabled={uploading}>
-              {uploading ? 'Загрузка...' : '📷 Загрузить баннер'}
+            <button className="adm-btn-ghost" onClick={() => fileRef.current?.click()} disabled={!!uploading}>
+              {uploading === 'desktop' ? 'Загрузка...' : '🖥 Загрузить для десктопа'}
             </button>
           </div>
+
+          <div className="adm-field">
+            <label>Баннер для телефона <span className="adm-field-hint">(800×400px, пропорция 2:1)</span></label>
+            <input type="file" accept="image/*" ref={fileMobileRef} style={{ display: 'none' }} onChange={uploadAdImage('ad_image_mobile_url', 900)} />
+            {form.ad_image_mobile_url && (
+              <div className="adm-project-img" style={{ marginBottom: 10, aspectRatio: '2 / 1', maxWidth: 260 }}>
+                <img src={form.ad_image_mobile_url} alt="" onError={e => { e.target.style.display = 'none' }} />
+              </div>
+            )}
+            <button className="adm-btn-ghost" onClick={() => fileMobileRef.current?.click()} disabled={!!uploading}>
+              {uploading === 'mobile' ? 'Загрузка...' : '📱 Загрузить для телефона'}
+            </button>
+            <div className="adm-field-hint" style={{ marginTop: 6 }}>Необязательно — если не загрузить, на телефоне обрежется десктопная картинка по центру.</div>
+          </div>
+
           <div className="adm-field">
             <label>Ссылка при клике</label>
             <input value={form.ad_link} onChange={f('ad_link')} placeholder="https://..." />
