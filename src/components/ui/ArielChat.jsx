@@ -1,9 +1,9 @@
 import { useState, useRef } from 'react'
 
 // Тяжёлые запросы (AI-чат, генерация .docx + отправка почты) обслуживает
-// свой Node-сервер на VPS, а не Vercel Functions — так нет лимита по времени
-// выполнения и сайт не подвисает на долгих ответах DeepSeek.
-const API_BASE = import.meta.env.VITE_API_BASE || 'https://167-233-112-60.nip.io'
+// свой Node-сервер — тот же VPS, что теперь отдаёт и сам сайт, поэтому
+// по умолчанию просто относительный путь, без CORS и отдельного домена.
+const API_BASE = import.meta.env.VITE_API_BASE || ''
 
 const CHIPS = ['Тип проекта', 'Функции', 'Дизайн', 'Интеграции', 'Бюджет', 'Контакт']
 
