@@ -19,8 +19,8 @@ export default function Cursor() {
     }
 
     const loop = () => {
-      gx += (mx - gx) * 0.08
-      gy += (my - gy) * 0.08
+      gx += (mx - gx) * 0.35
+      gy += (my - gy) * 0.35
       dot.style.transform = `translate(${mx}px, ${my}px)`
       glow.style.transform = `translate(${gx}px, ${gy}px)`
       raf = requestAnimationFrame(loop)
