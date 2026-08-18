@@ -59,6 +59,8 @@ export default function PortfolioTab() {
       tags:        form.tags.split(',').map(s => s.trim()).filter(Boolean),
       image_url:   form.image_url.trim() || null,
       link:        form.link.trim()      || null,
+      // Самир — супер-админ: его правки публикуются сразу, без модерации.
+      status: 'approved',
     }
     if (editing === 'new') {
       await supabase.from('portfolio').insert([{ ...payload, order_index: rows.length }])
@@ -99,7 +101,11 @@ export default function PortfolioTab() {
               </div>
             )}
             <div className="adm-project-body">
-              <div className="adm-td-strong">{row.title}</div>
+              <div className="adm-td-strong">
+                {row.title}
+                {row.status !== 'approved' && <span className={`adm-badge adm-badge-${row.status}`}>{row.status === 'pending' ? 'на проверке' : row.status}</span>}
+                {row.has_pending_edit && <span className="adm-badge adm-badge-pending">правка на проверке</span>}
+              </div>
               <div className="adm-td-dim adm-clamp">{row.description}</div>
               <div className="adm-tags">
                 {(row.tags || []).map(t => <span key={t} className="adm-tag">{t}</span>)}

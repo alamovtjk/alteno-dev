@@ -14,6 +14,7 @@ import NotFound from './pages/NotFound'
 const Admin         = lazy(() => import('./pages/Admin'))
 const Login         = lazy(() => import('./pages/Login'))
 const Account       = lazy(() => import('./pages/Account'))
+const Panel         = lazy(() => import('./pages/Panel'))
 const Projects      = lazy(() => import('./pages/Projects'))
 const ProjectDetail = lazy(() => import('./pages/ProjectDetail'))
 const TeamPage      = lazy(() => import('./pages/TeamPage'))
@@ -27,6 +28,7 @@ export default function App() {
             <Route path="/admin/*" element={<Admin />} />
             <Route path="/login"   element={<Login />} />
             <Route path="/account" element={<Account />} />
+            <Route path="/panel"   element={<Panel />} />
             <Route path="*" element={
               <LanguageProvider>
                 <SettingsProvider>

@@ -93,6 +93,8 @@ export default function TeamTab() {
       avatar_url:    form.avatar_url.trim() || null,
       email:         form.email.trim()      || null,
       portfolio_url: form.portfolio_url.trim() || null,
+      // Самир — супер-админ: его правки публикуются сразу, без модерации.
+      status: 'approved',
     }
     if (editing === 'new') {
       await supabase.from('team').insert([{ ...payload, order_index: rows.length }])
@@ -144,7 +146,11 @@ export default function TeamTab() {
                 {row.avatar_url ? <img src={row.avatar_url} alt="" /> : row.initials}
               </div>
               <div className="adm-team-info">
-                <div className="adm-td-strong">{row.name}</div>
+                <div className="adm-td-strong">
+                  {row.name}
+                  {row.status !== 'approved' && <span className={`adm-badge adm-badge-${row.status}`}>{row.status === 'pending' ? 'на проверке' : row.status}</span>}
+                  {row.has_pending_edit && <span className="adm-badge adm-badge-pending">правка на проверке</span>}
+                </div>
                 <div className="adm-td-dim">{row.role}</div>
               </div>
               <div className="adm-team-skills">
