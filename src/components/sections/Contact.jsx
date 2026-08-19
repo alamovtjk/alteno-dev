@@ -163,17 +163,17 @@ export default function Contact() {
               <form onSubmit={submit} noValidate style={{ opacity: status !== 'idle' ? 0 : 1, pointerEvents: status !== 'idle' ? 'none' : 'auto', transition: 'opacity .3s' }}>
                 <div className="field">
                   <label>{t.contact.lname}</label>
-                  <input type="text" required placeholder={t.contact.pname}
+                  <input type="text" required maxLength={120} placeholder={t.contact.pname}
                     value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} />
                 </div>
                 <div className="field">
                   <label>{t.contact.lcontact}</label>
-                  <input type="text" required placeholder={t.contact.pcontact}
+                  <input type="text" required maxLength={200} placeholder={t.contact.pcontact}
                     value={form.contact} onChange={e => setForm({ ...form, contact: e.target.value })} />
                 </div>
                 <div className="field">
                   <label>{t.contact.ltask}</label>
-                  <textarea placeholder={t.contact.ptask}
+                  <textarea placeholder={t.contact.ptask} maxLength={2000}
                     value={form.task} onChange={e => setForm({ ...form, task: e.target.value })} />
                 </div>
                 <button type="submit" className="btn btn-primary"

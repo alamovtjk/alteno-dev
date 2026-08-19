@@ -35,3 +35,21 @@ export async function logout() {
   if (!supabase) return
   await supabase.auth.signOut()
 }
+
+/**
+ * Действительно ли этот пользователь админ.
+ *
+ * Раньше /admin пускал по факту наличия сессии — а вход в неё общий с
+ * учениками (Login.jsx зовёт тот же login()). То есть подписчик курсов мог
+ * набрать /admin и увидеть всю панель: аналитику, подписчиков, настройки.
+ * Данные его RLS не отдавала, но сам факт доступа к интерфейсу — лишний.
+ *
+ * Таблица admins читается только своими же (см. security.sql), поэтому
+ * пустой ответ = не админ.
+ */
+export async function isAdmin(userId) {
+  if (!supabase || !userId) return false
+  const { data } = await supabase
+    .from('admins').select('user_id').eq('user_id', userId).maybeSingle()
+  return !!data
+}

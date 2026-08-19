@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { supabase, invalidateTable } from '../../../lib/supabase'
 import { toWebp } from '../../../lib/image'
+import { safeUrl } from '../../../lib/safeUrl'
 
 const EMPTY = { title: '', description: '', tags: '', image_url: '', link: '' }
 
@@ -114,7 +115,7 @@ export default function PortfolioTab() {
               </div>
             </div>
             <div className="adm-project-actions">
-              {row.link && <a href={row.link} target="_blank" rel="noreferrer" className="adm-btn-sm">↗ Открыть</a>}
+              {safeUrl(row.link) && <a href={safeUrl(row.link)} target="_blank" rel="noreferrer" className="adm-btn-sm">↗ Открыть</a>}
               <button className="adm-btn-sm" onClick={() => openEdit(row)}>Ред.</button>
               <button className="adm-btn-sm adm-btn-danger" onClick={() => del(row.id)}>Удал.</button>
             </div>

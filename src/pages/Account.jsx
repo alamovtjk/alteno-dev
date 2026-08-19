@@ -4,6 +4,7 @@ import '../admin.css'
 import { getSession, onAuthChange, logout } from '../lib/adminAuth'
 import { supabase } from '../lib/supabase'
 import { MusicProvider, useMusic } from '../context/MusicContext'
+import { safeUrl } from '../lib/safeUrl'
 import SupportChat from '../components/ui/SupportChat'
 
 const STATUS_LABEL = {
@@ -134,9 +135,9 @@ function PortfolioTabReadOnly() {
               <div className="adm-td-dim adm-clamp">{row.description}</div>
               <div className="adm-tags">{(row.tags || []).map(t => <span key={t} className="adm-tag">{t}</span>)}</div>
             </div>
-            {row.link && (
+            {safeUrl(row.link) && (
               <div className="adm-project-actions">
-                <a href={row.link} target="_blank" rel="noreferrer" className="adm-btn-sm">↗ Открыть</a>
+                <a href={safeUrl(row.link)} target="_blank" rel="noreferrer" className="adm-btn-sm">↗ Открыть</a>
               </div>
             )}
           </div>

@@ -1,4 +1,3 @@
-import { useRef } from 'react'
 import { useLanguage } from '../../context/LanguageContext'
 
 import myPhoto from '../../assets/photo.webp'

@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { fetchTable } from '../../lib/supabase'
+import { safeUrl } from '../../lib/safeUrl'
 
 /* Управляется из /admin → Настройки → Реклама. Ничего не рендерит, пока
    баннер выключен или картинка не задана — секция просто не занимает места. */
@@ -11,7 +12,7 @@ export default function AdBanner() {
       const map = {}
       for (const { key, value } of rows) map[key] = value
       if (map.ad_enabled === 'true' && map.ad_image_url) {
-        setAd({ image: map.ad_image_url, mobileImage: map.ad_image_mobile_url || null, link: map.ad_link || null })
+        setAd({ image: map.ad_image_url, mobileImage: map.ad_image_mobile_url || null, link: safeUrl(map.ad_link) })
       }
     })
   }, [])

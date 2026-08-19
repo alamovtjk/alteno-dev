@@ -90,7 +90,9 @@ export function MusicProvider({ children }) {
     const a = audioRef.current
     if (!a) return
     if (playing) { a.pause(); setPlaying(false) }
-    else { try { await a.play(); setPlaying(true) } catch {} }
+    /* play() отклоняется, если браузер ещё не считает жест пользователя
+       достаточным основанием для звука — молча остаёмся на паузе */
+    else { try { await a.play(); setPlaying(true) } catch { /* автоплей заблокирован */ } }
   }
 
   return (

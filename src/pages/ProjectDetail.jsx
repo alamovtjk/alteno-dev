@@ -4,6 +4,7 @@ import { useLanguage } from '../context/LanguageContext'
 import { fetchTable } from '../lib/supabase'
 import { findBySlug, rowSlug } from '../lib/slug'
 import { useSeo } from '../lib/useSeo'
+import { safeUrl } from '../lib/safeUrl'
 
 /* Мета-описание короче полного текста в карточке — так рекомендует Google */
 const toMetaDesc = (text) => {
@@ -64,9 +65,10 @@ export default function ProjectDetail() {
   const year   = project.created_at ? new Date(project.created_at).getFullYear() : null
 
   /* Скриншот ведёт на сайт проекта, если ссылка есть */
-  const Shot = project.link ? 'a' : 'div'
-  const shotProps = project.link
-    ? { href: project.link, target: '_blank', rel: 'noreferrer' }
+  const link = safeUrl(project.link)
+  const Shot = link ? 'a' : 'div'
+  const shotProps = link
+    ? { href: link, target: '_blank', rel: 'noreferrer' }
     : {}
 
   return (
@@ -85,7 +87,7 @@ export default function ProjectDetail() {
           {project.image_url && (
             <Shot {...shotProps} className="pd-hero reveal">
               <img src={project.image_url} alt={project.title} />
-              {project.link && (
+              {link && (
                 <span className="pd-hero-hint">
                   {t.projects.visit}
                   <svg viewBox="0 0 24 24" fill="none" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -127,8 +129,8 @@ export default function ProjectDetail() {
             </div>
 
             <div className="pd-actions">
-              {project.link && (
-                <a href={project.link} target="_blank" rel="noreferrer" className="btn btn-primary pd-visit">
+              {link && (
+                <a href={link} target="_blank" rel="noreferrer" className="btn btn-primary pd-visit">
                   {t.projects.visit}
                   <svg viewBox="0 0 24 24" fill="none" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <path d="M7 17L17 7M7 7h10v10" stroke="#fff"/>

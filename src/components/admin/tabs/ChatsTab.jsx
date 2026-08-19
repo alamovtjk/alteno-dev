@@ -100,7 +100,7 @@ export default function ChatsTab() {
                 ))}
               </div>
               <form className="adm-chat-form" onSubmit={send}>
-                <input value={text} onChange={e => setText(e.target.value)} placeholder="Ответить..." />
+                <input value={text} onChange={e => setText(e.target.value)} maxLength={2000} placeholder="Ответить..." />
                 <button className="adm-btn-primary" type="submit" disabled={sending || !text.trim()}>Отправить</button>
               </form>
             </>

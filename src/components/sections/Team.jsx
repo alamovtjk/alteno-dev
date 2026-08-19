@@ -2,6 +2,7 @@ import { useRef, useEffect, useState, useCallback } from 'react'
 import { Link } from 'react-router-dom'
 import { useLanguage } from '../../context/LanguageContext'
 import { fetchTable } from '../../lib/supabase'
+import { safeUrl } from '../../lib/safeUrl'
 
 const PARTICLES = [
   { id:0,  x:6,  y:10, s:2,   c:'#7c3aed', dur:7, del:0   },
@@ -79,8 +80,8 @@ function TeamCard({ m, labels }) {
               </svg>
             </a>
           )}
-          {m.portfolio_url && (
-            <a href={m.portfolio_url} target="_blank" rel="noreferrer" className="tc-icon" aria-label="Portfolio">
+          {safeUrl(m.portfolio_url) && (
+            <a href={safeUrl(m.portfolio_url)} target="_blank" rel="noreferrer" className="tc-icon" aria-label="Portfolio">
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
                 <path d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
               </svg>

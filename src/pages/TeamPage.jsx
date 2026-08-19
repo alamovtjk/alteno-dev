@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { useLanguage } from '../context/LanguageContext'
 import { fetchTable } from '../lib/supabase'
 import { useSeo } from '../lib/useSeo'
+import { safeUrl } from '../lib/safeUrl'
 
 function initials(m) {
   if (m.initials) return m.initials
@@ -41,8 +42,8 @@ function MemberCard({ m }) {
             </svg>
           </a>
         )}
-        {m.portfolio_url && (
-          <a href={m.portfolio_url} target="_blank" rel="noreferrer" className="tc-icon" aria-label="Portfolio">
+        {safeUrl(m.portfolio_url) && (
+          <a href={safeUrl(m.portfolio_url)} target="_blank" rel="noreferrer" className="tc-icon" aria-label="Portfolio">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
               <path d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>

@@ -56,7 +56,7 @@ export default function SupportChat({ userId }) {
       </div>
 
       <form className="adm-chat-form" onSubmit={send}>
-        <input value={text} onChange={e => setText(e.target.value)} placeholder="Сообщение..." />
+        <input value={text} onChange={e => setText(e.target.value)} maxLength={2000} placeholder="Сообщение..." />
         <button className="adm-btn-primary" type="submit" disabled={sending || !text.trim()}>Отправить</button>
       </form>
     </div>
