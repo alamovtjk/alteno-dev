@@ -4,7 +4,7 @@ import { useLanguage } from '../context/LanguageContext'
 import { fetchTable } from '../lib/supabase'
 import { rowSlug } from '../lib/slug'
 import { accentFor } from '../lib/accents'
-import { useSeo } from '../lib/useSeo'
+import { useSeo, breadcrumbs } from '../lib/useSeo'
 import ProjectCard from '../components/ui/ProjectCard'
 
 export default function Projects() {
@@ -13,7 +13,14 @@ export default function Projects() {
   const [loading, setLoading] = useState(true)
   const [tag,     setTag]     = useState(null)
 
-  useSeo({ title: `${t.projects.t1} ${t.projects.t2}`, description: t.projects.sub })
+  useSeo({
+    title: `${t.projects.t1} ${t.projects.t2}`,
+    description: t.projects.sub,
+    jsonLd: breadcrumbs([
+      { name: 'Главная', path: '/' },
+      { name: 'Проекты', path: '/projects' },
+    ]),
+  })
 
   useEffect(() => {
     fetchTable('portfolio').then(data => {

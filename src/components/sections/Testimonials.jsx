@@ -43,7 +43,7 @@ function ReviewCard({ row, accent }) {
       <p className="quote">{row.text}</p>
       <div className="who">
         {row.avatar_url
-          ? <img className="av" src={row.avatar_url} alt={row.name}
+          ? <img className="av" src={row.avatar_url} alt={row.name} loading="lazy"
               style={{ objectFit: 'cover' }} />
           : <div className="av">{initials(row.name)}</div>}
         <div>

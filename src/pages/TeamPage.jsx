@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useLanguage } from '../context/LanguageContext'
 import { fetchTable } from '../lib/supabase'
-import { useSeo } from '../lib/useSeo'
+import { useSeo, breadcrumbs } from '../lib/useSeo'
 import { safeUrl } from '../lib/safeUrl'
 
 function initials(m) {
@@ -21,7 +21,7 @@ function MemberCard({ m }) {
 
       <div className="tp-avatar" style={{ background: `linear-gradient(135deg, ${blob} 0%, #0d0d16 130%)` }}>
         {m.avatar_url
-          ? <img src={m.avatar_url} alt={m.name} onError={e => { e.target.style.display = 'none' }} />
+          ? <img src={m.avatar_url} alt={`${m.name} — ${m.role}`} loading="lazy" onError={e => { e.target.style.display = 'none' }} />
           : <span>{initials(m)}</span>}
       </div>
 
@@ -59,7 +59,14 @@ export default function TeamPage() {
   const [members, setMembers] = useState([])
   const [loading, setLoading] = useState(true)
 
-  useSeo({ title: `${t.team.t1} ${t.team.t2}`, description: t.team.sub })
+  useSeo({
+    title: `${t.team.t1} ${t.team.t2}`,
+    description: t.team.sub,
+    jsonLd: breadcrumbs([
+      { name: 'Главная', path: '/' },
+      { name: 'Команда', path: '/team' },
+    ]),
+  })
 
   useEffect(() => {
     fetchTable('team').then(data => {

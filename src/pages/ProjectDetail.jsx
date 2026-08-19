@@ -3,7 +3,7 @@ import { Link, useParams } from 'react-router-dom'
 import { useLanguage } from '../context/LanguageContext'
 import { fetchTable } from '../lib/supabase'
 import { findBySlug, rowSlug } from '../lib/slug'
-import { useSeo } from '../lib/useSeo'
+import { useSeo, breadcrumbs } from '../lib/useSeo'
 import { safeUrl } from '../lib/safeUrl'
 
 /* Мета-описание короче полного текста в карточке — так рекомендует Google */
@@ -31,6 +31,26 @@ export default function ProjectDetail() {
     title: project.title,
     description: toMetaDesc(project.description) || undefined,
     image: project.image_url || undefined,
+    type: 'article',
+    jsonLd: {
+      '@context': 'https://schema.org',
+      '@graph': [
+        {
+          '@type': 'CreativeWork',
+          name: project.title,
+          description: toMetaDesc(project.description) || undefined,
+          image: project.image_url || undefined,
+          dateCreated: project.created_at || undefined,
+          keywords: (project.tags || []).join(', ') || undefined,
+          creator: { '@type': 'Organization', name: 'AlTeNo Dev', url: 'https://alteno.dev/' },
+        },
+        breadcrumbs([
+          { name: 'Главная', path: '/' },
+          { name: 'Проекты', path: '/projects' },
+          { name: project.title, path: `/projects/${slug}` },
+        ]),
+      ],
+    },
   } : {})
 
   if (loading) {
@@ -82,11 +102,12 @@ export default function ProjectDetail() {
           {t.projects.backToAll}
         </Link>
 
-        <div className="pd-layout">
+        {/* Кейс — самостоятельная единица контента, а не просто блок вёрстки */}
+        <article className="pd-layout">
 
           {project.image_url && (
             <Shot {...shotProps} className="pd-hero reveal">
-              <img src={project.image_url} alt={project.title} />
+              <img src={project.image_url} alt={`${project.title} — скриншот проекта`} />
               {link && (
                 <span className="pd-hero-hint">
                   {t.projects.visit}
@@ -154,7 +175,7 @@ export default function ProjectDetail() {
               </Link>
             )}
           </div>
-        </div>
+        </article>
 
       </div>
     </section>

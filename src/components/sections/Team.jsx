@@ -53,7 +53,7 @@ function TeamCard({ m, labels }) {
           <div className="tc-ring-gap" />
           <div className="team-avatar" style={{ background: `linear-gradient(135deg, ${blob} 0%, #0d0d16 130%)` }}>
             {m.avatar_url
-              ? <img src={m.avatar_url} alt={m.name} />
+              ? <img src={m.avatar_url} alt={`${m.name} — ${m.role}`} loading="lazy" />
               : <span>{m.initials || m.name?.slice(0, 2)}</span>}
           </div>
           <span className="tc-presence" aria-hidden="true" />
