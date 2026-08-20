@@ -115,7 +115,10 @@ export default function Team() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    fetchTable('team').then(data => {
+    /* team_public вместо team: обычная таблица через select('*') отдавала
+       анонимам ещё и email участников, owner_user_id и черновики правок.
+       View показывает только то, что реально нужно карточке. */
+    fetchTable('team_public').then(data => {
       setMembers(data)
       setLoading(false)
     })

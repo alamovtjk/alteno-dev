@@ -69,7 +69,8 @@ export default function TeamPage() {
   })
 
   useEffect(() => {
-    fetchTable('team').then(data => {
+    /* см. Team.jsx — публичный view без email и служебных полей */
+    fetchTable('team_public').then(data => {
       setMembers(data)
       setLoading(false)
     })
