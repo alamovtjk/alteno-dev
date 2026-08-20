@@ -48,7 +48,7 @@ export default function SettingsTab() {
 
   /* Десктоп 1200×300 (4:1) — 1600px по ширине с запасом на retina.
      Мобильный 800×400 (2:1) — обрезка та же пропорция, что на телефоне
-     реально показывается (см. .ad-banner в alteno.css), просто меньше
+     реально показывается (см. .promo-slot в alteno.css), просто меньше
      разрешение, раз и так занимает четверть экрана. */
   const uploadAdImage = (field, maxWidth) => async (e) => {
     const file = e.target.files?.[0]
@@ -57,7 +57,7 @@ export default function SettingsTab() {
     setUploading(kind)
     const upload = await toWebp(file, { maxWidth, quality: 0.85 }).catch(() => file)
     const ext  = upload.name.split('.').pop()
-    const path = `ads/banner_${kind}_${Date.now()}.${ext}`
+    const path = `promo/slot_${kind}_${Date.now()}.${ext}`
     const { error } = await supabase.storage.from('media').upload(path, upload, { upsert: true })
     if (!error) {
       const { data } = supabase.storage.from('media').getPublicUrl(path)

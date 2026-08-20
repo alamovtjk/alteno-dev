@@ -23,14 +23,14 @@ export default function AdBanner() {
   const linkProps = ad.link ? { href: ad.link, target: '_blank', rel: 'noopener noreferrer sponsored' } : {}
 
   return (
-    <section className="ad-banner-section" style={{ position: 'relative', zIndex: 2 }}>
+    <section className="promo-slot-section" style={{ position: 'relative', zIndex: 2 }}>
       <div className="shell">
-        <Tag className="ad-banner" {...linkProps}>
+        <Tag className="promo-slot" {...linkProps}>
           <picture>
             {ad.mobileImage && <source media="(max-width: 600px)" srcSet={ad.mobileImage} />}
             <img src={ad.image} alt="Реклама" loading="lazy" />
           </picture>
-          <span className="ad-banner-label">Реклама</span>
+          <span className="promo-slot-note">Реклама</span>
         </Tag>
       </div>
     </section>
