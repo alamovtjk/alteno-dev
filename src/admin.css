@@ -780,3 +780,131 @@ body { background: var(--adm-bg); color: var(--adm-text); font-family: 'Manrope'
   box-shadow: none !important; padding: 10px 12px !important;
   font-family: 'Manrope', sans-serif; font-size: 14px; color: var(--adm-text);
 }
+
+/* ═══════════════════════════════════════════════════
+   МОБИЛЬНАЯ ВЕРСИЯ ПАНЕЛЕЙ (/admin, /panel, /account)
+   Раньше на телефоне было нечитаемо: боковое меню в 220px
+   намертво занимало больше половины экрана, а контенту
+   оставалось ~150px. Ниже — меню превращается в полосу
+   вкладок сверху, а всё остальное перестраивается в одну
+   колонку.
+   ═══════════════════════════════════════════════════ */
+@media (max-width: 860px) {
+
+  /* ── Каркас: меню сверху, контент под ним ── */
+  .adm-layout { flex-direction: column; }
+
+  .adm-sidebar {
+    position: static;
+    width: 100%;
+    height: auto;
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+    border-right: none;
+    border-bottom: 1px solid var(--adm-border);
+    padding: 8px 10px;
+    /* Вкладки не влезают по ширине — листаем вбок, а не ломаем сетку */
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    position: sticky;
+    top: 0;
+    z-index: 40;
+  }
+  .adm-sidebar::-webkit-scrollbar { display: none; }
+
+  .adm-sb-brand {
+    padding: 0 6px 0 0;
+    margin: 0;
+    border-bottom: none;
+    flex-shrink: 0;
+  }
+  .adm-sb-logo-img { height: 26px; }
+
+  .adm-nav {
+    flex: 0 0 auto;
+    flex-direction: row;
+    gap: 6px;
+    padding: 0;
+  }
+  .adm-sb-footer {
+    flex-direction: row;
+    gap: 6px;
+    padding: 0;
+    border-top: none;
+    margin-left: auto;
+    flex-shrink: 0;
+  }
+  .adm-nav-item {
+    white-space: nowrap;
+    padding: 8px 12px;
+    font-size: 13px;
+    flex-shrink: 0;
+  }
+  /* Ссылка «на сайт» на телефоне только мешает — выход оставляем */
+  .adm-nav-link { display: none; }
+
+  .adm-main { margin-left: 0; padding: 16px 12px 40px; }
+
+  /* ── Заголовок вкладки: кнопка под текстом, а не рядом ── */
+  .adm-tab-hd {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+  .adm-tab-title { font-size: 20px; }
+
+  /* ── Сетки — в одну колонку ── */
+  .adm-settings-grid,
+  .adm-cards-grid { grid-template-columns: 1fr; }
+  .adm-row-2 { grid-template-columns: 1fr; }
+
+  /* ── Карточки списков: содержимое сверху, кнопки снизу ── */
+  .adm-team-row,
+  .adm-review-card {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+  .adm-td-actions { justify-content: flex-start; flex-wrap: wrap; }
+  /* Навыки в списке команды на узком экране только шумят */
+  .adm-team-skills { display: none; }
+
+  /* ── Модалки почти во весь экран ── */
+  .adm-overlay { padding: 10px; align-items: flex-start; }
+  .adm-modal,
+  .adm-modal-wide {
+    max-width: 100%;
+    max-height: 92vh;
+    margin-top: 10px;
+  }
+  /* Форма и превью карточки — друг под другом */
+  .adm-modal-split { grid-template-columns: 1fr; }
+  .adm-card-preview { display: none; }
+  .adm-modal-ft { flex-wrap: wrap; }
+  .adm-modal-ft button { flex: 1; min-width: 130px; }
+
+  /* ── Чат ── */
+  .adm-chat-box { height: 55vh; }
+  .adm-chat-msg { max-width: 88%; }
+
+  /* Вход в панели */
+  .adm-login-card { padding: 24px 18px; }
+}
+
+/* Совсем узкие экраны */
+@media (max-width: 420px) {
+  .adm-main { padding: 14px 10px 32px; }
+  .adm-nav-item { padding: 7px 10px; font-size: 12px; }
+  .adm-tab-title { font-size: 18px; }
+}
+
+/* Чаты: слева список диалогов, справа переписка */
+.adm-chats-layout { display: grid; grid-template-columns: 280px 1fr; gap: 16px; }
+@media (max-width: 860px) {
+  /* На телефоне — друг под другом, список сверху и невысокий,
+     чтобы переписка оставалась на экране */
+  .adm-chats-layout { grid-template-columns: 1fr; }
+  .adm-chats-layout > .adm-list { max-height: 30vh; overflow-y: auto; }
+}

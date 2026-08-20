@@ -68,7 +68,9 @@ export default function ChatsTab() {
         </div>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '280px 1fr', gap: 16 }}>
+      {/* Класс, а не инлайн-стиль: инлайн медиа-запрос не перебьёт,
+          и на телефоне список диалогов остался бы колонкой в 280px. */}
+      <div className="adm-chats-layout">
         <div className="adm-list">
           {threads.map(t => (
             <div
