@@ -29,3 +29,23 @@ if ('requestIdleCallback' in window) {
 } else {
   setTimeout(prefetchNextRoutes, 2000)
 }
+
+/* Показ старой версии после выкладки.
+   Сайт — PWA: страницу отдаёт service worker из своего кэша. Новая
+   версия скачивалась и вставала у руля (skipWaiting + clientsClaim),
+   но уже открытую страницу об этом никто не уведомлял — она так и
+   висела на старом коде до ручной перезагрузки. Причём это касалось
+   всех посетителей, а не только нас.
+
+   Слушатель вешаем ТОЛЬКО если управляющий worker уже есть: при самом
+   первом заходе clientsClaim тоже вызывает это событие, и без проверки
+   получилась бы лишняя перезагрузка у каждого нового посетителя.
+   Флаг — страховка от повторного срабатывания. */
+if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
+  let reloading = false
+  navigator.serviceWorker.addEventListener('controllerchange', () => {
+    if (reloading) return
+    reloading = true
+    window.location.reload()
+  })
+}
