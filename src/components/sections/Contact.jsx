@@ -50,32 +50,23 @@ function recordSubmission() {
   localStorage.setItem(RL_KEY, JSON.stringify({ date: today, count: getTodayCount() + 1 }))
 }
 
-async function sendNotifications(form, email) {
-  await Promise.allSettled([
-    /* Telegram — через свою функцию: токен бота остаётся на сервере */
-    fetch('/api/contact', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name: form.name, contact: form.contact, task: form.task }),
-    }).catch(() => {}),
-
-    fetch(`https://formsubmit.co/ajax/${email}`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-      body: JSON.stringify({
-        name: form.name,
-        contact: form.contact,
-        task: form.task || '—',
-        _subject: '🆕 Новая заявка — AlTeNo Dev',
-        _template: 'table',
-      }),
-    }).catch(() => {}),
-  ])
+/* Раньше та же заявка дублировалась ещё и на formsubmit.co — сторонний
+   сервис получал имя, контакт и описание задачи клиента без всякой
+   необходимости: всё это и так приходит в Telegram. Убрано, чтобы данные
+   клиентов не уходили лишней компании. */
+async function sendNotifications(form) {
+  /* Telegram — через свою функцию: токен бота остаётся на сервере */
+  await fetch('/api/contact', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ name: form.name, contact: form.contact, task: form.task }),
+  }).catch(() => {})
 }
 
 export default function Contact() {
   const { t } = useLanguage()
-  const { settings, links } = useSettings()
+  /* settings больше не нужен: он давал email для formsubmit.co, который убран */
+  const { links } = useSettings()
   const [form, setForm]       = useState({ name: '', contact: '', task: '' })
   const [sending, setSending] = useState(false)
   const [status, setStatus]   = useState('idle')
@@ -90,7 +81,7 @@ export default function Contact() {
     if (getTodayCount() >= MAX_PER_DAY) { setStatus('limited'); return }
 
     setSending(true)
-    await sendNotifications(form, settings.email)
+    await sendNotifications(form)
     recordSubmission()
     setSending(false)
     setForm({ name: '', contact: '', task: '' })

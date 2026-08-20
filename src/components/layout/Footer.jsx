@@ -139,7 +139,11 @@ export default function Footer() {
 
           <div className="footer-bottom reveal">
             <span>{t.footer.rights}</span>
-            <span>Unbounded × Manrope · Glassmorphism</span>
+            <span className="footer-legal">
+              <Link to="/privacy">Политика конфиденциальности</Link>
+              <span className="footer-dot">·</span>
+              Unbounded × Manrope
+            </span>
           </div>
         </div>
       </footer>

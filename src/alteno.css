@@ -4238,3 +4238,43 @@ a.pd-hero:hover .pd-hero-hint { opacity: 1; transform: translateY(0); }
 @media (prefers-reduced-motion: reduce) {
   .tc-presence { animation: none; }
 }
+
+/* ── Политика конфиденциальности ── */
+.pv-wrap { max-width: 820px; }
+.pv-updated { font-size: 13px; color: var(--text-faint); margin-bottom: 40px; }
+.pv-body { display: flex; flex-direction: column; gap: 36px; }
+.pv-block { display: flex; flex-direction: column; gap: 12px; }
+.pv-h2 {
+  font-family: 'Unbounded', sans-serif; font-weight: 600;
+  font-size: clamp(18px, 2.4vw, 22px); line-height: 1.25;
+}
+.pv-body p { color: var(--text-dim); line-height: 1.7; font-size: 15px; }
+.pv-body a { color: var(--violet-l); }
+.pv-list { display: flex; flex-direction: column; gap: 8px; padding-left: 20px; }
+.pv-list li { color: var(--text-dim); line-height: 1.65; font-size: 15px; }
+.pv-list li b, .pv-body p b { color: var(--text); }
+.pv-note {
+  border-left: 2px solid var(--violet); padding: 10px 0 10px 14px;
+  background: rgba(124,58,237,.06); border-radius: 0 8px 8px 0;
+  font-size: 14px !important;
+}
+/* Таблица уезжает вбок на узком экране, а не ломает страницу */
+.pv-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+.pv-table { width: 100%; border-collapse: collapse; font-size: 14px; min-width: 460px; }
+.pv-table th, .pv-table td {
+  text-align: left; padding: 10px 12px;
+  border-bottom: 1px solid rgba(255,255,255,.08); vertical-align: top;
+}
+.pv-table th { color: var(--text); font-weight: 600; font-size: 12px; text-transform: uppercase; letter-spacing: .05em; }
+.pv-table td { color: var(--text-dim); line-height: 1.55; }
+.pv-table td b { color: var(--text); }
+.footer-legal { display: inline-flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.footer-legal a { color: var(--text-dim); text-decoration: none; transition: color .2s; }
+.footer-legal a:hover { color: var(--text); text-decoration: underline; }
+.footer-dot { opacity: .5; }
+/* Сноска про AI под полем ввода — заметная, но не мешающая */
+.ariel-privacy {
+  font-size: 11px; line-height: 1.4; text-align: center;
+  color: var(--text-faint); padding: 0 16px 10px; margin: -4px 0 0;
+}
+.ariel-privacy a { color: var(--text-dim); }

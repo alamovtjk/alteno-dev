@@ -419,6 +419,16 @@ export default function ArielChat() {
           </button>
         </div>
       )}
+
+      {/* Диалог уходит на обработку во внешний AI-сервис (DeepSeek, Китай),
+          а ассистент спрашивает контакты и бюджет — человек должен знать
+          об этом до того, как начнёт писать, а не из политики постфактум. */}
+      {started && !done && (
+        <p className="ariel-privacy">
+          Диалог обрабатывает внешний AI-сервис.{' '}
+          <a href="/privacy" target="_blank" rel="noreferrer">Подробнее</a>
+        </p>
+      )}
     </div>
   )
 }

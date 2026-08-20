@@ -18,6 +18,7 @@ const Panel         = lazy(() => import('./pages/Panel'))
 const Projects      = lazy(() => import('./pages/Projects'))
 const ProjectDetail = lazy(() => import('./pages/ProjectDetail'))
 const TeamPage      = lazy(() => import('./pages/TeamPage'))
+const Privacy       = lazy(() => import('./pages/Privacy'))
 
 export default function App() {
   return (
@@ -38,6 +39,7 @@ export default function App() {
                         <Route path="/projects"       element={<Projects />} />
                         <Route path="/projects/:slug" element={<ProjectDetail />} />
                         <Route path="/team"           element={<TeamPage />} />
+                        <Route path="/privacy"        element={<Privacy />} />
                         <Route path="/"               element={<Home />} />
                         <Route path="*"               element={<NotFound />} />
                       </Route>
