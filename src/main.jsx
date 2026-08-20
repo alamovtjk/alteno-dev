@@ -49,3 +49,19 @@ if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
     window.location.reload()
   })
 }
+
+/* Сам по себе браузер ищет новую версию только при переходе по страницам.
+   У того, кто держит вкладку открытой полдня, сайт так и остался бы
+   старым. Поэтому спрашиваем сами: при возврате на вкладку и раз в
+   полчаса. Запрос дешёвый — если версия та же, ничего не скачивается,
+   а если новая, сработает слушатель выше и страница обновится сама. */
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.ready.then((registration) => {
+    const check = () => registration.update().catch(() => {})
+
+    document.addEventListener('visibilitychange', () => {
+      if (document.visibilityState === 'visible') check()
+    })
+    setInterval(check, 30 * 60 * 1000)
+  }).catch(() => {})
+}

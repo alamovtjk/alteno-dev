@@ -53,17 +53,14 @@ export default defineConfig({
         /* Воркер не должен подменять статику страницей: именно так HTML
            однажды осел в кеше под адресом скрипта и сайт перестал стартовать */
         navigateFallbackDenylist: [/^\/api\//, /^\/assets\//, /^\/apps\//, /^\/music\//, /^\/splash\//],
-        runtimeCaching: [
-          {
-            urlPattern: /^https:\/\/fonts\.(googleapis|gstatic)\.com\/.*/i,
-            handler: 'CacheFirst',
-            options: {
-              cacheName: 'google-fonts',
-              expiration: { maxEntries: 10, maxAgeSeconds: 60 * 60 * 24 * 365 },
-              cacheableResponse: { statuses: [0, 200] },
-            },
-          },
-        ],
+        /* Кэш от прошлых версий сайта сносится при активации новой —
+           иначе у давних посетителей копились бы старые сборки. */
+        cleanupOutdatedCaches: true,
+        /* Правило для Google Fonts убрано вместе с самим Google Fonts:
+           шрифты теперь свои и лежат на этом же домене, а раздаёт их
+           nginx с кэшем на год (см. location /fonts/). В прекеш их не
+           берём намеренно: там 6 файлов на 158 КБ, а конкретному
+           посетителю нужны от силы два. */
       },
     }),
   ],
