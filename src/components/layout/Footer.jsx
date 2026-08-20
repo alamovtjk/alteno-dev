@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { useLanguage } from '../../context/LanguageContext'
 import { useSettings } from '../../context/SettingsContext'
@@ -38,6 +38,37 @@ export default function Footer() {
     else navigate('/', { state: { scrollTo: href } })
   }
 
+  /* Скрытый вход для своих (по образцу режима разработчика на Android):
+     пять быстрых нажатий по логотипу в подвале открывают форму входа.
+     Обычный посетитель на неё не наткнётся — счётчик сбрасывается через
+     полторы секунды, а одиночный клик ничего не делает. Это не защита
+     (адрес /login по-прежнему открывается напрямую), а способ убрать
+     служебную кнопку с глаз. */
+  const taps = useRef(0)
+  const tapTimer = useRef(null)
+  const [tapHint, setTapHint] = useState(0)
+
+  useEffect(() => () => clearTimeout(tapTimer.current), [])
+
+  const onLogoTap = () => {
+    taps.current += 1
+    clearTimeout(tapTimer.current)
+
+    if (taps.current >= 5) {
+      taps.current = 0
+      setTapHint(0)
+      navigate('/login')
+      return
+    }
+
+    // Подсказку показываем только с третьего нажатия — случайный клик её не увидит
+    setTapHint(taps.current >= 3 ? taps.current : 0)
+    tapTimer.current = setTimeout(() => {
+      taps.current = 0
+      setTapHint(0)
+    }, 1500)
+  }
+
   return (
     <>
       <footer className="footer" style={{ position: 'relative', zIndex: 2 }}>
@@ -45,14 +76,22 @@ export default function Footer() {
           <div className="footer-grid">
             {/* Brand */}
             <div className="fbrand reveal">
-              <a href="/" onClick={e => {
-                  e.preventDefault()
-                  if (isHome) window.scrollTo({ top: 0, behavior: 'smooth' })
-                  else navigate('/')
-                }}
-                style={{ textDecoration: 'none', display: 'inline-flex', marginBottom: 12 }}>
+              {/* Домой ведут логотип в шапке и кнопка «наверх» — здесь логотип
+                  занят скрытым входом, иначе первый же тап уводил бы со страницы
+                  и сбрасывал счётчик. */}
+              <button
+                type="button"
+                onClick={onLogoTap}
+                aria-label="AlTeNo Dev"
+                style={{
+                  background: 'none', border: 'none', padding: 0, cursor: 'default',
+                  display: 'inline-flex', marginBottom: 12,
+                  opacity: tapHint ? 1 : undefined,
+                  transform: tapHint ? `scale(${1 + tapHint * 0.04})` : undefined,
+                  transition: 'transform .18s ease',
+                }}>
                 <LogoMarkFooter />
-              </a>
+              </button>
               <p>{t.footer.desc}</p>
               <div className="socials">
                 {SOCIAL_ORDER.filter(k => links[k]).map(k => (
