@@ -11,6 +11,7 @@ const ICONS = {
   email:     <svg viewBox="0 0 24 24" fill="none" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>,
   whatsapp:  <svg viewBox="0 0 24 24" fill="none" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 11.5a8.5 8.5 0 0 1-12.6 7.4L3 20.5l1.7-5.2A8.5 8.5 0 1 1 21 11.5z"/><path d="M8.8 9.2c.4 2.4 2.6 4.6 5 5l1-1.4 1.8.8-.4 1.6c-2.6.5-6.6-2.7-7.6-6l1.5-.6.8 1.8-.9 1"/></svg>,
   phone:     <svg viewBox="0 0 24 24" fill="none" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6.5 3h3l1.5 4-2 1.5a11 11 0 0 0 5.5 5.5L16 12l4 1.5v3a2 2 0 0 1-2.2 2A16 16 0 0 1 4 6.2 2 2 0 0 1 6 4z"/></svg>,
+  location:  <svg viewBox="0 0 24 24" fill="none" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 21s7-6.1 7-11a7 7 0 1 0-14 0c0 4.9 7 11 7 11z"/><circle cx="12" cy="10" r="2.6"/></svg>,
 }
 
 /* Порядок соцсетей в подвале; какие есть в настройках — те и рисуем */
@@ -126,14 +127,21 @@ export default function Footer() {
             {/* Contact */}
             <div className="fcol reveal">
               <h5 className="ub">{t.footer.col3}</h5>
+              {/* Иконка обязательна: без неё @samiralamov и @alamovtjk
+                  выглядят одинаково, а два одинаковых номера (телефон и
+                  WhatsApp) вообще не отличить — непонятно, куда ведёт ссылка. */}
               {CONTACT_ORDER.filter(k => links[k]).map(k => (
-                <a key={k} href={links[k].href}
+                <a key={k} href={links[k].href} className="fcontact"
                   target={isExternal(k) ? '_blank' : undefined}
                   rel={isExternal(k) ? 'noreferrer' : undefined}>
-                  {links[k].label}
+                  <span className="fcontact-ico" aria-hidden="true">{ICONS[k]}</span>
+                  <span className="fcontact-label">{links[k].label}</span>
                 </a>
               ))}
-              <a>Душанбе, Таджикистан</a>
+              <span className="fcontact fcontact-static">
+                <span className="fcontact-ico" aria-hidden="true">{ICONS.location}</span>
+                <span className="fcontact-label">Душанбе, Таджикистан</span>
+              </span>
             </div>
           </div>
 
