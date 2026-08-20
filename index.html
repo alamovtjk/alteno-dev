@@ -72,11 +72,13 @@
     <meta name="twitter:image" content="https://alteno.dev/og-image.png" />
     <meta name="twitter:image:alt" content="AlTeNo Dev — AI веб-студия из Душанбе" />
 
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
-    <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;500;600;700;800&family=Manrope:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet" />
+    <!-- Fonts — свои, с этого же сервера (см. src/fonts.css).
+         Google Fonts убран: он получал IP каждого посетителя и добавлял
+         два лишних подключения перед первой отрисовкой текста.
+         Заранее подгружаем то, что нужно первому экрану: заголовки
+         (Unbounded) и основной текст (Manrope), кириллица. -->
+    <link rel="preload" href="/fonts/unbounded-cyrillic.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/manrope-cyrillic.woff2" as="font" type="font/woff2" crossorigin />
 
     <!-- Structured data — организация + сайт целиком, не зависит от маршрута -->
     <script type="application/ld+json">
