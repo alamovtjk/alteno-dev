@@ -4301,3 +4301,13 @@ a.pd-hero:hover .pd-hero-hint { opacity: 1; transform: translateY(0); }
 .fcontact-label { overflow-wrap: anywhere; }
 /* Город — не ссылка, кликать нечего */
 .fcontact-static { cursor: default; }
+
+@media(max-width:560px) {
+  /* Подвал держался в две колонки даже на узких экранах. После добавления
+     иконок колонка контактов стала тесной: иконка 26px + длинная почта
+     переносились некрасиво. Отдаём контактам всю ширину. */
+  .fcol:last-child { grid-column: 1 / -1; }
+  .fcol:last-child .fcontact { margin-bottom: 10px; }
+  /* Ссылка на политику и подпись — друг под другом, а не встык */
+  .footer-bottom { flex-direction: column; align-items: flex-start; gap: 8px; }
+}
